@@ -54,10 +54,10 @@ defmodule Chart.Gauge.Svg do
           d="<%= @view.d_gauge_half_circle(@settings) %>">
         </path>
         <path id="gauge-value"
-          <%= if String.length(@settings.gauge_value_class) != 0 do %>
-            class="<%= @settings.gauge_value_class %>"
+          <%= if !Enum.empty?(@settings.gauge_value_class) do %>
+            class="<%= @view.gauge_value_class(@settings.gauge_value_class, @data.data) %>"
           <% end %>
-          d="<%= @settings.d_value %>">
+          d="<%= @view.gauge_value_half_circle(@settings, @data.data) %>">
         </path>
       </g>
 
@@ -75,7 +75,7 @@ defmodule Chart.Gauge.Svg do
       <text class="value-font value-text"
         x="<%= elem(@settings.value_text.position, 0) %>" y = "<%= elem(@settings.value_text.position, 1) %>"
         text-anchor="middle" alignment-baseline="middle" dominant-baseline="central"
-        ><%= @settings.text_value %>
+        ><%= @view.value(@data.data, @settings.value_text.decimals) %>
       </text>
 
     </svg>

@@ -5,6 +5,10 @@ defmodule Chart.Gauge.Utils do
     Enum.reduce(keywords, map, fn {key, val}, map -> Map.put(map, key, val) end)
   end
 
+  def round_value(value, decimals) do
+    :erlang.float_to_list(1.0 * value, decimals: decimals)
+  end
+
   def value_to_angle(val, {a, b}), do: value_to_angle(val, a, b)
 
   def value_to_angle(val, a, b) do

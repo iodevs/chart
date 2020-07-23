@@ -197,7 +197,7 @@ defmodule Chart.Gauge.Settings do
 
   @type t() :: %__MODULE__{
           gauge_bottom_width_lines: nil | number(),
-          gauge_value_colors: nil | list(tuple()),
+          gauge_value_class: nil | list(tuple()),
           major_ticks: nil | MajorTicks.t(),
           major_ticks_text: nil | MajorTicksText.t(),
           range: nil | {number(), number()},
@@ -208,15 +208,12 @@ defmodule Chart.Gauge.Settings do
           # Internal
           d_gauge_bg_border_bottom_lines: list(tuple()),
           d_gauge_half_circle: tuple(),
-          d_value: String.t(),
           gauge_center: {number(), number()},
-          gauge_radius: {number(), number()},
-          gauge_value_class: String.t(),
-          text_value: String.t()
+          gauge_radius: {number(), number()}
         }
 
   defstruct gauge_bottom_width_lines: nil,
-            gauge_value_colors: nil,
+            gauge_value_class: nil,
             major_ticks: nil,
             major_ticks_text: nil,
             range: nil,
@@ -227,18 +224,15 @@ defmodule Chart.Gauge.Settings do
             # Internal
             d_gauge_bg_border_bottom_lines: [{}],
             d_gauge_half_circle: {},
-            d_value: "",
             gauge_center: {0, 0},
-            gauge_radius: {50, 50},
-            gauge_value_class: "",
-            text_value: ""
+            gauge_radius: {50, 50}
 
   @spec set(list()) :: t()
   def set(config) do
     %__MODULE__{
       gauge_bottom_width_lines:
         key_guard(config, :gauge_bottom_width_lines, 1.25, &validate_number/1),
-      gauge_value_colors: key_guard(config, :gauge_value_colors, [], &validate_list_of_tuples/1),
+      gauge_value_class: key_guard(config, :gauge_value_class, [], &validate_list_of_tuples/1),
       range: key_guard(config, :range, {0, 300}, &validate_range/1),
       viewbox: key_guard(config, :viewbox, {160, 80}, &validate_viewbox/1)
     }
