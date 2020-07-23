@@ -2,11 +2,15 @@ defmodule Chart.Gauge.Svg do
   @moduledoc false
 
   alias Chart.Gauge
+  alias Chart.Gauge.View
 
   use Phoenix.HTML
 
   def generate(%Gauge{} = gauge) do
-    assigns = Map.from_struct(gauge)
+    assigns =
+      gauge
+      |> Map.from_struct()
+      |> Map.put(:view, View)
 
     ~E"""
     <svg version="1.2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -15,12 +19,12 @@ defmodule Chart.Gauge.Svg do
       <defs>
         <line id="major-line-ticks"
           x1="<%= @settings.major_ticks.length %>"
-          transform="<%= @settings.major_ticks.translate %>" />
+          transform="<%= @view.translate(@settings.major_ticks.translate) %>" />
       </defs>
       <g class="major-ticks">
         <%= for angle <- @settings.major_ticks.positions do %>
           <use xlink:href="#major-line-ticks"
-            transform="rotate(<%= angle %>, <%= elem(@settings.gauge_center, 0) %>, <%= elem(@settings.gauge_center, 1) %>)" />
+            transform="<%= @view.rotate(angle, @settings.gauge_center) %>" />
         <% end %>
       </g>
 
@@ -39,14 +43,15 @@ defmodule Chart.Gauge.Svg do
           <path id="gauge-bg-border"
             d="<%= @settings.d_gauge_half_circle %>">
           </path>
-          <%= for lines <- @settings.d_gauge_bg_border_bottom_lines do %>
+          <%= for {x, y, width} <- @settings.d_gauge_bg_border_bottom_lines do %>
             <path class="gauge-bg-border-bottom-lines"
-              d="<%= lines %>">
+              d="<%= @view.line_width(x, y, width) %>">
             </path>
           <% end %>
         </g>
+
         <path id="gauge-bg"
-          d="<%= @settings.d_gauge_half_circle %>">
+          d="<%= @view.d_gauge_half_circle(@settings) %>">
         </path>
         <path id="gauge-value"
           <%= if String.length(@settings.gauge_value_class) != 0 do %>
@@ -58,10 +63,10 @@ defmodule Chart.Gauge.Svg do
 
       <%= if !Enum.empty?(@settings.thresholds.positions_with_class_name) do %>
         <g class="thresholds">
-          <%= for {treshold, angle, class} <- @settings.thresholds.d_thresholds_with_class do %>
+          <%= for {x, y, width, angle, class} <- @settings.thresholds.d_thresholds_with_class do %>
             <path class="<%= class %>"
-              d="<%= treshold %>"
-              transform="rotate(<%= angle %>, <%= elem(@settings.gauge_center, 0) %>, <%= elem(@settings.gauge_center, 1) %>)">
+              d="<%= @view.line_width(x, y, width) %>"
+              transform="<%= @view.rotate(angle, @settings.gauge_center) %>">
             </path>
           <% end %>
         </g>
