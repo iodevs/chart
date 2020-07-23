@@ -35,8 +35,9 @@ defmodule Chart.MixProject do
     [
       # {:ex_doc, "~> 0.21", only: :dev},
       {:credo, "~> 1.1", only: [:dev, :test]},
+      {:dialyxir, "~> 1.0", only: [:dev, :test], runtime: false},
       {:excoveralls, "~> 0.11", only: :test},
-      {:dialyxir, "~> 1.0", only: [:dev, :test], runtime: false}
+      {:phoenix_html, "~> 2.11"}
     ]
   end
 end

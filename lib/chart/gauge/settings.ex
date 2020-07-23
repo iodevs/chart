@@ -4,7 +4,6 @@ defmodule Chart.Gauge.Settings do
   alias Chart.Gauge.Utils
 
   @offset_from_bottom 35
-  @offset_radius_major_ticks_text 15
 
   defmodule MajorTicks do
     @moduledoc false
@@ -27,7 +26,7 @@ defmodule Chart.Gauge.Settings do
               positions: [],
               translate: ""
 
-    def put(%__MODULE__{} = settings, keywords) do
+    def put(settings, keywords) do
       major_ticks =
         keywords
         |> Utils.set_map(%__MODULE__{})
@@ -36,10 +35,24 @@ defmodule Chart.Gauge.Settings do
 
       Kernel.put_in(settings.major_ticks, major_ticks)
     end
+
+    # Private
+
+    defp set_major_ticks_translate(major_ticks, {_cx, cy}) do
+      Map.put(major_ticks, :translate, "translate(#{16.5 - major_ticks.gap}, #{cy})")
+    end
+
+    defp set_major_ticks_positions(major_ticks) do
+      angles = Utils.linspace(0, 180, major_ticks.count)
+
+      Map.put(major_ticks, :positions, angles)
+    end
   end
 
   defmodule MajorTicksText do
     @moduledoc false
+
+    @offset_radius_major_ticks_text 15
 
     @type t() :: %__MODULE__{
             decimals: nil | non_neg_integer(),
@@ -52,6 +65,61 @@ defmodule Chart.Gauge.Settings do
     defstruct decimals: nil,
               gap: nil,
               positions: nil
+
+    def put(settings, keywords) do
+      major_ticks_text =
+        keywords
+        |> Utils.set_map(%__MODULE__{})
+        |> set_major_ticks_text_positions(settings)
+
+      Kernel.put_in(settings.major_ticks_text, major_ticks_text)
+    end
+
+    # Private
+
+    defp set_major_ticks_text_positions(major_ticks_text, settings) do
+      count = settings.major_ticks.count
+
+      ticks_text_pos =
+        settings.range
+        |> Utils.linspace(count)
+        |> Utils.split_major_tick_values(count)
+        |> parse_tick_values(settings, major_ticks_text.gap, major_ticks_text.decimals)
+
+      Map.put(major_ticks_text, :positions, ticks_text_pos)
+    end
+
+    defp parse_tick_values([left, center, right], settings, gap, decimals)
+         when is_list(left) and is_list(center) and is_list(right) do
+      l = left |> compute_positions_with_text_anchor(settings, gap, decimals, "end")
+      c = center |> compute_positions_with_text_anchor(settings, gap, decimals, "middle")
+      r = right |> compute_positions_with_text_anchor(settings, gap, decimals, "start")
+
+      [l, c, r] |> List.flatten()
+    end
+
+    defp parse_tick_values([left, right], settings, gap, decimals)
+         when is_list(left) and is_list(right) do
+      l = left |> compute_positions_with_text_anchor(settings, gap, decimals, "end")
+      r = right |> compute_positions_with_text_anchor(settings, gap, decimals, "start")
+
+      [l, r] |> List.flatten()
+    end
+
+    defp compute_positions_with_text_anchor(val_list, settings, gap, decimals, text_anchor) do
+      {cx, cy} = settings.gauge_center
+      {rx, _ry} = settings.gauge_radius
+
+      radius = rx + @offset_radius_major_ticks_text + gap
+
+      val_list
+      |> Enum.map(fn tick_val ->
+        phi = Utils.value_to_angle(tick_val, settings.range)
+        {x, y} = Utils.polar_to_cartesian(radius, phi)
+
+        {cx + x, cy - y, :erlang.float_to_list(1.0 * tick_val, decimals: decimals), text_anchor}
+      end)
+    end
   end
 
   defmodule ValueText do
@@ -64,6 +132,23 @@ defmodule Chart.Gauge.Settings do
 
     defstruct decimals: nil,
               position: nil
+
+    def put(settings, keywords) do
+      value_text =
+        keywords
+        |> Utils.set_map(%__MODULE__{})
+        |> set_value_text_position(settings.gauge_center)
+
+      Kernel.put_in(settings.value_text, value_text)
+    end
+
+    # Private
+
+    defp set_value_text_position(value_text, {cx, cy}) do
+      {x, y} = value_text.position
+
+      Map.put(value_text, :position, {cx + x, cy + y})
+    end
   end
 
   defmodule Thresholds do
@@ -80,6 +165,34 @@ defmodule Chart.Gauge.Settings do
     defstruct positions_with_class_name: nil,
               width: nil,
               d_thresholds_with_class: [{"", "", ""}]
+
+    def put(settings, keywords) do
+      thresholds =
+        keywords
+        |> Utils.set_map(%__MODULE__{})
+        |> set_thresholds(settings)
+
+      Kernel.put_in(settings.thresholds, thresholds)
+    end
+
+    # Private
+
+    defp set_thresholds(thresholds, settings) do
+      {cx, cy} = settings.gauge_center
+      {rx, _ry} = settings.gauge_radius
+      width = thresholds.width
+
+      d_thresholds_with_class =
+        thresholds.positions_with_class_name
+        |> Enum.map(fn {val, class} ->
+          phi = Utils.value_to_angle(val, settings.range)
+          angle = 180.0 - Utils.radian_to_degree(phi) + width / 2.0
+
+          {"M#{cx - rx}, #{cy} l0, #{width}", angle, class}
+        end)
+
+      Map.put(thresholds, :d_thresholds_with_class, d_thresholds_with_class)
+    end
   end
 
   @type t() :: %__MODULE__{
@@ -137,48 +250,21 @@ defmodule Chart.Gauge.Settings do
       gap: key_guard(config, :major_ticks_gap, 0, &validate_number/1),
       length: key_guard(config, :major_ticks_length, 7, &validate_positive_number/1)
     )
-    |> put_major_ticks_text(
+    |> MajorTicksText.put(
       decimals: key_guard(config, :major_ticks_value_decimals, 0, &validate_decimals/1),
       gap: key_guard(config, :major_ticks_text_gap, 0, &validate_number/1)
     )
-    |> put_value_text(
+    |> ValueText.put(
       decimals: key_guard(config, :value_text_decimals, 0, &validate_decimals/1),
       position: key_guard(config, :value_text_position, {0, -10}, &validate_value_text_position/1)
     )
-    |> put_thresholds(
+    |> Thresholds.put(
       positions_with_class_name: key_guard(config, :thresholds, [], &validate_list_of_tuples/1),
       width: key_guard(config, :treshold_width, 1, &validate_positive_number/1)
     )
   end
 
   # Private
-
-  defp put_major_ticks_text(%__MODULE__{} = settings, keywords) do
-    major_ticks_text =
-      keywords
-      |> set_map(%MajorTicksText{})
-      |> set_major_ticks_text_positions(settings)
-
-    Kernel.put_in(settings.major_ticks_text, major_ticks_text)
-  end
-
-  defp put_value_text(%__MODULE__{} = settings, keywords) do
-    value_text =
-      keywords
-      |> set_map(%ValueText{})
-      |> set_value_text_position(settings.gauge_center)
-
-    Kernel.put_in(settings.value_text, value_text)
-  end
-
-  defp put_thresholds(%__MODULE__{} = settings, keywords) do
-    thresholds =
-      keywords
-      |> set_map(%Thresholds{})
-      |> set_thresholds(settings)
-
-    Kernel.put_in(settings.thresholds, thresholds)
-  end
 
   # Setters for map keys
 
@@ -207,51 +293,6 @@ defmodule Chart.Gauge.Settings do
         "M#{cx + rx}, #{cy - 0.5} l0, #{width}"
       ]
     )
-  end
-
-  defp set_major_ticks_translate(major_ticks, {_cx, cy}) do
-    Map.put(major_ticks, :translate, "translate(#{16.5 - major_ticks.gap}, #{cy})")
-  end
-
-  defp set_major_ticks_positions(major_ticks) do
-    angles = Utils.linspace(0, 180, major_ticks.count)
-
-    Map.put(major_ticks, :positions, angles)
-  end
-
-  defp set_major_ticks_text_positions(major_ticks_text, settings) do
-    count = settings.major_ticks.count
-
-    ticks_text_pos =
-      settings.range
-      |> Utils.linspace(count)
-      |> Utils.split_major_tick_values(count)
-      |> parse_tick_values(settings, major_ticks_text.gap, major_ticks_text.decimals)
-
-    Map.put(major_ticks_text, :positions, ticks_text_pos)
-  end
-
-  defp set_thresholds(thresholds, settings) do
-    {cx, cy} = settings.gauge_center
-    {rx, _ry} = settings.gauge_radius
-    width = thresholds.width
-
-    d_thresholds_with_class =
-      thresholds.positions_with_class_name
-      |> Enum.map(fn {val, class} ->
-        phi = Utils.value_to_angle(val, settings.range)
-        angle = 180.0 - Utils.radian_to_degree(phi) + width / 2.0
-
-        {"M#{cx - rx}, #{cy} l0, #{width}", angle, class}
-      end)
-
-    Map.put(thresholds, :d_thresholds_with_class, d_thresholds_with_class)
-  end
-
-  defp set_value_text_position(value_text, {cx, cy}) do
-    {x, y} = value_text.position
-
-    Map.put(value_text, :position, {cx + x, cy + y})
   end
 
   #  Validators
@@ -295,41 +336,5 @@ defmodule Chart.Gauge.Settings do
 
   defp key_guard(kw, key, default_val, fun) do
     fun.(Keyword.get(kw, key, default_val))
-  end
-
-  defp set_map(keywords, map) do
-    Enum.reduce(keywords, map, fn {key, val}, map -> Map.put(map, key, val) end)
-  end
-
-  defp parse_tick_values([left, center, right], settings, gap, decimals)
-       when is_list(left) and is_list(center) and is_list(right) do
-    l = left |> compute_positions_with_text_anchor(settings, gap, decimals, "end")
-    c = center |> compute_positions_with_text_anchor(settings, gap, decimals, "middle")
-    r = right |> compute_positions_with_text_anchor(settings, gap, decimals, "start")
-
-    [l, c, r] |> List.flatten()
-  end
-
-  defp parse_tick_values([left, right], settings, gap, decimals)
-       when is_list(left) and is_list(right) do
-    l = left |> compute_positions_with_text_anchor(settings, gap, decimals, "end")
-    r = right |> compute_positions_with_text_anchor(settings, gap, decimals, "start")
-
-    [l, r] |> List.flatten()
-  end
-
-  defp compute_positions_with_text_anchor(val_list, settings, gap, decimals, text_anchor) do
-    {cx, cy} = settings.gauge_center
-    {rx, _ry} = settings.gauge_radius
-
-    radius = rx + @offset_radius_major_ticks_text + gap
-
-    val_list
-    |> Enum.map(fn tick_val ->
-      phi = Utils.value_to_angle(tick_val, settings.range)
-      {x, y} = Utils.polar_to_cartesian(radius, phi)
-
-      {cx + x, cy - y, :erlang.float_to_list(1.0 * tick_val, decimals: decimals), text_anchor}
-    end)
   end
 end
