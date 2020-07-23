@@ -8,14 +8,17 @@ defmodule Chart.MixProject do
       elixir: "~> 1.9",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
+      description: "Plot graphs.",
       deps: deps(),
+      package: package(),
       test_coverage: [tool: ExCoveralls],
       preferred_cli_env: [
         coveralls: :test,
         "coveralls.detail": :test,
         "coveralls.post": :test,
         "coveralls.html": :test
-      ]
+      ],
+      source_url: "https://github.com/iodevs/chart",
     ]
   end
 
@@ -38,6 +41,19 @@ defmodule Chart.MixProject do
       {:dialyxir, "~> 1.0", only: [:dev, :test], runtime: false},
       {:excoveralls, "~> 0.11", only: :test},
       {:phoenix_html, "~> 2.11"}
+    ]
+  end
+
+  defp package do
+    [
+      maintainers: [
+        "Jindrich K. Smitka <smitka.j@gmail.com>",
+        "Ondrej Tucek <ondrej.tucek@gmail.com>"
+      ],
+      licenses: ["BSD-4-Clause"],
+      links: %{
+        "GitHub" => "https://github.com/iodevs/chart"
+      }
     ]
   end
 end
