@@ -1,0 +1,2 @@
+defmodule Chart do
+end

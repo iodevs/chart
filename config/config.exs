@@ -1,10 +1,10 @@
 use Mix.Config
 
-#     config(:grafex, key: :value)
+#     config(:chart, key: :value)
 #
 # And access this configuration in your application as:
 #
-#     Application.get_env(:grafex, :key)
+#     Application.get_env(:chart, :key)
 #
 # Or configure a 3rd-party app:
 #

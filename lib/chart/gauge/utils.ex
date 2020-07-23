@@ -1,5 +1,9 @@
-defmodule Examples.Gauge.Utils do
+defmodule Chart.Gauge.Utils do
   @moduledoc false
+
+  def set_map(keywords, map) do
+    Enum.reduce(keywords, map, fn {key, val}, map -> Map.put(map, key, val) end)
+  end
 
   def value_to_angle(val, {a, b}), do: value_to_angle(val, a, b)
 

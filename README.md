@@ -1,14 +1,13 @@
-# Grafex
+# Chart
 
-> TODO: Add description**
-
+> TODO: Add description\*\*
 
 ## Installation
 
 ```elixir
 def deps do
   [
-    {:grafex, "~> 0.1.0"}
+    {:chart, "~> 0.1.0"}
   ]
 end
 ```
@@ -17,5 +16,6 @@ end
 
 > TODO: Add license
 
-----
-Created:  2019-09-26Z
+---
+
+Created: 2019-09-26Z

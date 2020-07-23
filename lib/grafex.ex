@@ -1,3 +1,0 @@
-defmodule Grafex do
-
-end
