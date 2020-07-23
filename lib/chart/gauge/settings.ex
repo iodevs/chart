@@ -39,7 +39,7 @@ defmodule Chart.Gauge.Settings do
     # Private
 
     defp set_major_ticks_translate(major_ticks, {_cx, cy}) do
-      Map.put(major_ticks, :translate, "translate(#{16.5 - major_ticks.gap}, #{cy})")
+      Map.put(major_ticks, :translate, {16.5 - major_ticks.gap, cy})
     end
 
     defp set_major_ticks_positions(major_ticks) do
@@ -164,7 +164,7 @@ defmodule Chart.Gauge.Settings do
 
     defstruct positions_with_class_name: nil,
               width: nil,
-              d_thresholds_with_class: [{"", "", ""}]
+              d_thresholds_with_class: [{}]
 
     def put(settings, keywords) do
       thresholds =
@@ -188,7 +188,7 @@ defmodule Chart.Gauge.Settings do
           phi = Utils.value_to_angle(val, settings.range)
           angle = 180.0 - Utils.radian_to_degree(phi) + width / 2.0
 
-          {"M#{cx - rx}, #{cy} l0, #{width}", angle, class}
+          {cx - rx, cy, width, angle, class}
         end)
 
       Map.put(thresholds, :d_thresholds_with_class, d_thresholds_with_class)
@@ -206,8 +206,8 @@ defmodule Chart.Gauge.Settings do
           viewbox: nil | {pos_integer(), pos_integer()},
 
           # Internal
-          d_gauge_bg_border_bottom_lines: list(String.t()),
-          d_gauge_half_circle: String.t(),
+          d_gauge_bg_border_bottom_lines: list(tuple()),
+          d_gauge_half_circle: tuple(),
           d_value: String.t(),
           gauge_center: {number(), number()},
           gauge_radius: {number(), number()},
@@ -225,8 +225,8 @@ defmodule Chart.Gauge.Settings do
             viewbox: nil,
 
             # Internal
-            d_gauge_bg_border_bottom_lines: ["", ""],
-            d_gauge_half_circle: "",
+            d_gauge_bg_border_bottom_lines: [{}],
+            d_gauge_half_circle: {},
             d_value: "",
             gauge_center: {0, 0},
             gauge_radius: {50, 50},
@@ -275,10 +275,7 @@ defmodule Chart.Gauge.Settings do
   defp set_gauge_half_circle(
          %__MODULE__{gauge_center: {cx, cy}, gauge_radius: {rx, ry}} = settings
        ) do
-    Kernel.put_in(
-      settings.d_gauge_half_circle,
-      "M#{cx - rx}, #{cy} A#{rx}, #{ry} 0 0,1 #{cx + rx}, #{cy}"
-    )
+    Kernel.put_in(settings.d_gauge_half_circle, {cx, cy, rx, ry})
   end
 
   defp set_gauge_bg_border_bottom_lines(
@@ -289,8 +286,8 @@ defmodule Chart.Gauge.Settings do
     Kernel.put_in(
       settings.d_gauge_bg_border_bottom_lines,
       [
-        "M#{cx - rx}, #{cy - 0.5} l0, #{width}",
-        "M#{cx + rx}, #{cy - 0.5} l0, #{width}"
+        {cx - rx, cy - 0.5, width},
+        {cx + rx, cy - 0.5, width}
       ]
     )
   end
