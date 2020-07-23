@@ -30,19 +30,19 @@ defmodule Chart.Gauge.Settings do
       major_ticks =
         keywords
         |> Utils.set_map(%__MODULE__{})
-        |> set_major_ticks_translate(settings.gauge_center)
-        |> set_major_ticks_positions()
+        |> set_translate(settings.gauge_center)
+        |> set_positions()
 
       Kernel.put_in(settings.major_ticks, major_ticks)
     end
 
     # Private
 
-    defp set_major_ticks_translate(major_ticks, {_cx, cy}) do
+    defp set_translate(major_ticks, {_cx, cy}) do
       Map.put(major_ticks, :translate, {16.5 - major_ticks.gap, cy})
     end
 
-    defp set_major_ticks_positions(major_ticks) do
+    defp set_positions(major_ticks) do
       angles = Utils.linspace(0, 180, major_ticks.count)
 
       Map.put(major_ticks, :positions, angles)
@@ -52,7 +52,7 @@ defmodule Chart.Gauge.Settings do
   defmodule MajorTicksText do
     @moduledoc false
 
-    @offset_radius_major_ticks_text 15
+    @offset_radius_text 15
 
     @type t() :: %__MODULE__{
             decimals: nil | non_neg_integer(),
@@ -70,14 +70,14 @@ defmodule Chart.Gauge.Settings do
       major_ticks_text =
         keywords
         |> Utils.set_map(%__MODULE__{})
-        |> set_major_ticks_text_positions(settings)
+        |> set_positions(settings)
 
       Kernel.put_in(settings.major_ticks_text, major_ticks_text)
     end
 
     # Private
 
-    defp set_major_ticks_text_positions(major_ticks_text, settings) do
+    defp set_positions(major_ticks_text, settings) do
       count = settings.major_ticks.count
 
       ticks_text_pos =
@@ -110,7 +110,7 @@ defmodule Chart.Gauge.Settings do
       {cx, cy} = settings.gauge_center
       {rx, _ry} = settings.gauge_radius
 
-      radius = rx + @offset_radius_major_ticks_text + gap
+      radius = rx + @offset_radius_text + gap
 
       val_list
       |> Enum.map(fn tick_val ->
@@ -137,14 +137,14 @@ defmodule Chart.Gauge.Settings do
       value_text =
         keywords
         |> Utils.set_map(%__MODULE__{})
-        |> set_value_text_position(settings.gauge_center)
+        |> set_position(settings.gauge_center)
 
       Kernel.put_in(settings.value_text, value_text)
     end
 
     # Private
 
-    defp set_value_text_position(value_text, {cx, cy}) do
+    defp set_position(value_text, {cx, cy}) do
       {x, y} = value_text.position
 
       Map.put(value_text, :position, {cx + x, cy + y})
