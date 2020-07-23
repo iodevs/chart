@@ -253,7 +253,7 @@ defmodule Examples.Gauge.Settings do
   end
 
   #  Validators
-  defp validate_decimals(decimals) when 0 <= decimals and is_integer(decimals) do
+  defp validate_decimals(decimals) when is_integer(decimals) and 0 <= decimals do
     decimals
   end
 
@@ -272,11 +272,11 @@ defmodule Examples.Gauge.Settings do
     position
   end
 
-  defp validate_major_ticks_count(count) when 1 < count and is_integer(count) do
+  defp validate_major_ticks_count(count) when is_integer(count) and 1 < count do
     count
   end
 
-  defp validate_range({min, max} = range) when min < max and is_number(min) and is_number(max) do
+  defp validate_range({min, max} = range) when is_number(min) and is_number(max) and min < max do
     range
   end
 
@@ -285,7 +285,7 @@ defmodule Examples.Gauge.Settings do
   end
 
   defp validate_viewbox({width, height} = viewbox)
-       when 0 < width and 0 < height and is_number(width) and is_number(height) do
+       when is_number(width) and is_number(height) and 0 < width and 0 < height do
     viewbox
   end
 
