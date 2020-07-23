@@ -18,7 +18,7 @@ defmodule Chart.MixProject do
         "coveralls.post": :test,
         "coveralls.html": :test
       ],
-      source_url: "https://github.com/iodevs/chart",
+      source_url: "https://github.com/iodevs/chart"
     ]
   end
 
@@ -36,7 +36,7 @@ defmodule Chart.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      # {:ex_doc, "~> 0.21", only: :dev},
+      {:ex_doc, "~> 0.22", only: :dev},
       {:credo, "~> 1.1", only: [:dev, :test]},
       {:dialyxir, "~> 1.0", only: [:dev, :test], runtime: false},
       {:excoveralls, "~> 0.11", only: :test},
