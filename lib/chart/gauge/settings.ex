@@ -1,7 +1,8 @@
 defmodule Chart.Gauge.Settings do
   @moduledoc false
 
-  alias Chart.Gauge.Utils
+  alias Chart.Gauge.{Utils, Validators}
+  import Chart.Utils, only: [key_guard: 4]
 
   @offset_from_bottom 35
 
@@ -9,6 +10,7 @@ defmodule Chart.Gauge.Settings do
     @moduledoc false
 
     alias Chart.Gauge.Utils
+    import Chart.Utils, only: [key_guard: 4]
 
     @type t() :: %__MODULE__{
             count: pos_integer(),
@@ -26,10 +28,15 @@ defmodule Chart.Gauge.Settings do
               positions: [],
               translate: ""
 
-    def put(settings, keywords) do
+    def put(settings, config) do
       major_ticks =
-        keywords
-        |> Utils.set_map(%__MODULE__{})
+        %__MODULE__{
+          count:
+            key_guard(config, :major_ticks_count, 7, &Validators.validate_major_ticks_count/1),
+          gap: key_guard(config, :major_ticks_gap, 0, &Validators.validate_number/1),
+          length:
+            key_guard(config, :major_ticks_length, 7, &Validators.validate_positive_number/1)
+        }
         |> set_translate(settings.gauge_center)
         |> set_positions()
 
@@ -52,6 +59,9 @@ defmodule Chart.Gauge.Settings do
   defmodule MajorTicksText do
     @moduledoc false
 
+    alias Chart.Gauge.Validators
+    import Chart.Utils, only: [key_guard: 4]
+
     @offset_radius_text 15
 
     @type t() :: %__MODULE__{
@@ -66,10 +76,13 @@ defmodule Chart.Gauge.Settings do
               gap: nil,
               positions: nil
 
-    def put(settings, keywords) do
+    def put(settings, config) do
       major_ticks_text =
-        keywords
-        |> Utils.set_map(%__MODULE__{})
+        %__MODULE__{
+          decimals:
+            key_guard(config, :major_ticks_value_decimals, 0, &Validators.validate_decimals/1),
+          gap: key_guard(config, :major_ticks_text_gap, 0, &Validators.validate_number/1)
+        }
         |> set_positions(settings)
 
       Kernel.put_in(settings.major_ticks_text, major_ticks_text)
@@ -125,6 +138,9 @@ defmodule Chart.Gauge.Settings do
   defmodule ValueText do
     @moduledoc false
 
+    alias Chart.Gauge.Validators
+    import Chart.Utils, only: [key_guard: 4]
+
     @type t() :: %__MODULE__{
             decimals: nil | non_neg_integer(),
             position: nil | {number(), number()}
@@ -133,10 +149,18 @@ defmodule Chart.Gauge.Settings do
     defstruct decimals: nil,
               position: nil
 
-    def put(settings, keywords) do
+    def put(settings, config) do
       value_text =
-        keywords
-        |> Utils.set_map(%__MODULE__{})
+        %__MODULE__{
+          decimals: key_guard(config, :value_text_decimals, 0, &Validators.validate_decimals/1),
+          position:
+            key_guard(
+              config,
+              :value_text_position,
+              {0, -10},
+              &Validators.validate_value_text_position/1
+            )
+        }
         |> set_position(settings.gauge_center)
 
       Kernel.put_in(settings.value_text, value_text)
@@ -154,6 +178,9 @@ defmodule Chart.Gauge.Settings do
   defmodule Thresholds do
     @moduledoc false
 
+    alias Chart.Gauge.Validators
+    import Chart.Utils, only: [key_guard: 4]
+
     @type t() :: %__MODULE__{
             positions_with_class_name: nil | list(tuple()),
             width: nil | non_neg_integer(),
@@ -166,10 +193,13 @@ defmodule Chart.Gauge.Settings do
               width: nil,
               d_thresholds_with_class: [{}]
 
-    def put(settings, keywords) do
+    def put(settings, config) do
       thresholds =
-        keywords
-        |> Utils.set_map(%__MODULE__{})
+        %__MODULE__{
+          positions_with_class_name:
+            key_guard(config, :thresholds, [], &Validators.validate_list_of_tuples/1),
+          width: key_guard(config, :treshold_width, 1, &Validators.validate_positive_number/1)
+        }
         |> set_thresholds(settings)
 
       Kernel.put_in(settings.thresholds, thresholds)
@@ -231,31 +261,19 @@ defmodule Chart.Gauge.Settings do
   def set(config) do
     %__MODULE__{
       gauge_bottom_width_lines:
-        key_guard(config, :gauge_bottom_width_lines, 1.25, &validate_number/1),
-      gauge_value_class: key_guard(config, :gauge_value_class, [], &validate_list_of_tuples/1),
-      range: key_guard(config, :range, {0, 300}, &validate_range/1),
-      viewbox: key_guard(config, :viewbox, {160, 80}, &validate_viewbox/1)
+        key_guard(config, :gauge_bottom_width_lines, 1.25, &Validators.validate_number/1),
+      gauge_value_class:
+        key_guard(config, :gauge_value_class, [], &Validators.validate_list_of_tuples/1),
+      range: key_guard(config, :range, {0, 300}, &Validators.validate_range/1),
+      viewbox: key_guard(config, :viewbox, {160, 80}, &Validators.validate_viewbox/1)
     }
     |> set_gauge_center_circle()
     |> set_gauge_half_circle()
     |> set_gauge_bg_border_bottom_lines()
-    |> MajorTicks.put(
-      count: key_guard(config, :major_ticks_count, 7, &validate_major_ticks_count/1),
-      gap: key_guard(config, :major_ticks_gap, 0, &validate_number/1),
-      length: key_guard(config, :major_ticks_length, 7, &validate_positive_number/1)
-    )
-    |> MajorTicksText.put(
-      decimals: key_guard(config, :major_ticks_value_decimals, 0, &validate_decimals/1),
-      gap: key_guard(config, :major_ticks_text_gap, 0, &validate_number/1)
-    )
-    |> ValueText.put(
-      decimals: key_guard(config, :value_text_decimals, 0, &validate_decimals/1),
-      position: key_guard(config, :value_text_position, {0, -10}, &validate_value_text_position/1)
-    )
-    |> Thresholds.put(
-      positions_with_class_name: key_guard(config, :thresholds, [], &validate_list_of_tuples/1),
-      width: key_guard(config, :treshold_width, 1, &validate_positive_number/1)
-    )
+    |> MajorTicks.put(config)
+    |> MajorTicksText.put(config)
+    |> ValueText.put(config)
+    |> Thresholds.put(config)
   end
 
   # Private
@@ -284,48 +302,5 @@ defmodule Chart.Gauge.Settings do
         {cx + rx, cy - 0.5, width}
       ]
     )
-  end
-
-  #  Validators
-  defp validate_decimals(decimals) when is_integer(decimals) and 0 <= decimals do
-    decimals
-  end
-
-  defp validate_number(number) when is_number(number) do
-    number
-  end
-
-  defp validate_list_of_tuples([]), do: []
-
-  defp validate_list_of_tuples([tpl | tl] = val_colors)
-       when is_tuple(tpl) and is_list(tl) do
-    val_colors
-  end
-
-  defp validate_value_text_position({x, y} = position) when is_number(x) and is_number(y) do
-    position
-  end
-
-  defp validate_major_ticks_count(count) when is_integer(count) and 1 < count do
-    count
-  end
-
-  defp validate_range({min, max} = range) when is_number(min) and is_number(max) and min < max do
-    range
-  end
-
-  defp validate_positive_number(number) when 0 < number and is_number(number) do
-    number
-  end
-
-  defp validate_viewbox({width, height} = viewbox)
-       when is_number(width) and is_number(height) and 0 < width and 0 < height do
-    viewbox
-  end
-
-  # Helpers
-
-  defp key_guard(kw, key, default_val, fun) do
-    fun.(Keyword.get(kw, key, default_val))
   end
 end
