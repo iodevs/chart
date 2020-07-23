@@ -1,7 +1,7 @@
-defmodule Examples.Gauge.Svg do
+defmodule Chart.Gauge.Svg do
   @moduledoc false
 
-  alias Examples.Gauge
+  alias Chart.Gauge
 
   use Phoenix.HTML
 

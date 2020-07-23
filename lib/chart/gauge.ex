@@ -1,9 +1,9 @@
-defmodule Examples.Gauge do
+defmodule Chart.Gauge do
   @moduledoc """
   Gauge graph
   """
 
-  alias Examples.Gauge.{Settings, Svg, Utils}
+  alias Chart.Gauge.{Settings, Svg, Utils}
 
   @type data() :: nil | number() | list() | map()
   @type t() :: %__MODULE__{

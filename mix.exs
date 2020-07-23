@@ -1,9 +1,9 @@
-defmodule Grafex.MixProject do
+defmodule Chart.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :grafex,
+      app: :chart,
       version: "0.1.0",
       elixir: "~> 1.9",
       elixirc_paths: elixirc_paths(Mix.env()),

@@ -1,13 +1,15 @@
-defmodule Examples.Gauge.Settings do
+defmodule Chart.Gauge.Settings do
   @moduledoc false
 
-  alias Examples.Gauge.Utils
+  alias Chart.Gauge.Utils
 
   @offset_from_bottom 35
   @offset_radius_major_ticks_text 15
 
   defmodule MajorTicks do
     @moduledoc false
+
+    alias Chart.Gauge.Utils
 
     @type t() :: %__MODULE__{
             count: pos_integer(),
@@ -24,6 +26,16 @@ defmodule Examples.Gauge.Settings do
               length: 0,
               positions: [],
               translate: ""
+
+    def put(%__MODULE__{} = settings, keywords) do
+      major_ticks =
+        keywords
+        |> Utils.set_map(%__MODULE__{})
+        |> set_major_ticks_translate(settings.gauge_center)
+        |> set_major_ticks_positions()
+
+      Kernel.put_in(settings.major_ticks, major_ticks)
+    end
   end
 
   defmodule MajorTicksText do
@@ -120,7 +132,7 @@ defmodule Examples.Gauge.Settings do
     |> set_gauge_center_circle()
     |> set_gauge_half_circle()
     |> set_gauge_bg_border_bottom_lines()
-    |> put_major_ticks(
+    |> MajorTicks.put(
       count: key_guard(config, :major_ticks_count, 7, &validate_major_ticks_count/1),
       gap: key_guard(config, :major_ticks_gap, 0, &validate_number/1),
       length: key_guard(config, :major_ticks_length, 7, &validate_positive_number/1)
@@ -140,16 +152,6 @@ defmodule Examples.Gauge.Settings do
   end
 
   # Private
-
-  defp put_major_ticks(%__MODULE__{} = settings, keywords) do
-    major_ticks =
-      keywords
-      |> set_map(%MajorTicks{})
-      |> set_major_ticks_translate(settings.gauge_center)
-      |> set_major_ticks_positions()
-
-    Kernel.put_in(settings.major_ticks, major_ticks)
-  end
 
   defp put_major_ticks_text(%__MODULE__{} = settings, keywords) do
     major_ticks_text =
