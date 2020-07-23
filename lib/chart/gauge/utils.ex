@@ -36,11 +36,7 @@ defmodule Chart.Gauge.Utils do
     rad * 180 / :math.pi()
   end
 
-  def split_major_tick_values([l, r], 2) do
-    [[l], [r]]
-  end
-
-  def split_major_tick_values(lst_values, count) do
+  def split_major_tick_values(lst_values, count) when 1 < count do
     lst_values
     |> Enum.split(div(count, 2))
     |> rearrange()
