@@ -6,10 +6,42 @@ defmodule Chart.Gauge.Settings do
 
   @offset_from_bottom 35
 
+  @type t() :: %__MODULE__{
+          gauge_bottom_width_lines: nil | number(),
+          gauge_value_class: nil | list(tuple()),
+          major_ticks: nil | MajorTicks.t(),
+          major_ticks_text: nil | MajorTicksText.t(),
+          range: nil | {number(), number()},
+          thresholds: nil | Thresholds.t(),
+          value_text: nil | ValueText.t(),
+          viewbox: nil | {pos_integer(), pos_integer()},
+
+          # Internal
+          d_gauge_bg_border_bottom_lines: list(tuple()),
+          d_gauge_half_circle: tuple(),
+          gauge_center: {number(), number()},
+          gauge_radius: {number(), number()}
+        }
+
+  defstruct gauge_bottom_width_lines: nil,
+            gauge_value_class: nil,
+            major_ticks: nil,
+            major_ticks_text: nil,
+            range: nil,
+            thresholds: nil,
+            value_text: nil,
+            viewbox: nil,
+
+            # Internal
+            d_gauge_bg_border_bottom_lines: [{}],
+            d_gauge_half_circle: {},
+            gauge_center: {0, 0},
+            gauge_radius: {50, 50}
+
   defmodule MajorTicks do
     @moduledoc false
 
-    alias Chart.Gauge.Utils
+    alias Chart.Gauge.{Settings, Utils}
     import Chart.Utils, only: [key_guard: 4]
 
     @type t() :: %__MODULE__{
@@ -37,7 +69,7 @@ defmodule Chart.Gauge.Settings do
           length:
             key_guard(config, :major_ticks_length, 5, &Validators.validate_positive_number/1)
         }
-        |> set_translate(settings.gauge_center, settings.gauge_radius)
+        |> set_translate(settings)
         |> set_positions()
 
       Kernel.put_in(settings.major_ticks, major_ticks)
@@ -45,7 +77,7 @@ defmodule Chart.Gauge.Settings do
 
     # Private
 
-    defp set_translate(major_ticks, {cx, cy}, {rx, _ry}) do
+    defp set_translate(major_ticks, %Settings{gauge_center: {cx, cy}, gauge_radius: {rx, _ry}}) do
       Map.put(major_ticks, :translate, {cx - rx - major_ticks.gap - 13, cy})
     end
 
@@ -224,38 +256,6 @@ defmodule Chart.Gauge.Settings do
       Map.put(thresholds, :d_thresholds_with_class, d_thresholds_with_class)
     end
   end
-
-  @type t() :: %__MODULE__{
-          gauge_bottom_width_lines: nil | number(),
-          gauge_value_class: nil | list(tuple()),
-          major_ticks: nil | MajorTicks.t(),
-          major_ticks_text: nil | MajorTicksText.t(),
-          range: nil | {number(), number()},
-          thresholds: nil | Thresholds.t(),
-          value_text: nil | ValueText.t(),
-          viewbox: nil | {pos_integer(), pos_integer()},
-
-          # Internal
-          d_gauge_bg_border_bottom_lines: list(tuple()),
-          d_gauge_half_circle: tuple(),
-          gauge_center: {number(), number()},
-          gauge_radius: {number(), number()}
-        }
-
-  defstruct gauge_bottom_width_lines: nil,
-            gauge_value_class: nil,
-            major_ticks: nil,
-            major_ticks_text: nil,
-            range: nil,
-            thresholds: nil,
-            value_text: nil,
-            viewbox: nil,
-
-            # Internal
-            d_gauge_bg_border_bottom_lines: [{}],
-            d_gauge_half_circle: {},
-            gauge_center: {0, 0},
-            gauge_radius: {50, 50}
 
   @spec set(list()) :: t()
   def set(config) do

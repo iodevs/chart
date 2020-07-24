@@ -3,8 +3,8 @@ defmodule Chart.Gauge do
 
   ![Gauge](docs/gauge.png)
 
-  An appearance of gauge graph can be change via `config_keywords` (see below `setup` function)
-  and/or `gauge.css`. This css file has to by imported into your `app.css` in assets/css:
+  An appearance of gauge graph can be change via `config_keywords` (see below `setup/1` function)
+  and/or `gauge.css`. This css file has to by imported into your `app.scss` in assets/css:
 
   `@import "../../../chart/priv/static/css/gauge.css";`
 
@@ -24,7 +24,7 @@ defmodule Chart.Gauge do
             data: nil
 
   @doc """
-  For depicting values at gauge use `put` function.
+  This function serves for depicting values at gauge graph.
 
   In Phoenix LiveView is possible used it in e.g. `handle_info` function:
   ```
@@ -41,7 +41,7 @@ defmodule Chart.Gauge do
   end
 
   @doc """
-  For depicting gauge in your page/template/component use `render` function.
+  It renders gauge graph in your page/template/component.
 
   In Phoenix LiveView is possible used it as:
   ```
@@ -58,7 +58,7 @@ defmodule Chart.Gauge do
   end
 
   @doc """
-  Via `setup` function you can change some properties of gauge graph.
+  Via this function you can change some properties of gauge graph.
   Others properties can be set via `gauge.css`.
 
   Only following keys are valid:
