@@ -7,7 +7,7 @@
 ```elixir
 def deps do
   [
-    {:chart, "~> 0.1.0"}
+    {:chart, "~> 0.1.1"}
   ]
 end
 ```
