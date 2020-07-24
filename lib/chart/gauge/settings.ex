@@ -35,9 +35,9 @@ defmodule Chart.Gauge.Settings do
             key_guard(config, :major_ticks_count, 7, &Validators.validate_major_ticks_count/1),
           gap: key_guard(config, :major_ticks_gap, 0, &Validators.validate_number/1),
           length:
-            key_guard(config, :major_ticks_length, 7, &Validators.validate_positive_number/1)
+            key_guard(config, :major_ticks_length, 5, &Validators.validate_positive_number/1)
         }
-        |> set_translate(settings.gauge_center)
+        |> set_translate(settings.gauge_center, settings.gauge_radius)
         |> set_positions()
 
       Kernel.put_in(settings.major_ticks, major_ticks)
@@ -45,8 +45,8 @@ defmodule Chart.Gauge.Settings do
 
     # Private
 
-    defp set_translate(major_ticks, {_cx, cy}) do
-      Map.put(major_ticks, :translate, {16.5 - major_ticks.gap, cy})
+    defp set_translate(major_ticks, {cx, cy}, {rx, _ry}) do
+      Map.put(major_ticks, :translate, {cx - rx - major_ticks.gap - 13, cy})
     end
 
     defp set_positions(major_ticks) do

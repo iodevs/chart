@@ -18,7 +18,8 @@ defmodule Chart.MixProject do
         "coveralls.post": :test,
         "coveralls.html": :test
       ],
-      source_url: "https://github.com/iodevs/chart"
+      source_url: "https://github.com/iodevs/chart",
+      aliases: aliases()
     ]
   end
 
@@ -55,5 +56,16 @@ defmodule Chart.MixProject do
         "GitHub" => "https://github.com/iodevs/chart"
       }
     ]
+  end
+
+  defp aliases() do
+    [
+      docs: ["docs", &copy_assets/1]
+    ]
+  end
+
+  defp copy_assets(_) do
+    File.mkdir_p!("doc/docs")
+    File.cp_r!("docs", "doc/docs")
   end
 end
