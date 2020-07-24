@@ -59,7 +59,8 @@ defmodule Chart.Gauge do
 
   @doc """
   Via this function you can change some properties of gauge graph.
-  Others properties can be set via `gauge.css`.
+  Others properties can be set via `gauge.css`. You can just call
+  `Gauge.setup()` or with optional `config` parameter.
 
   Only following keys are valid:
   ```
@@ -105,7 +106,7 @@ defmodule Chart.Gauge do
   ```
   """
   @spec setup(list()) :: t()
-  def setup(config_keywords) do
+  def setup(config_keywords \\ []) do
     %__MODULE__{settings: Settings.set(config_keywords)}
   end
 end
