@@ -14,7 +14,7 @@ defmodule Chart.Internal.Axis do
           scale: nil | scale(),
 
           # Internal
-          lenght: nil | number(),
+          length: nil | number(),
           position: nil | {pos_integer(), pos_integer()}
         }
 
@@ -26,7 +26,7 @@ defmodule Chart.Internal.Axis do
             scale: nil,
 
             # Internal
-            lenght: nil,
+            length: nil,
             position: nil
 
   defmodule MajorTicks do
