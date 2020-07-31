@@ -5,6 +5,10 @@ defmodule Chart.Internal.Utils do
     fun.(Keyword.get(kw, key, default_val))
   end
 
+  def key_guard(kw, key, default_val, boundary_tpl_vals, fun) do
+    fun.(Keyword.get(kw, key, default_val), boundary_tpl_vals)
+  end
+
   def set_map(keywords, map) do
     Enum.reduce(keywords, map, fn {key, val}, map -> Map.put(map, key, val) end)
   end

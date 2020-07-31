@@ -2,6 +2,7 @@ defmodule Chart.Internal.Validators do
   @moduledoc false
 
   import Chart.Internal.TextPosition, only: [text_position: 1]
+  import Chart.Internal.Plot.Grid, only: [grid_placement: 1, grid_turn: 1]
 
   def validate_decimals(decimals) when is_integer(decimals) and 0 <= decimals do
     decimals
@@ -30,6 +31,14 @@ defmodule Chart.Internal.Validators do
     count
   end
 
+  def validate_grid_placement(pl) when grid_placement(pl) do
+    pl
+  end
+
+  def validate_grid_turn(t) when grid_turn(t) do
+    t
+  end
+
   def validate_range({min, max} = range) when is_number(min) and is_number(max) and min < max do
     range
   end
@@ -42,8 +51,14 @@ defmodule Chart.Internal.Validators do
     string
   end
 
-  def validate_viewbox({width, height} = viewbox)
+  def validate_tuple_numbers({width, height} = viewbox)
       when is_number(width) and is_number(height) and 0 < width and 0 < height do
     viewbox
+  end
+
+  def validate_plot_size({width, height} = size, {limit_w, limit_h})
+      when is_number(width) and is_number(height) and 0 < width and 0 < height and
+             width < limit_w and height < limit_h do
+    size
   end
 end
