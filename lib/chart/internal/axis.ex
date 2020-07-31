@@ -3,6 +3,26 @@ defmodule Chart.Internal.Axis do
 
   alias Chart.Internal.{MajorTicks, MinorTicks, MajorTicksText, TextPosition}
 
+  defguard origin_cs(cs)
+           when cs in [
+                  :left_bottom,
+                  :center_bottom,
+                  :right_bottom,
+                  :left_top,
+                  :center_top,
+                  :right_top,
+                  :center
+                ] or is_tuple(cs)
+
+  @type origin_cs() ::
+          :left_bottom
+          | :center_bottom
+          | :right_bottom
+          | :left_top
+          | :center_top
+          | :right_top
+          | :center
+          | {number(), number()}
   @type scale() :: :linear | :log
 
   @type t() :: %__MODULE__{
@@ -10,6 +30,7 @@ defmodule Chart.Internal.Axis do
           major_ticks: nil | MajorTicks.t(),
           minor_ticks: nil | MinorTicks.t(),
           major_ticks_text: nil | MajorTicksText.t(),
+          origin_cs: nil | origin_cs(),
           position_label: nil | TextPosition.t(),
           scale: nil | scale(),
 
@@ -22,6 +43,7 @@ defmodule Chart.Internal.Axis do
             major_ticks: nil,
             minor_ticks: nil,
             major_ticks_text: nil,
+            origin_cs: nil,
             position_label: nil,
             scale: nil,
 
@@ -48,7 +70,8 @@ defmodule Chart.Internal.Axis do
               length: 0,
               positions: []
 
-    def put(axis, config) do
+    def put(plot, config) do
+      plot
     end
 
     # Private
@@ -75,7 +98,8 @@ defmodule Chart.Internal.Axis do
               positions: [],
               translate: ""
 
-    def put(settings, config) do
+    def put(plot, config) do
+      plot
     end
 
     # Private
@@ -100,7 +124,8 @@ defmodule Chart.Internal.Axis do
               gap: nil,
               positions: nil
 
-    def put(settings, config) do
+    def put(plot, config) do
+      plot
     end
 
     # Private

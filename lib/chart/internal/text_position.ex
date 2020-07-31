@@ -21,10 +21,12 @@ defmodule Chart.Internal.TextPosition do
             subtitle: nil,
             title: nil
 
-  def put(%Figure{} = figure, config) do
+  def put(%Figure{} = figure, _config) do
+    figure
   end
 
-  def put(%Plot{} = figure, config) do
+  def put(%Plot{} = plot, _config) do
+    plot
   end
 
   # Private
