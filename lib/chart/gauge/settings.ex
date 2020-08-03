@@ -1,8 +1,8 @@
 defmodule Chart.Gauge.Settings do
   @moduledoc false
 
-  alias Chart.Gauge.{Utils, Validators}
-  import Chart.Utils, only: [key_guard: 4]
+  alias Chart.Internal.{Utils, Validators}
+  import Chart.Internal.Utils, only: [key_guard: 4]
 
   @offset_from_bottom 35
 
@@ -41,8 +41,8 @@ defmodule Chart.Gauge.Settings do
   defmodule MajorTicks do
     @moduledoc false
 
-    alias Chart.Gauge.{Settings, Utils}
-    import Chart.Utils, only: [key_guard: 4]
+    alias Chart.Gauge.Settings
+    import Chart.Internal.Utils, only: [key_guard: 4, linspace: 3]
 
     @type t() :: %__MODULE__{
             count: pos_integer(),
@@ -82,7 +82,7 @@ defmodule Chart.Gauge.Settings do
     end
 
     defp set_positions(major_ticks) do
-      angles = Utils.linspace(0, 180, major_ticks.count)
+      angles = linspace(0, 180, major_ticks.count)
 
       Map.put(major_ticks, :positions, angles)
     end
@@ -91,8 +91,8 @@ defmodule Chart.Gauge.Settings do
   defmodule MajorTicksText do
     @moduledoc false
 
-    alias Chart.Gauge.Validators
-    import Chart.Utils, only: [key_guard: 4]
+    alias Chart.Internal.{Utils, Validators}
+    import Chart.Gauge.Utils, only: [split_major_tick_values: 2]
 
     @offset_radius_text 15
 
@@ -112,8 +112,13 @@ defmodule Chart.Gauge.Settings do
       major_ticks_text =
         %__MODULE__{
           decimals:
-            key_guard(config, :major_ticks_value_decimals, 0, &Validators.validate_decimals/1),
-          gap: key_guard(config, :major_ticks_text_gap, 0, &Validators.validate_number/1)
+            Utils.key_guard(
+              config,
+              :major_ticks_value_decimals,
+              0,
+              &Validators.validate_decimals/1
+            ),
+          gap: Utils.key_guard(config, :major_ticks_text_gap, 0, &Validators.validate_number/1)
         }
         |> set_positions(settings)
 
@@ -128,7 +133,7 @@ defmodule Chart.Gauge.Settings do
       ticks_text_pos =
         settings.range
         |> Utils.linspace(count)
-        |> Utils.split_major_tick_values(count)
+        |> split_major_tick_values(count)
         |> parse_tick_values(settings, major_ticks_text.gap, major_ticks_text.decimals)
 
       Map.put(major_ticks_text, :positions, ticks_text_pos)
@@ -170,8 +175,7 @@ defmodule Chart.Gauge.Settings do
   defmodule ValueText do
     @moduledoc false
 
-    alias Chart.Gauge.Validators
-    import Chart.Utils, only: [key_guard: 4]
+    alias Chart.Internal.{Utils, Validators}
 
     @type t() :: %__MODULE__{
             decimals: nil | non_neg_integer(),
@@ -186,11 +190,11 @@ defmodule Chart.Gauge.Settings do
         %__MODULE__{
           decimals: key_guard(config, :value_text_decimals, 0, &Validators.validate_decimals/1),
           position:
-            key_guard(
+            Utils.key_guard(
               config,
               :value_text_position,
               {0, -10},
-              &Validators.validate_value_text_position/1
+              &Validators.validate_text_position/1
             )
         }
         |> set_position(settings.gauge_center)
@@ -210,8 +214,7 @@ defmodule Chart.Gauge.Settings do
   defmodule Thresholds do
     @moduledoc false
 
-    alias Chart.Gauge.Validators
-    import Chart.Utils, only: [key_guard: 4]
+    alias Chart.Internal.{Utils, Validators}
 
     @type t() :: %__MODULE__{
             positions_with_class_name: nil | list(tuple()),
@@ -229,8 +232,9 @@ defmodule Chart.Gauge.Settings do
       thresholds =
         %__MODULE__{
           positions_with_class_name:
-            key_guard(config, :thresholds, [], &Validators.validate_list_of_tuples/1),
-          width: key_guard(config, :treshold_width, 1, &Validators.validate_positive_number/1)
+            Utils.key_guard(config, :thresholds, [], &Validators.validate_list_of_tuples/1),
+          width:
+            Utils.key_guard(config, :treshold_width, 1, &Validators.validate_positive_number/1)
         }
         |> set_thresholds(settings)
 
@@ -265,7 +269,7 @@ defmodule Chart.Gauge.Settings do
       gauge_value_class:
         key_guard(config, :gauge_value_class, [], &Validators.validate_list_of_tuples/1),
       range: key_guard(config, :range, {0, 300}, &Validators.validate_range/1),
-      viewbox: key_guard(config, :viewbox, {160, 80}, &Validators.validate_viewbox/1)
+      viewbox: key_guard(config, :viewbox, {160, 80}, &Validators.validate_tuple_numbers/1)
     }
     |> set_gauge_center_circle()
     |> set_gauge_half_circle()
