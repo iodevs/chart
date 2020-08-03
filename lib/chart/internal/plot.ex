@@ -54,25 +54,27 @@ defmodule Chart.Internal.Plot do
     def put(plot, config) do
       grid = %__MODULE__{
         major_gap:
-          Utils.key_guard(config, :major_gap, 0.5, &Validators.validate_positive_number/1),
+          Utils.key_guard(config, :grid_major_gap, 0.5, &Validators.validate_positive_number/1),
         major_placement:
           Utils.key_guard(
             config,
-            :major_placement,
+            :grid_major_placement,
             :bottom,
             &Validators.validate_grid_placement/1
           ),
-        major_turn: Utils.key_guard(config, :major_turn, :on, &Validators.validate_grid_turn/1),
+        major_turn:
+          Utils.key_guard(config, :grid_major_turn, :on, &Validators.validate_grid_turn/1),
         minor_gap:
-          Utils.key_guard(config, :minor_gap, 0.5, &Validators.validate_positive_number/1),
+          Utils.key_guard(config, :grid_minor_gap, 0.5, &Validators.validate_positive_number/1),
         minor_placement:
           Utils.key_guard(
             config,
-            :minor_placement,
+            :grid_minor_placement,
             :bottom,
             &Validators.validate_grid_placement/1
           ),
-        minor_turn: Utils.key_guard(config, :minor_turn, :off, &Validators.validate_grid_turn/1)
+        minor_turn:
+          Utils.key_guard(config, :grid_minor_turn, :off, &Validators.validate_grid_turn/1)
       }
 
       Kernel.put_in(plot.grid, grid)
@@ -82,17 +84,16 @@ defmodule Chart.Internal.Plot do
   def put(figure, config) do
     plot =
       %__MODULE__{
-        position:
-          Utils.key_guard(config, :position, {100, 100}, &Validators.validate_tuple_numbers/1),
         size:
           Utils.key_guard(
             config,
-            :size,
+            :plot_size,
             {600, 400},
-            config.viewbox,
+            figure.viewbox,
             &Validators.validate_plot_size/2
           )
       }
+      |> set_plot_position(config, figure.viewbox)
       |> Grid.put(config)
       |> set_x_axis(config)
       |> set_y_axis(config)
@@ -101,6 +102,19 @@ defmodule Chart.Internal.Plot do
   end
 
   # Private
+
+  defp set_plot_position(%__MODULE__{size: plot_size} = plot, config, fig_viewbox) do
+    position =
+      Utils.key_guard(
+        config,
+        :plot_position,
+        {100, 100},
+        {fig_viewbox, plot_size},
+        &Validators.validate_plot_position/2
+      )
+
+    Map.put(plot, :position, position)
+  end
 
   defp set_x_axis(plot, config) do
   end

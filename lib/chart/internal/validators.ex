@@ -51,14 +51,23 @@ defmodule Chart.Internal.Validators do
     string
   end
 
-  def validate_tuple_numbers({width, height} = viewbox)
+  def validate_viewbox({width, height} = viewbox)
       when is_number(width) and is_number(height) and 0 < width and 0 < height do
     viewbox
   end
 
-  def validate_plot_size({width, height} = size, {limit_w, limit_h})
+  def validate_plot_size({width, height} = size, {fig_width, fig_height})
       when is_number(width) and is_number(height) and 0 < width and 0 < height and
-             width < limit_w and height < limit_h do
+             width < fig_width and height < fig_height do
     size
+  end
+
+  def validate_plot_position(
+        {pos_x, pos_y} = position,
+        {{fig_width, fig_height}, {plot_width, plot_height}}
+      )
+      when is_number(pos_x) and is_number(pos_y) and 0 < pos_x and 0 < pos_y and
+             pos_x + plot_width < fig_width and pos_y + plot_height < fig_height do
+    position
   end
 end
