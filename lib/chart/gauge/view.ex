@@ -1,11 +1,13 @@
 defmodule Chart.Gauge.View do
   @moduledoc false
 
-  alias Chart.Gauge.{Settings, Utils}
+  alias Chart.Internal.Utils
+  alias Chart.Gauge.Settings
+  import Chart.Gauge.Utils, only: [is_in_interval?: 2]
 
   def gauge_value_class(list_value_class, value) do
     list_value_class
-    |> Enum.find({[], ""}, fn {interval, _class} -> Utils.is_in_interval?(value, interval) end)
+    |> Enum.find({[], ""}, fn {interval, _class} -> is_in_interval?(value, interval) end)
     |> Kernel.elem(1)
   end
 
