@@ -62,6 +62,12 @@ defmodule Chart.Internal.Validators do
     size
   end
 
+  def validate_rect_bg_padding({top, right, bottom, left} = pad)
+      when is_number(top) and is_number(right) and is_number(bottom) and is_number(left) and
+             0 <= top and 0 <= right and 0 <= bottom and 0 <= left do
+    pad
+  end
+
   def validate_plot_position(
         {pos_x, pos_y} = position,
         {{fig_width, fig_height}, {plot_width, plot_height}}

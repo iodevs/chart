@@ -31,8 +31,8 @@ defmodule Chart.Internal.Axis do
           minor_ticks: nil | MinorTicks.t(),
           major_ticks_text: nil | MajorTicksText.t(),
           origin_cs: nil | origin_cs(),
-          position_label: nil | TextPosition.t(),
           scale: nil | scale(),
+          thickness: nil | number,
 
           # Internal
           length: nil | number(),
@@ -44,8 +44,8 @@ defmodule Chart.Internal.Axis do
             minor_ticks: nil,
             major_ticks_text: nil,
             origin_cs: nil,
-            position_label: nil,
             scale: nil,
+            thickness: nil,
 
             # Internal
             length: nil,
