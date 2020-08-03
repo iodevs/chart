@@ -1,7 +1,7 @@
 defmodule Chart.Internal.Figure do
   @moduledoc false
 
-  alias Chart.Internal.{Utils, Validators}
+  alias Chart.Internal.{Plot, Utils, Validators}
 
   @type t() :: %__MODULE__{
           # legend: nil | Legend.t(),

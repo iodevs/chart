@@ -269,7 +269,7 @@ defmodule Chart.Gauge.Settings do
       gauge_value_class:
         key_guard(config, :gauge_value_class, [], &Validators.validate_list_of_tuples/1),
       range: key_guard(config, :range, {0, 300}, &Validators.validate_range/1),
-      viewbox: key_guard(config, :viewbox, {160, 80}, &Validators.validate_tuple_numbers/1)
+      viewbox: key_guard(config, :viewbox, {160, 80}, &Validators.validate_viewbox/1)
     }
     |> set_gauge_center_circle()
     |> set_gauge_half_circle()
