@@ -8,6 +8,7 @@ defmodule Chart.Internal.Plot do
           grid: nil | Grid.t(),
           position: nil | {number(), number()},
           size: nil | {number(), number()},
+          rect_bg_padding: nil | {number(), number(), number(), number()},
           x_axis: nil | Axis.t(),
           x_axis_label: nil | TextPosition.t(),
           y_axis: nil | Axis.t(),
@@ -21,6 +22,7 @@ defmodule Chart.Internal.Plot do
             # box: :off,
             position: nil,
             size: nil,
+            rect_bg_padding: nil,
             x_axis: nil,
             x_axis_label: nil,
             y_axis: nil,
@@ -91,6 +93,13 @@ defmodule Chart.Internal.Plot do
             {600, 400},
             figure.viewbox,
             &Validators.validate_plot_size/2
+          ),
+        rect_bg_padding:
+          Utils.key_guard(
+            config,
+            :plot_bg_padding,
+            {0, 0, 0, 0},
+            &Validators.validate_rect_bg_padding/1
           )
       }
       |> set_plot_position(config, figure.viewbox)
