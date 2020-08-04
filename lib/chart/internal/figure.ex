@@ -25,7 +25,7 @@ defmodule Chart.Internal.Figure do
   # title_text: nil
 
   @spec put(list()) :: t()
-  def put(config) do
+  def put(config \\ []) do
     %__MODULE__{
       viewbox: Utils.key_guard(config, :fig_viewbox, {800, 600}, &Validators.validate_viewbox/1)
     }
