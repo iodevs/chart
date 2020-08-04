@@ -1,8 +1,29 @@
 defmodule Chart.Internal.Validators do
   @moduledoc false
 
+  import Chart.Internal.Axis, only: [scale: 1]
+  import Chart.Internal.Plot.Grid, only: [grid_placement: 1]
   import Chart.Internal.TextPosition, only: [text_position: 1]
-  import Chart.Internal.Plot.Grid, only: [grid_placement: 1, grid_turn: 1]
+
+  defguard turn(t) when t in [:on, :off]
+
+  def validate_labels([]), do: []
+
+  def validate_labels([str, _rest] = lbs) when is_list(lbs) and is_binary(str) do
+    lbs
+  end
+
+  def validate_axis_tick_labels_format({:decimals, dec} = lf) when is_integer(dec) and 0 <= dec do
+    lf
+  end
+
+  def validate_axis_tick_labels_format({:datetime, dt} = lf) when is_binary(dt) do
+    lf
+  end
+
+  def validate_axis_scale(s) when scale(s) do
+    s
+  end
 
   def validate_decimals(decimals) when is_integer(decimals) and 0 <= decimals do
     decimals
@@ -27,7 +48,7 @@ defmodule Chart.Internal.Validators do
     position
   end
 
-  def validate_major_ticks_count(count) when is_integer(count) and 1 < count do
+  def validate_ticks_count(count) when is_integer(count) and 1 < count do
     count
   end
 
@@ -35,20 +56,20 @@ defmodule Chart.Internal.Validators do
     pl
   end
 
-  def validate_grid_turn(t) when grid_turn(t) do
-    t
-  end
-
   def validate_range({min, max} = range) when is_number(min) and is_number(max) and min < max do
     range
   end
 
-  def validate_positive_number(number) when 0 < number and is_number(number) do
+  def validate_positive_number(number) when is_number(number) and 0 < number do
     number
   end
 
   def validate_string(string) when is_binary(string) do
     string
+  end
+
+  def validate_turn(t) when turn(t) do
+    t
   end
 
   def validate_viewbox({width, height} = viewbox)

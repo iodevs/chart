@@ -3,23 +3,25 @@ defmodule Chart.Internal.TextPosition do
 
   alias Chart.Internal.{Figure, Plot, Utils, Validators}
 
-  defguard text_position(pos) when pos in [:left, :center, :right]
+  defguard text_position(pos)
+           when pos in [:left, :center, :right, :top, :middle, :bottom] or is_tuple(pos)
 
-  @offset_bottom_title 20
+  # @offset_bottom_title 20
 
-  @type position() :: {number(), number()} | :left | :center | :right
+  @type position() :: :left | :center | :right | :top | :middle | :bottom | {number(), number()}
+  @type turn() :: :on | :off
 
   @type t() :: %__MODULE__{
-          gap: number(),
+          gap: nil | number(),
           position: nil | position(),
-          subtitle: nil | String.t(),
-          title: nil | String.t()
+          rect_bg: turn(),
+          text: nil | String.t()
         }
 
   defstruct gap: nil,
             position: nil,
-            subtitle: nil,
-            title: nil
+            rect_bg: :off,
+            text: nil
 
   def put(%Figure{} = figure, _config) do
     figure

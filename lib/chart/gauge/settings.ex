@@ -63,8 +63,7 @@ defmodule Chart.Gauge.Settings do
     def put(settings, config) do
       major_ticks =
         %__MODULE__{
-          count:
-            key_guard(config, :major_ticks_count, 7, &Validators.validate_major_ticks_count/1),
+          count: key_guard(config, :major_ticks_count, 7, &Validators.validate_ticks_count/1),
           gap: key_guard(config, :major_ticks_gap, 0, &Validators.validate_number/1),
           length:
             key_guard(config, :major_ticks_length, 5, &Validators.validate_positive_number/1)
