@@ -3,7 +3,7 @@ defmodule Chart.Internal.Validators do
 
   import Chart.Internal.Axis, only: [scale: 1]
   import Chart.Internal.Plot.Grid, only: [grid_placement: 1]
-  import Chart.Internal.TextPosition, only: [text_placement: 1]
+  import Chart.Internal.Text, only: [text_placement: 1]
 
   defguard turn(t) when t in [:on, :off]
 

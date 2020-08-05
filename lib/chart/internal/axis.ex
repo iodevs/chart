@@ -1,14 +1,14 @@
 defmodule Chart.Internal.Axis do
   @moduledoc false
 
-  alias Chart.Internal.{MajorTicks, MinorTicks, MajorTicksText, TextPosition, Utils, Validators}
+  alias Chart.Internal.{MajorTicks, MinorTicks, MajorTicksText, Text, Utils, Validators}
 
   defguard scale(s) when s in [:linear, :log]
 
   @type scale() :: :linear | :log
 
   @type t() :: %__MODULE__{
-          label: nil | TextPosition.t(),
+          label: nil | Text.t(),
           major_ticks: nil | MajorTicks.t(),
           minor_ticks: nil | MinorTicks.t(),
           major_ticks_text: nil | MajorTicksText.t(),

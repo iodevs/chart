@@ -8,11 +8,11 @@ defmodule Chart.Internal.Figure do
           plot: nil | Plot.t(),
           # subtitle: nil | Strings.t(),
           # title: nil | String.t(),
-          # title_position: nil | TextPosition.position(),
+          # title_position: nil | Text.position(),
           viewbox: nil | {pos_integer(), pos_integer()}
 
           # Internal
-          # title_text: nil | TextPosition.t()
+          # title_text: nil | Text.t()
         }
 
   defstruct plot: nil,
@@ -30,7 +30,7 @@ defmodule Chart.Internal.Figure do
       viewbox: Utils.key_guard(config, :fig_viewbox, {800, 600}, &Validators.validate_viewbox/1)
     }
     # |> Legend.put(config)
-    # |> TextPosition.put(config)
+    # |> Text.put(config)
     |> Plot.put(config)
   end
 end
