@@ -1,7 +1,7 @@
 defmodule Chart.Internal.Plot do
   @moduledoc false
 
-  alias Chart.Internal.{Axis, TextPosition, Utils, Validators}
+  alias Chart.Internal.{Axis, Text, Utils, Validators}
 
   # defguard origin_cs(cs)
   #          when cs in [
@@ -156,7 +156,7 @@ defmodule Chart.Internal.Plot do
       scale: :linear,
       thickness: 2,
       text_gap: 0,
-      text_position: :center,
+      text_placement: :center,
       text_rect_bg: :off,
       text: "Axis x"
     }
@@ -186,7 +186,7 @@ defmodule Chart.Internal.Plot do
       scale: :linear,
       thickness: 2,
       text_gap: 0,
-      text_position: :top,
+      text_placement: :top,
       text_rect_bg: :off,
       text: "Axis y"
     }
@@ -215,6 +215,6 @@ defmodule Chart.Internal.Plot do
   end
 
   defp set_axis_label(axis, config, default) do
-    Map.put(axis, :label, TextPosition.put(config, default))
+    Map.put(axis, :label, Text.put(config, default))
   end
 end
