@@ -51,7 +51,7 @@ defmodule Chart.Internal.Text do
         config,
         :text_placement,
         default_value,
-        &Validators.validate_number/1
+        &Validators.validate_text_placement/1
       )
 
     Map.put(text, :placement, placement)
@@ -63,7 +63,7 @@ defmodule Chart.Internal.Text do
         config,
         :text_rect_bg,
         default_value,
-        &Validators.validate_number/1
+        &Validators.validate_turn/1
       )
 
     Map.put(text, :rect_bg, rect_bg)
@@ -75,7 +75,7 @@ defmodule Chart.Internal.Text do
         config,
         :text,
         default_value,
-        &Validators.validate_number/1
+        &Validators.validate_string/1
       )
 
     Map.put(text, :text, new_text)
