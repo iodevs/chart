@@ -30,56 +30,27 @@ defmodule Chart.Internal.Text do
             position: nil
 
   def new() do
-    %__MODULE__{}
+    %__MODULE__{
+      gap: 0,
+      placement: nil,
+      rect_bg: :off,
+      text: nil
+    }
   end
 
-  def put(text, :gap, config, default_value) do
-    gap =
-      Utils.key_guard(
-        config,
-        :text_gap,
-        default_value,
-        &Validators.validate_number/1
-      )
-
-    Map.put(text, :gap, gap)
-  end
-
-  def put(text, :placement, config, default_value) do
-    placement =
-      Utils.key_guard(
-        config,
-        :text_placement,
-        default_value,
-        &Validators.validate_text_placement/1
-      )
-
-    Map.put(text, :placement, placement)
-  end
-
-  def put(text, :rect_bg, config, default_value) do
-    rect_bg =
-      Utils.key_guard(
-        config,
-        :text_rect_bg,
-        default_value,
-        &Validators.validate_turn/1
-      )
-
-    Map.put(text, :rect_bg, rect_bg)
-  end
-
-  def put(text, :text, config, default_value) do
-    new_text =
-      Utils.key_guard(
-        config,
-        :text,
-        default_value,
-        &Validators.validate_string/1
-      )
-
-    Map.put(text, :text, new_text)
+  def put(text, key, config) do
+    Utils.put(text, key, config, &lookup/1)
   end
 
   # Private
+
+  defp lookup(key) do
+    %{
+      gap: {:text_gap, &Validators.validate_number/1},
+      placement: {:text_placement, &Validators.validate_text_placement/1},
+      rect_bg: {:text_rect_bg, &Validators.validate_turn/1},
+      text: {:text, &Validators.validate_string/1}
+    }
+    |> Map.fetch!(key)
+  end
 end
