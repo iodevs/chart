@@ -193,7 +193,7 @@ defmodule Chart.Gauge.Settings do
               config,
               :value_text_position,
               {0, -10},
-              &Validators.validate_text_position/1
+              &Validators.validate_position/1
             )
         }
         |> set_position(settings.gauge_center)

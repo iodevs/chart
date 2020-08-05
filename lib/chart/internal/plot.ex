@@ -154,7 +154,11 @@ defmodule Chart.Internal.Plot do
       minor_ticks_length: 0.25,
       minor_ticks_range: {0, elem(plot.size, 0)},
       scale: :linear,
-      thickness: 2
+      thickness: 2,
+      text_gap: 0,
+      text_position: :center,
+      text_rect_bg: :off,
+      text: "Axis x"
     }
 
     axis =
@@ -180,7 +184,11 @@ defmodule Chart.Internal.Plot do
       minor_ticks_length: 0.25,
       minor_ticks_range: {0, elem(plot.size, 1)},
       scale: :linear,
-      thickness: 2
+      thickness: 2,
+      text_gap: 0,
+      text_position: :top,
+      text_rect_bg: :off,
+      text: "Axis y"
     }
 
     axis =
@@ -207,8 +215,6 @@ defmodule Chart.Internal.Plot do
   end
 
   defp set_axis_label(axis, config, default) do
-    label = ""
-
-    Map.put(axis, :label, label)
+    Map.put(axis, :label, TextPosition.put(config, default))
   end
 end
