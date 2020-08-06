@@ -15,6 +15,7 @@ defmodule Chart.Internal.Text do
           gap: nil | number(),
           placement: nil | placement(),
           rect_bg: turn(),
+          show: turn(),
           text: nil | String.t(),
 
           # Internal
@@ -24,6 +25,7 @@ defmodule Chart.Internal.Text do
   defstruct gap: nil,
             placement: nil,
             rect_bg: :off,
+            show: :on,
             text: nil,
 
             # Internal
@@ -34,8 +36,9 @@ defmodule Chart.Internal.Text do
       gap: 0,
       placement: :center,
       rect_bg: :off,
+      show: :on,
       text: "",
-      position: nil
+      position: {400, 50}
     }
   end
 
@@ -54,6 +57,7 @@ defmodule Chart.Internal.Text do
       gap: &Validators.validate_number/1,
       placement: &Validators.validate_text_placement/1,
       rect_bg: &Validators.validate_turn/1,
+      show: &Validators.validate_turn/1,
       text: &Validators.validate_string/1
     }
   end
