@@ -214,9 +214,11 @@ defmodule Chart.Internal.Plot do
     label =
       Text.new()
       |> Text.set(:text, "Axis x")
+      |> Text.set(:position, {400, 560})
       |> Text.put(:gap, :x_axis_text_gap, config)
       |> Text.put(:placement, :x_axis_text_placement, config)
       |> Text.put(:rect_bg, :x_axis_text_rect_bg, config)
+      |> Text.put(:show, :x_axis_text_show, config)
       |> Text.put(:text, :x_axis_text, config)
 
     axis =
@@ -264,11 +266,13 @@ defmodule Chart.Internal.Plot do
 
     label =
       Text.new()
-      |> Text.set(:placement, :top)
       |> Text.set(:text, "Axis y")
+      |> Text.set(:position, {40, 110})
+      |> Text.set(:placement, :top)
       |> Text.put(:gap, :y_axis_text_gap, config)
       |> Text.put(:placement, :y_axis_text_placement, config)
       |> Text.put(:rect_bg, :y_axis_text_rect_bg, config)
+      |> Text.put(:show, :y_axis_text_show, config)
       |> Text.put(:text, :y_axis_text, config)
 
     axis =
