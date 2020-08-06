@@ -1,10 +1,15 @@
 defmodule Chart.Internal.Utils do
   @moduledoc false
 
-  def put(module, key, config, lookup_fun) do
-    {config_key, guard} = lookup_fun.(key)
+  def put(module, key, config_key, config, validate_fun) do
+    guard = validate_fun.() |> Map.fetch!(key)
 
-    Map.put(module, key, config |> Keyword.get(config_key) |> guard.())
+    validated_val =
+      config
+      |> Keyword.get(config_key, Map.fetch!(module, key))
+      |> guard.()
+
+    Map.put(module, key, validated_val)
   end
 
   def key_guard(kw, key, default_val, fun) do

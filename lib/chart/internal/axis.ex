@@ -29,78 +29,94 @@ defmodule Chart.Internal.Axis do
             # Internal
             line: nil
 
+  @spec new() :: Axis.t()
+  def new() do
+    %__MODULE__{
+      label: nil,
+      major_ticks: nil,
+      minor_ticks: nil,
+      major_ticks_text: nil,
+      scale: :linear,
+      thickness: 2,
+      line: nil
+    }
+  end
+
+  def put(axis, key, config_key, config) do
+    Utils.put(axis, key, config_key, config, &validate/0)
+  end
+
+  # Private
+
+  defp validate() do
+    %{
+      scale: &Validators.validate_axis_scale/1,
+      thickness: &Validators.validate_positive_number/1
+    }
+  end
+
   defmodule MajorTicks do
     @moduledoc false
 
     alias Chart.Internal.{Utils, Validators}
 
     @type t() :: %__MODULE__{
-            count: pos_integer(),
-            gap: number(),
-            length: number(),
-            range: {number(), number()},
+            count: nil | pos_integer(),
+            gap: nil | number(),
+            length: nil | number(),
+            range: nil | {number(), number()},
 
             # Internal
-            positions: list(number())
+            positions: nil | list(number())
           }
 
-    defstruct count: 0,
-              gap: 0,
-              length: 0,
-              range: {0, 1},
+    defstruct count: nil,
+              gap: nil,
+              length: nil,
+              range: nil,
 
               # Internal
-              positions: []
+              positions: nil
 
-    def put(axis, config, default) do
-      major_ticks =
-        %__MODULE__{
-          count:
-            Utils.key_guard(
-              config,
-              :major_ticks_count,
-              default.major_ticks_count,
-              &Validators.validate_ticks_count/1
-            ),
-          gap:
-            Utils.key_guard(
-              config,
-              :major_ticks_gap,
-              default.major_ticks_gap,
-              &Validators.validate_number/1
-            ),
-          length:
-            Utils.key_guard(
-              config,
-              :major_ticks_length,
-              default.major_ticks_length,
-              &Validators.validate_positive_number/1
-            ),
-          range:
-            Utils.key_guard(
-              config,
-              :major_ticks_range,
-              default.major_ticks_range,
-              &Validators.validate_range/1
-            )
-        }
-        |> set_positions(default.scale)
+    def new() do
+      %__MODULE__{
+        count: 7,
+        gap: 0,
+        length: 0.5,
+        range: {0, 1},
+        positions: []
+      }
+    end
 
-      Kernel.put_in(axis.major_ticks, major_ticks)
+    def put(major_ticks, key, config_key, config) do
+      Utils.put(major_ticks, key, config_key, config, &validate/0)
+    end
+
+    def set(major_ticks, key, :linear) do
+      lst = Utils.linspace(major_ticks.range, major_ticks.count)
+
+      Map.put(major_ticks, key, lst)
+    end
+
+    def set(major_ticks, key, :log) do
+      lst = Utils.logspace(major_ticks.range, major_ticks.count)
+
+      Map.put(major_ticks, key, lst)
+    end
+
+    def set(major_ticks, key, value) do
+      Map.put(major_ticks, key, value)
     end
 
     # Private
 
-    defp set_positions(major_ticks, :linear) do
-      lst = Utils.linspace(major_ticks.range, major_ticks.count)
-
-      Map.put(major_ticks, :positions, lst)
-    end
-
-    defp set_positions(major_ticks, :log) do
-      lst = Utils.logspace(major_ticks.range, major_ticks.count)
-
-      Map.put(major_ticks, :positions, lst)
+    defp validate() do
+      %{
+        count: &Validators.validate_ticks_count/1,
+        gap: &Validators.validate_number/1,
+        length: &Validators.validate_positive_number/1,
+        range: &Validators.validate_range/1
+      }
     end
   end
 
@@ -110,72 +126,62 @@ defmodule Chart.Internal.Axis do
     alias Chart.Internal.{Utils, Validators}
 
     @type t() :: %__MODULE__{
-            count: pos_integer(),
-            gap: number(),
-            length: number(),
-            range: {number(), number()},
+            count: nil | pos_integer(),
+            gap: nil | number(),
+            length: nil | number(),
+            range: nil | {number(), number()},
 
             # Internal
-            positions: list(number())
+            positions: nil | list(number())
           }
 
-    defstruct count: 0,
-              gap: 0,
-              length: 0,
-              range: {0, 1},
+    defstruct count: nil,
+              gap: nil,
+              length: nil,
+              range: nil,
 
               #  Internal
-              positions: []
+              positions: nil
 
-    def put(axis, config, default) do
-      minor_ticks =
-        %__MODULE__{
-          count:
-            Utils.key_guard(
-              config,
-              :minor_ticks_count,
-              default.minor_ticks_count,
-              &Validators.validate_ticks_count/1
-            ),
-          gap:
-            Utils.key_guard(
-              config,
-              :minor_ticks_gap,
-              default.minor_ticks_gap,
-              &Validators.validate_number/1
-            ),
-          length:
-            Utils.key_guard(
-              config,
-              :minor_ticks_length,
-              default.minor_ticks_length,
-              &Validators.validate_positive_number/1
-            ),
-          range:
-            Utils.key_guard(
-              config,
-              :minor_ticks_range,
-              default.minor_ticks_range,
-              &Validators.validate_range/1
-            )
-        }
-        |> set_positions(default.scale)
+    def new() do
+      %__MODULE__{
+        count: 20,
+        gap: 0,
+        length: 0.25,
+        range: {0, 1},
+        positions: []
+      }
+    end
 
-      Kernel.put_in(axis.minor_ticks, minor_ticks)
+    def put(minor_ticks, key, config_key, config) do
+      Utils.put(minor_ticks, key, config_key, config, &validate/0)
+    end
+
+    def set(minor_ticks, key, :linear) do
+      lst = Utils.linspace(minor_ticks.range, minor_ticks.count)
+
+      Map.put(minor_ticks, key, lst)
+    end
+
+    def set(minor_ticks, key, :log) do
+      lst = Utils.logspace(minor_ticks.range, minor_ticks.count)
+
+      Map.put(minor_ticks, key, lst)
+    end
+
+    def set(minor_ticks, key, value) do
+      Map.put(minor_ticks, key, value)
     end
 
     # Private
 
-    defp set_positions(minor_ticks, :linear) do
-      lst = Utils.linspace(minor_ticks.range, minor_ticks.count)
-
-      Map.put(minor_ticks, :positions, lst)
-    end
-
-    defp set_positions(minor_ticks, :log) do
-      lst = Utils.logspace(minor_ticks.range, minor_ticks.count)
-
-      Map.put(minor_ticks, :positions, lst)
+    defp validate() do
+      %{
+        count: &Validators.validate_ticks_count/1,
+        gap: &Validators.validate_number/1,
+        length: &Validators.validate_positive_number/1,
+        range: &Validators.validate_range/1
+      }
     end
   end
 
@@ -187,77 +193,44 @@ defmodule Chart.Internal.Axis do
     @type format() :: {:decimals, non_neg_integer()} | {:datetime, String.t()}
 
     @type t() :: %__MODULE__{
-            format: format(),
-            gap: number(),
-            labels: list(String.t()),
+            format: nil | format(),
+            gap: nil | number(),
+            labels: nil | list(String.t()),
 
             # Internal
-            positions: list(number())
+            positions: nil | list(number())
           }
 
     defstruct format: nil,
-              gap: 0,
-              labels: [],
-              positions: []
+              gap: nil,
+              labels: nil,
+              positions: nil
 
-    def put(axis, config, default) do
-      major_ticks_text =
-        %__MODULE__{
-          format:
-            Utils.key_guard(
-              config,
-              :axis_tick_labels_format,
-              default.axis_tick_labels_format,
-              &Validators.validate_axis_tick_labels_format/1
-            ),
-          gap:
-            Utils.key_guard(
-              config,
-              :axis_tick_gap_labels,
-              default.axis_tick_gap_labels,
-              &Validators.validate_number/1
-            ),
-          labels:
-            Utils.key_guard(
-              config,
-              :axis_tick_labels,
-              default.axis_tick_labels,
-              &Validators.validate_labels/1
-            )
-        }
-        |> set_positions(axis.major_ticks.positions)
+    def new() do
+      %__MODULE__{
+        format: {:decimals, 0},
+        gap: 0,
+        labels: [],
+        positions: []
+      }
+    end
 
-      Kernel.put_in(axis.major_ticks_text, major_ticks_text)
+    def put(minor_ticks, key, config_key, config) do
+      Utils.put(minor_ticks, key, config_key, config, &validate/0)
+    end
+
+    def set(major_ticks_text, key, value) do
+      Map.put(major_ticks_text, key, value)
     end
 
     # Private
 
-    defp set_positions(major_ticks_text, positions) do
-      Map.put(major_ticks_text, :positions, positions)
+    defp validate() do
+      %{
+        format: &Validators.validate_axis_tick_labels_format/1,
+        gap: &Validators.validate_number/1,
+        labels: &Validators.validate_labels/1
+      }
     end
   end
-
-  def put(config, default) do
-    %__MODULE__{
-      scale:
-        Utils.key_guard(
-          config,
-          :axis_scale,
-          default.scale,
-          &Validators.validate_axis_scale/1
-        ),
-      thickness:
-        Utils.key_guard(
-          config,
-          :axis_thickness,
-          default.thickness,
-          &Validators.validate_positive_number/1
-        )
-    }
-    |> MajorTicks.put(config, default)
-    |> MinorTicks.put(config, default)
-    |> MajorTicksText.put(config, default)
-  end
-
-  # Private
 end
