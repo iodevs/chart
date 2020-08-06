@@ -32,25 +32,29 @@ defmodule Chart.Internal.Text do
   def new() do
     %__MODULE__{
       gap: 0,
-      placement: nil,
+      placement: :center,
       rect_bg: :off,
-      text: nil
+      text: "",
+      position: nil
     }
   end
 
-  def put(text, key, config) do
-    Utils.put(text, key, config, &lookup/1)
+  def put(text, key, config_key, config) do
+    Utils.put(text, key, config_key, config, &validate/0)
+  end
+
+  def set(text, key, value) do
+    Map.put(text, key, value)
   end
 
   # Private
 
-  defp lookup(key) do
+  defp validate() do
     %{
-      gap: {:text_gap, &Validators.validate_number/1},
-      placement: {:text_placement, &Validators.validate_text_placement/1},
-      rect_bg: {:text_rect_bg, &Validators.validate_turn/1},
-      text: {:text, &Validators.validate_string/1}
+      gap: &Validators.validate_number/1,
+      placement: &Validators.validate_text_placement/1,
+      rect_bg: &Validators.validate_turn/1,
+      text: &Validators.validate_string/1
     }
-    |> Map.fetch!(key)
   end
 end
