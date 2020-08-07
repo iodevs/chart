@@ -37,11 +37,12 @@ defmodule Chart.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:ex_doc, "~> 0.22", only: :dev},
       {:credo, "~> 1.1", only: [:dev, :test]},
       {:dialyxir, "~> 1.0", only: [:dev, :test], runtime: false},
+      {:phoenix_html, "~> 2.11"},
       {:excoveralls, "~> 0.11", only: :test},
-      {:phoenix_html, "~> 2.11"}
+      {:ex_doc, "~> 0.22", only: :dev},
+      {:ex_maybe, "~> 1.1"}
     ]
   end
 
