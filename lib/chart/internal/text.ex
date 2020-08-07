@@ -2,6 +2,7 @@ defmodule Chart.Internal.Text do
   @moduledoc false
 
   alias Chart.Internal.{Utils, Validators}
+  alias ExMaybe, as: Maybe
 
   defguard text_placement(pl)
            when pl in [:left, :center, :right, :top, :middle, :bottom] or is_tuple(pl)
@@ -12,20 +13,20 @@ defmodule Chart.Internal.Text do
   @type turn() :: :on | :off
 
   @type t() :: %__MODULE__{
-          gap: nil | number(),
-          placement: nil | placement(),
-          rect_bg: turn(),
-          show: turn(),
-          text: nil | String.t(),
+          gap: Maybe.t(number()),
+          placement: Maybe.t(placement()),
+          rect_bg: Maybe.t(turn()),
+          show: Maybe.t(turn()),
+          text: Maybe.t(String.t()),
 
           # Internal
-          position: nil | {number(), number()}
+          position: Maybe.t({number(), number()})
         }
 
   defstruct gap: nil,
             placement: nil,
-            rect_bg: :off,
-            show: :on,
+            rect_bg: nil,
+            show: nil,
             text: nil,
 
             # Internal
@@ -42,23 +43,19 @@ defmodule Chart.Internal.Text do
     }
   end
 
-  def put(text, key, config_key, config) do
-    Utils.put(text, key, config_key, config, &validate/0)
-  end
-
-  def set(text, key, value) do
-    Map.put(text, key, value)
+  def new(kw, validate \\ validate()) when is_list(kw) and is_map(validate) do
+    Utils.update_module(new(), kw, validate)
   end
 
   # Private
 
   defp validate() do
     %{
-      gap: &Validators.validate_number/1,
-      placement: &Validators.validate_text_placement/1,
-      rect_bg: &Validators.validate_turn/1,
-      show: &Validators.validate_turn/1,
-      text: &Validators.validate_string/1
+      gap: {:gap, &Validators.validate_number/1},
+      placement: {:placement, &Validators.validate_text_placement/1},
+      rect_bg: {:rect_bg, &Validators.validate_turn/1},
+      show: {:show, &Validators.validate_turn/1},
+      text: {:text, &Validators.validate_string/1}
     }
   end
 end

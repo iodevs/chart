@@ -2,21 +2,22 @@ defmodule Chart.Internal.Axis do
   @moduledoc false
 
   alias Chart.Internal.{MajorTicks, MinorTicks, MajorTicksText, Text, Utils, Validators}
+  alias ExMaybe, as: Maybe
 
   defguard scale(s) when s in [:linear, :log]
 
   @type scale() :: :linear | :log
 
   @type t() :: %__MODULE__{
-          label: nil | Text.t(),
-          major_ticks: nil | MajorTicks.t(),
-          minor_ticks: nil | MinorTicks.t(),
-          major_ticks_text: nil | MajorTicksText.t(),
-          scale: nil | scale(),
-          thickness: nil | number(),
+          label: Maybe.t(Text.t()),
+          major_ticks: Maybe.t(MajorTicks.t()),
+          minor_ticks: Maybe.t(MinorTicks.t()),
+          major_ticks_text: Maybe.t(MajorTicksText.t()),
+          scale: Maybe.t(scale()),
+          thickness: Maybe.t(number()),
 
           # Internal
-          line: nil | {pos_integer(), pos_integer(), pos_integer(), pos_integer()}
+          line: Maybe.t({pos_integer(), pos_integer(), pos_integer(), pos_integer()})
         }
 
   defstruct label: nil,
@@ -42,16 +43,20 @@ defmodule Chart.Internal.Axis do
     }
   end
 
-  def put(axis, key, config_key, config) do
-    Utils.put(axis, key, config_key, config, &validate/0)
+  def new(kw, validate \\ validate()) when is_list(kw) and is_map(validate) do
+    Utils.update_module(new(), kw, validate)
+  end
+
+  def set(axis, key, value) do
+    Map.put(axis, key, value)
   end
 
   # Private
 
   defp validate() do
     %{
-      scale: &Validators.validate_axis_scale/1,
-      thickness: &Validators.validate_positive_number/1
+      scale: {:scale, &Validators.validate_axis_scale/1},
+      thickness: {:thickness, &Validators.validate_positive_number/1}
     }
   end
 
@@ -59,15 +64,16 @@ defmodule Chart.Internal.Axis do
     @moduledoc false
 
     alias Chart.Internal.{Utils, Validators}
+    alias ExMaybe, as: Maybe
 
     @type t() :: %__MODULE__{
-            count: nil | pos_integer(),
-            gap: nil | number(),
-            length: nil | number(),
-            range: nil | {number(), number()},
+            count: Maybe.t(pos_integer()),
+            gap: Maybe.t(number()),
+            length: Maybe.t(number()),
+            range: Maybe.t({number(), number()}),
 
             # Internal
-            positions: nil | list(number())
+            positions: Maybe.t(list(number()))
           }
 
     defstruct count: nil,
@@ -88,8 +94,8 @@ defmodule Chart.Internal.Axis do
       }
     end
 
-    def put(major_ticks, key, config_key, config) do
-      Utils.put(major_ticks, key, config_key, config, &validate/0)
+    def new(kw, validate \\ validate()) when is_list(kw) and is_map(validate) do
+      Utils.update_module(new(), kw, validate)
     end
 
     def set(major_ticks, key, :linear) do
@@ -112,10 +118,10 @@ defmodule Chart.Internal.Axis do
 
     defp validate() do
       %{
-        count: &Validators.validate_ticks_count/1,
-        gap: &Validators.validate_number/1,
-        length: &Validators.validate_positive_number/1,
-        range: &Validators.validate_range/1
+        count: {:count, &Validators.validate_ticks_count/1},
+        gap: {:gap, &Validators.validate_number/1},
+        length: {:length, &Validators.validate_positive_number/1},
+        range: {:range, &Validators.validate_range/1}
       }
     end
   end
@@ -124,15 +130,16 @@ defmodule Chart.Internal.Axis do
     @moduledoc false
 
     alias Chart.Internal.{Utils, Validators}
+    alias ExMaybe, as: Maybe
 
     @type t() :: %__MODULE__{
-            count: nil | pos_integer(),
-            gap: nil | number(),
-            length: nil | number(),
-            range: nil | {number(), number()},
+            count: Maybe.t(pos_integer()),
+            gap: Maybe.t(number()),
+            length: Maybe.t(number()),
+            range: Maybe.t({number(), number()}),
 
             # Internal
-            positions: nil | list(number())
+            positions: Maybe.t(list(number()))
           }
 
     defstruct count: nil,
@@ -153,8 +160,8 @@ defmodule Chart.Internal.Axis do
       }
     end
 
-    def put(minor_ticks, key, config_key, config) do
-      Utils.put(minor_ticks, key, config_key, config, &validate/0)
+    def new(kw, validate \\ validate()) when is_list(kw) and is_map(validate) do
+      Utils.update_module(new(), kw, validate)
     end
 
     def set(minor_ticks, key, :linear) do
@@ -177,10 +184,10 @@ defmodule Chart.Internal.Axis do
 
     defp validate() do
       %{
-        count: &Validators.validate_ticks_count/1,
-        gap: &Validators.validate_number/1,
-        length: &Validators.validate_positive_number/1,
-        range: &Validators.validate_range/1
+        count: {:count, &Validators.validate_ticks_count/1},
+        gap: {:gap, &Validators.validate_number/1},
+        length: {:length, &Validators.validate_positive_number/1},
+        range: {:range, &Validators.validate_range/1}
       }
     end
   end
@@ -189,16 +196,17 @@ defmodule Chart.Internal.Axis do
     @moduledoc false
 
     alias Chart.Internal.{Utils, Validators}
+    alias ExMaybe, as: Maybe
 
     @type format() :: {:decimals, non_neg_integer()} | {:datetime, String.t()}
 
     @type t() :: %__MODULE__{
-            format: nil | format(),
-            gap: nil | number(),
-            labels: nil | list(String.t()),
+            format: Maybe.t(format()),
+            gap: Maybe.t(number()),
+            labels: Maybe.t(list(String.t())),
 
             # Internal
-            positions: nil | list(number())
+            positions: Maybe.t(list(number()))
           }
 
     defstruct format: nil,
@@ -215,8 +223,8 @@ defmodule Chart.Internal.Axis do
       }
     end
 
-    def put(minor_ticks, key, config_key, config) do
-      Utils.put(minor_ticks, key, config_key, config, &validate/0)
+    def new(kw, validate \\ validate()) when is_list(kw) and is_map(validate) do
+      Utils.update_module(new(), kw, validate)
     end
 
     def set(major_ticks_text, key, value) do
@@ -227,9 +235,9 @@ defmodule Chart.Internal.Axis do
 
     defp validate() do
       %{
-        format: &Validators.validate_axis_tick_labels_format/1,
-        gap: &Validators.validate_number/1,
-        labels: &Validators.validate_labels/1
+        format: {:format, &Validators.validate_axis_tick_labels_format/1},
+        gap: {:gap, &Validators.validate_number/1},
+        labels: {:labels, &Validators.validate_labels/1}
       }
     end
   end

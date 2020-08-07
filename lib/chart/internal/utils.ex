@@ -1,15 +1,12 @@
 defmodule Chart.Internal.Utils do
   @moduledoc false
 
-  def put(module, key, config_key, config, validate_fun) do
-    guard = validate_fun.() |> Map.fetch!(key)
+  alias ExMaybe, as: Maybe
 
-    validated_val =
-      config
-      |> Keyword.get(config_key, Map.fetch!(module, key))
-      |> guard.()
-
-    Map.put(module, key, validated_val)
+  def update_module(settings, kw, validate) do
+    settings
+    |> Map.from_struct()
+    |> Enum.reduce(settings, &update(&1, &2, kw, validate))
   end
 
   def key_guard(kw, key, default_val, fun) do
@@ -66,5 +63,19 @@ defmodule Chart.Internal.Utils do
 
   def radian_to_degree(rad) do
     rad * 180 / :math.pi()
+  end
+
+  #  Others
+
+  defp update({key, value}, acc, config, validate) do
+    {config_key, f} = Map.get(validate, key, {key, fn val -> val end})
+
+    value =
+      config
+      |> Keyword.get(config_key)
+      |> Maybe.map(f)
+      |> Maybe.with_default(value)
+
+    Map.put(acc, key, value)
   end
 end
