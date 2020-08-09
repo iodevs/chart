@@ -1,12 +1,12 @@
 defmodule Chart.Internal.Utils do
   @moduledoc false
 
-  alias ExMaybe, as: Maybe
+  def add_prefix(key, nil) do
+    key
+  end
 
-  def update_module(settings, kw, validate) do
-    settings
-    |> Map.from_struct()
-    |> Enum.reduce(settings, &update(&1, &2, kw, validate))
+  def add_prefix(key, prefix) when is_atom(prefix) and is_atom(key) do
+    String.to_atom("#{Atom.to_string(prefix)}_#{Atom.to_string(key)}")
   end
 
   def key_guard(kw, key, default_val, fun) do
@@ -63,19 +63,5 @@ defmodule Chart.Internal.Utils do
 
   def radian_to_degree(rad) do
     rad * 180 / :math.pi()
-  end
-
-  #  Others
-
-  defp update({key, value}, acc, config, validate) do
-    {config_key, f} = Map.get(validate, key, {key, fn val -> val end})
-
-    value =
-      config
-      |> Keyword.get(config_key)
-      |> Maybe.map(f)
-      |> Maybe.with_default(value)
-
-    Map.put(acc, key, value)
   end
 end
