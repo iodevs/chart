@@ -3,10 +3,26 @@ defmodule Chart.Internal.Utils do
 
   alias ExMaybe, as: Maybe
 
-  def update_module(settings, kw, validate) do
-    settings
+  def put(module, key, value, validators_map) do
+    {_, f} = Map.get(validators_map, key, {nil, fn x -> x end})
+
+    Map.put(module, key, f.(value))
+  end
+
+  def merge(module, kw, validators_map) do
+    module
     |> Map.from_struct()
-    |> Enum.reduce(settings, &update(&1, &2, kw, validate))
+    |> Enum.reduce(module, &update(&1, &2, kw, validators_map))
+  end
+
+  def update_validators(prefix, validators_map) do
+    prefix = fn key -> String.to_atom("#{prefix}_#{Atom.to_string(key)}") end
+
+    update_config_key = fn {key, {config_key, f}}, acc ->
+      Map.put(acc, key, {prefix.(config_key), f})
+    end
+
+    Enum.reduce(validators_map, %{}, update_config_key)
   end
 
   def key_guard(kw, key, default_val, fun) do
@@ -67,8 +83,8 @@ defmodule Chart.Internal.Utils do
 
   #  Others
 
-  defp update({key, value}, acc, config, validate) do
-    {config_key, f} = Map.get(validate, key, {key, fn val -> val end})
+  defp update({key, value}, acc, config, validators_map) do
+    {config_key, f} = Map.get(validators_map, key, {key, fn val -> val end})
 
     value =
       config

@@ -3,7 +3,6 @@ defmodule Chart.Internal.Validators do
 
   import Chart.Internal.Axis, only: [scale: 1]
   import Chart.Internal.Plot.Grid, only: [grid_placement: 1]
-  import Chart.Internal.Text, only: [text_placement: 1]
 
   defguard turn(t) when t in [:on, :off]
 
@@ -42,10 +41,6 @@ defmodule Chart.Internal.Validators do
 
   def validate_position({x, y} = position) when is_number(x) and is_number(y) do
     position
-  end
-
-  def validate_text_placement(pl) when text_placement(pl) do
-    pl
   end
 
   def validate_ticks_count(count) when is_integer(count) and 1 < count do

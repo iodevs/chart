@@ -4,55 +4,49 @@ defmodule Chart.Internal.Text do
   alias Chart.Internal.{Utils, Validators}
   alias ExMaybe, as: Maybe
 
-  defguard text_placement(pl)
-           when pl in [:left, :center, :right, :top, :middle, :bottom] or is_tuple(pl)
-
-  # @offset_bottom_title 20
-
-  @type placement() :: :left | :center | :right | :top | :middle | :bottom | {number(), number()}
+  @type position() :: {number(), number()}
   @type turn() :: :on | :off
 
   @type t() :: %__MODULE__{
           gap: Maybe.t(number()),
-          placement: Maybe.t(placement()),
+          position: Maybe.t(position()),
           rect_bg: Maybe.t(turn()),
           show: Maybe.t(turn()),
-          text: Maybe.t(String.t()),
-
-          # Internal
-          position: Maybe.t({number(), number()})
+          text: Maybe.t(String.t())
         }
 
   defstruct gap: nil,
-            placement: nil,
+            position: nil,
             rect_bg: nil,
             show: nil,
-            text: nil,
-
-            # Internal
-            position: nil
+            text: nil
 
   def new() do
     %__MODULE__{
       gap: 0,
-      placement: :center,
+      position: {0, 0},
       rect_bg: :off,
       show: :on,
-      text: "",
-      position: {400, 50}
+      text: ""
     }
   end
 
-  def new(kw, validate \\ validate()) when is_list(kw) and is_map(validate) do
-    Utils.update_module(new(), kw, validate)
+  def new(kw, validators \\ validators()) when is_list(kw) and is_map(validators) do
+    Utils.merge(new(), kw, validators)
   end
 
-  # Private
+  def put(module, key, value, validators \\ validators()) do
+    Utils.put(module, key, value, validators)
+  end
 
-  defp validate() do
+  def set(module, key, value) do
+    Map.put(module, key, value)
+  end
+
+  def validators() do
     %{
       gap: {:gap, &Validators.validate_number/1},
-      placement: {:placement, &Validators.validate_text_placement/1},
+      position: {:position, &Validators.validate_position/1},
       rect_bg: {:rect_bg, &Validators.validate_turn/1},
       show: {:show, &Validators.validate_turn/1},
       text: {:text, &Validators.validate_string/1}

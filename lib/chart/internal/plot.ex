@@ -2,7 +2,6 @@ defmodule Chart.Internal.Plot do
   @moduledoc false
 
   alias Chart.Internal.{Axis, Text, Utils, Validators}
-  alias Chart.Internal.Axis.{MajorTicks, MinorTicks, MajorTicksText}
   alias ExMaybe, as: Maybe
 
   # defguard origin_cs(cs)
@@ -48,6 +47,33 @@ defmodule Chart.Internal.Plot do
             x_axis: nil,
             y_axis: nil
 
+  def new() do
+    %__MODULE__{
+      grid: nil,
+      # box: :off,
+      position: {100, 100},
+      rect_bg_padding: {0, 0, 0, 0},
+      size: {600, 400},
+      x_axis: nil,
+      y_axis: nil
+    }
+  end
+
+  def new(kw, validators) when is_list(kw) and is_map(validators) do
+    Utils.merge(new(), kw, validators)
+  end
+
+  def put(module, key, value, validators \\ validators()) do
+    Utils.put(module, key, value, validators)
+  end
+
+  def validators() do
+    %{
+      scale: {:scale, &Validators.validate_axis_scale/1},
+      thickness: {:thickness, &Validators.validate_positive_number/1}
+    }
+  end
+
   defmodule Grid do
     @moduledoc false
 
@@ -85,13 +111,15 @@ defmodule Chart.Internal.Plot do
       }
     end
 
-    def new(kw, validate \\ validate()) when is_list(kw) and is_map(validate) do
-      Utils.update_module(new(), kw, validate)
+    def new(kw, validators \\ validators()) when is_list(kw) and is_map(validators) do
+      Utils.merge(new(), kw, validators)
     end
 
-    # Private
+    def put(module, key, value, validators \\ validators()) do
+      Utils.put(module, key, value, validators)
+    end
 
-    defp validate() do
+    def validators() do
       %{
         major_gap: {:major_gap, &Validators.validate_positive_number/1},
         major_placement: {:major_placement, &Validators.validate_grid_placement/1},
@@ -101,21 +129,5 @@ defmodule Chart.Internal.Plot do
         minor_turn: {:minor_turn, &Validators.validate_turn/1}
       }
     end
-  end
-
-  def new() do
-    %__MODULE__{
-      grid: nil,
-      # box: :off,
-      position: {100, 100},
-      rect_bg_padding: {0, 0, 0, 0},
-      size: {600, 400},
-      x_axis: nil,
-      y_axis: nil
-    }
-  end
-
-  def new(kw, validate) when is_list(kw) and is_map(validate) do
-    Utils.update_module(new(), kw, validate)
   end
 end
