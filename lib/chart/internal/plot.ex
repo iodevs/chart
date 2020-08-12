@@ -10,7 +10,6 @@ defmodule Chart.Internal.Plot do
 
   def new() do
     %{
-      axis: [],
       position: {100, 100},
       rect_bg_padding: {0, 0, 0, 0},
       size: {600, 400}
