@@ -1,24 +1,10 @@
 defmodule Chart.Internal.Utils do
   @moduledoc false
 
-  def add_prefix(key, nil) do
-    key
-  end
-
-  def add_prefix(key, prefix) when is_atom(prefix) and is_atom(key) do
-    String.to_atom("#{Atom.to_string(prefix)}_#{Atom.to_string(key)}")
-  end
-
-  def key_guard(kw, key, default_val, fun) do
-    fun.(Keyword.get(kw, key, default_val))
-  end
-
-  def key_guard(kw, key, default_val, boundary_tpl_vals, fun) do
-    fun.(Keyword.get(kw, key, default_val), boundary_tpl_vals)
-  end
-
-  def set_map(keywords, map) do
-    Enum.reduce(keywords, map, fn {key, val}, map -> Map.put(map, key, val) end)
+  def datetime_format(int, dt) when is_integer(int) and is_binary(dt) do
+    int
+    |> DateTime.from_unix!()
+    |> NimbleStrftime.format(dt)
   end
 
   # Math
