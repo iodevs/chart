@@ -3,7 +3,7 @@ defmodule Chart.SomeChart.Settings do
   A chart settings.
   """
 
-  alias Chart.Internal.AxisLine.{Helpers, Label, MajorTicks, MajorTicksText, MinorTicks}
+  alias Chart.Internal.AxisLine.{Label, MajorTicks, MajorTicksText, MinorTicks}
   alias Chart.Internal.{AxisLine, Figure, GridLine, Plot, Title}
 
   def new() do
@@ -27,9 +27,5 @@ defmodule Chart.SomeChart.Settings do
     |> MajorTicks.add(key)
     |> MajorTicksText.add(key)
     |> MinorTicks.add(key)
-    |> Helpers.recalculate_ticks_positions(key)
-    |> Helpers.recalculate_line(key)
-    |> Helpers.recalculate_label_position(key)
-    |> Helpers.recalculate_ticks_labels(key)
   end
 end

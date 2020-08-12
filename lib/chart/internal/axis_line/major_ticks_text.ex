@@ -1,8 +1,8 @@
 defmodule Chart.Internal.AxisLine.MajorTicksText do
   @moduledoc false
 
-  alias Chart.Internal.AxisLine.Helpers
-  import Chart.Internal.Guards, only: [is_decimals: 1, is_number: 2]
+  alias Chart.Internal.Utils
+  import Chart.Internal.Guards, only: [is_decimals: 1]
 
   @self_key :major_ticks_text
 
@@ -17,7 +17,10 @@ defmodule Chart.Internal.AxisLine.MajorTicksText do
   end
 
   def add(settings, axis) when is_map(settings) and is_atom(axis) do
-    put_in(settings, [axis, @self_key], new())
+    settings
+    |> put_in([axis, @self_key], new())
+    |> set_positions(axis)
+    |> set_labels(axis)
   end
 
   # Setters
@@ -39,14 +42,55 @@ defmodule Chart.Internal.AxisLine.MajorTicksText do
   @doc """
   range :: tuple(number(), number())
   """
-  def set_labels(settings, axis, {from, to} = range)
-      when is_map(settings) and is_atom(axis) and is_number(from, to) do
+  def set_labels(settings, axis)
+      when is_map(settings) and is_atom(axis) do
+    settings_ax = settings[axis]
+    format = settings_ax.major_ticks_text.format
+
+    labels =
+      compute_labels(
+        settings_ax.major_ticks_text.range,
+        settings_ax.major_ticks.count,
+        settings_ax.scale,
+        format
+      )
+      |> apply_format(format)
+
+    put_in(settings, [axis, @self_key, :labels], labels)
+  end
+
+  def set_positions(settings, axis) when is_map(settings) and is_atom(axis) do
+    put_in(settings, [axis, @self_key, :positions], settings[axis].major_ticks.positions)
+  end
+
+  def set_range(settings, axis, {from, to} = range)
+      when is_map(settings) and is_atom(axis) and is_number(from) and is_number(to) and from < to do
     settings
     |> put_in([axis, @self_key, :range], range)
-    |> Helpers.recalculate_ticks_labels(axis)
+    |> set_labels(axis)
   end
 
   # Private
+
+  defp apply_format(labels, {:decimals, dec}) do
+    Enum.map(labels, &Utils.round_value(&1, dec))
+  end
+
+  defp apply_format(labels, {:datetime, dt}) do
+    Enum.map(labels, &Utils.datetime_format(&1, dt))
+  end
+
+  defp compute_labels(range, count, :linear, {:decimals, _dec}) do
+    Utils.linspace(range, count)
+  end
+
+  defp compute_labels(range, count, :log, {:decimals, _dec}) do
+    Utils.logspace(range, count)
+  end
+
+  defp compute_labels(range, count, :linear, {:datetime, _dt}) do
+    Utils.linspace(range, count)
+  end
 
   defp validate_format({:decimals, dec} = format) when is_decimals(dec) do
     format
