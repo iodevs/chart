@@ -2,7 +2,7 @@ defmodule Chart.Internal.Title do
   @moduledoc false
 
   alias Chart.Internal.Text
-  import Chart.Internal.Guards, only: [is_numbers: 2, is_turn: 1]
+  import Chart.Internal.Guards, only: [is_number: 2, is_turn: 1]
 
   @self_key :title
 
@@ -13,7 +13,7 @@ defmodule Chart.Internal.Title do
   # Setters
 
   def set_position(settings, {x, y} = position)
-      when is_map(settings) and is_numbers(x, y) do
+      when is_map(settings) and is_number(x, y) do
     put_in(settings, [@self_key, :position], position)
   end
 

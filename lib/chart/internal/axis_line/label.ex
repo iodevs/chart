@@ -2,7 +2,7 @@ defmodule Chart.Internal.AxisLine.Label do
   @moduledoc false
 
   alias Chart.Internal.AxisLine.Helpers
-  import Chart.Internal.Guards, only: [is_numbers: 2, is_turn: 1]
+  import Chart.Internal.Guards, only: [is_number: 2, is_turn: 1]
 
   @self_key :label
 
@@ -29,7 +29,7 @@ defmodule Chart.Internal.AxisLine.Label do
   adjust_placement :: {number, number}
   """
   def set_adjust_placement(settings, axis, {x, y} = adjust_placement)
-      when is_map(settings) and is_atom(axis) and is_numbers(x, y) do
+      when is_map(settings) and is_atom(axis) and is_number(x, y) do
     settings
     |> put_in([axis, @self_key, :adjust_placement], adjust_placement)
     |> Helpers.recalculate_label_position(axis)

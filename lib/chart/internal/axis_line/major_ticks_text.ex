@@ -2,7 +2,7 @@ defmodule Chart.Internal.AxisLine.MajorTicksText do
   @moduledoc false
 
   alias Chart.Internal.AxisLine.Helpers
-  import Chart.Internal.Guards, only: [is_decimals: 1, is_numbers: 2]
+  import Chart.Internal.Guards, only: [is_decimals: 1, is_number: 2]
 
   @self_key :major_ticks_text
 
@@ -40,7 +40,7 @@ defmodule Chart.Internal.AxisLine.MajorTicksText do
   range :: tuple(number(), number())
   """
   def set_labels(settings, axis, {from, to} = range)
-      when is_map(settings) and is_atom(axis) and is_numbers(from, to) do
+      when is_map(settings) and is_atom(axis) and is_number(from, to) do
     settings
     |> put_in([axis, @self_key, :range], range)
     |> Helpers.recalculate_ticks_labels(axis)

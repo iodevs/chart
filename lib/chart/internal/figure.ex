@@ -1,7 +1,7 @@
 defmodule Chart.Internal.Figure do
   @moduledoc false
 
-  import Chart.Internal.Guards, only: [is_positive_numbers: 2]
+  import Chart.Internal.Guards, only: [is_positive_number: 2]
 
   def new() do
     %{viewbox: {800, 600}}
@@ -11,7 +11,7 @@ defmodule Chart.Internal.Figure do
     Map.put(settings, :figure, new())
   end
 
-  def put_viewbox(settings, {width, height} = viewbox) when is_positive_numbers(width, height) do
+  def put_viewbox(settings, {width, height} = viewbox) when is_positive_number(width, height) do
     put_in(settings, [:figure, :viewbox], viewbox)
   end
 end
