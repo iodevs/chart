@@ -15,7 +15,6 @@ defmodule Chart.Internal.AxisLine do
 
   def add(settings, axis) when is_map(settings) and is_atom(axis) do
     settings
-    |> put_in([:plot, :axis], [axis | settings.plot.axis])
     |> Map.put(axis, new())
     |> set_line(axis)
   end
