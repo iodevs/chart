@@ -37,7 +37,7 @@ defmodule Chart.Internal.AxisLine.MajorTicksText do
   end
 
   @doc """
-  labels :: list(number()) | list(String.t())
+  range :: tuple(number(), number())
   """
   def set_labels(settings, axis, {from, to} = range)
       when is_map(settings) and is_atom(axis) and is_numbers(from, to) do

@@ -7,14 +7,17 @@ defmodule Chart.Internal.AxisLine.Helpers do
   @gap_from_left 20
 
   def recalculate_ticks_labels(settings, axis) do
+    settings_ax = settings[axis]
+    major_ticks_text = settings_ax.major_ticks_text
+
     labels =
       compute_labels(
-        settings[axis].major_ticks_text.range,
-        settings[axis].major_ticks.count,
-        settings[axis].scale,
-        settings[axis].major_ticks_text.format
+        major_ticks_text.range,
+        settings_ax.major_ticks.count,
+        settings_ax.scale,
+        major_ticks_text.format
       )
-      |> apply_format(settings[axis].major_ticks_text.format)
+      |> apply_format(major_ticks_text.format)
 
     put_in(settings, [axis, :major_ticks_text, :labels], labels)
   end
@@ -25,10 +28,12 @@ defmodule Chart.Internal.AxisLine.Helpers do
 
   def recalculate_label_position(settings, axis)
       when is_map(settings) and is_atom(axis) do
+    label = settings[axis].label
+
     position =
       compute_label_position(
-        settings[axis].label.placement,
-        settings[axis].label.adjust_placement,
+        label.placement,
+        label.adjust_placement,
         settings.plot.position,
         settings.plot.size
       )
@@ -52,13 +57,15 @@ defmodule Chart.Internal.AxisLine.Helpers do
   end
 
   def recalculate_ticks_positions(settings, axis) when is_map(settings) and is_atom(axis) do
+    settings_ax = settings[axis]
+
     major_ticks_positions =
       compute_ticks_positions(
         axis,
         settings.plot.position,
         settings.plot.size,
-        settings[axis].major_ticks.count,
-        settings[axis].scale
+        settings_ax.major_ticks.count,
+        settings_ax.scale
       )
 
     minor_ticks_positions =
@@ -66,8 +73,8 @@ defmodule Chart.Internal.AxisLine.Helpers do
         axis,
         settings.plot.position,
         settings.plot.size,
-        settings[axis].minor_ticks.count,
-        settings[axis].scale
+        settings_ax.minor_ticks.count,
+        settings_ax.scale
       )
 
     settings
