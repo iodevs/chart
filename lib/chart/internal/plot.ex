@@ -1,10 +1,10 @@
 defmodule Chart.Internal.Plot do
   @moduledoc false
 
-  alias Chart.Internal.AxisLine.Helpers
+  alias Chart.Internal.AxisLine
+  alias Chart.Internal.AxisLine.{Label, MajorTicks, MinorTicks}
 
-  import Chart.Internal.Guards,
-    only: [is_nonnegative_number: 1, is_positive_number: 2, is_number: 2]
+  import Chart.Internal.Guards, only: [is_nonnegative_number: 1, is_positive_number: 1]
 
   @self_key :plot
 
@@ -24,17 +24,20 @@ defmodule Chart.Internal.Plot do
   # Setters
 
   def set_position(settings, {x, y} = position)
-      when is_map(settings) and is_number(x, y) do
-    axis = settings.plot.axis
-
+      when is_map(settings) and is_number(x) and is_number(y) do
     settings
     |> put_in(
       [@self_key, :position],
       validate_position(position, settings.figure.viewbox, settings.plot.size)
     )
-    |> Helpers.recalculate_ticks_positions(axis)
-    |> Helpers.recalculate_line(axis)
-    |> Helpers.recalculate_label_position(axis)
+    |> MajorTicks.set_positions(:x_axis)
+    |> MajorTicks.set_positions(:y_axis)
+    |> MinorTicks.set_positions(:x_axis)
+    |> MinorTicks.set_positions(:y_axis)
+    |> AxisLine.set_line(:x_axis)
+    |> AxisLine.set_line(:y_axis)
+    |> Label.set_position(:x_axis)
+    |> Label.set_position(:y_axis)
   end
 
   def set_rect_bg_padding(settings, rect_bg_padding) do
@@ -46,17 +49,20 @@ defmodule Chart.Internal.Plot do
   end
 
   def set_size(settings, {x, y} = size)
-      when is_map(settings) and is_number(x, y) do
-    axis = settings.plot.axis
-
+      when is_map(settings) and is_number(x) and is_number(y) do
     settings
     |> put_in(
       [@self_key, :size],
       validate_size(size, settings.figure.viewbox)
     )
-    |> Helpers.recalculate_ticks_positions(axis)
-    |> Helpers.recalculate_line(axis)
-    |> Helpers.recalculate_label_position(axis)
+    |> MajorTicks.set_positions(:x_axis)
+    |> MajorTicks.set_positions(:y_axis)
+    |> MinorTicks.set_positions(:x_axis)
+    |> MinorTicks.set_positions(:y_axis)
+    |> AxisLine.set_line(:x_axis)
+    |> AxisLine.set_line(:y_axis)
+    |> Label.set_position(:x_axis)
+    |> Label.set_position(:y_axis)
   end
 
   # Private
@@ -66,7 +72,7 @@ defmodule Chart.Internal.Plot do
          {fig_width, fig_height},
          {plot_width, plot_height}
        )
-       when is_positive_number(pos_x, pos_y) and
+       when is_positive_number(pos_x) and is_positive_number(pos_y) and
               pos_x + plot_width < fig_width and pos_y + plot_height < fig_height do
     position
   end
@@ -78,7 +84,7 @@ defmodule Chart.Internal.Plot do
   end
 
   defp validate_size({width, height} = size, {fig_width, fig_height})
-       when is_positive_number(width, height) and
+       when is_positive_number(width) and is_positive_number(height) and
               width < fig_width and height < fig_height do
     size
   end

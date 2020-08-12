@@ -1,7 +1,7 @@
 defmodule Chart.Internal.Text do
   @moduledoc false
 
-  import Chart.Internal.Guards, only: [is_number: 2, is_turn: 1]
+  import Chart.Internal.Guards, only: [is_turn: 1]
 
   @self_key :text
 
@@ -21,7 +21,7 @@ defmodule Chart.Internal.Text do
   # Setters
 
   def set_position(settings, {x, y} = position)
-      when is_map(settings) and is_number(x, y) do
+      when is_map(settings) and is_number(x) and is_number(y) do
     put_in(settings, [@self_key, :position], position)
   end
 
