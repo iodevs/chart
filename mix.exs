@@ -39,6 +39,7 @@ defmodule Chart.MixProject do
     [
       {:credo, "~> 1.1", only: [:dev, :test]},
       {:dialyxir, "~> 1.0", only: [:dev, :test], runtime: false},
+      {:nimble_strftime, "~> 0.1.1"},
       {:phoenix_html, "~> 2.11"},
       {:excoveralls, "~> 0.11", only: :test},
       {:ex_doc, "~> 0.22", only: :dev},

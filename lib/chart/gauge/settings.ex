@@ -1,8 +1,8 @@
 defmodule Chart.Gauge.Settings do
   @moduledoc false
 
-  alias Chart.Internal.{Utils, Validators}
-  import Chart.Internal.Utils, only: [key_guard: 4]
+  alias Chart.Gauge.{Utils, Validators}
+  import Chart.Gauge.Utils, only: [key_guard: 4]
 
   @offset_from_bottom 35
 
@@ -42,7 +42,7 @@ defmodule Chart.Gauge.Settings do
     @moduledoc false
 
     alias Chart.Gauge.Settings
-    import Chart.Internal.Utils, only: [key_guard: 4, linspace: 3]
+    import Chart.Gauge.Utils, only: [key_guard: 4, linspace: 3]
 
     @type t() :: %__MODULE__{
             count: pos_integer(),
@@ -90,7 +90,7 @@ defmodule Chart.Gauge.Settings do
   defmodule MajorTicksText do
     @moduledoc false
 
-    alias Chart.Internal.{Utils, Validators}
+    alias Chart.Gauge.{Utils, Validators}
     import Chart.Gauge.Utils, only: [split_major_tick_values: 2]
 
     @offset_radius_text 15
@@ -174,7 +174,7 @@ defmodule Chart.Gauge.Settings do
   defmodule ValueText do
     @moduledoc false
 
-    alias Chart.Internal.{Utils, Validators}
+    alias Chart.Gauge.{Utils, Validators}
 
     @type t() :: %__MODULE__{
             decimals: nil | non_neg_integer(),
@@ -213,7 +213,7 @@ defmodule Chart.Gauge.Settings do
   defmodule Thresholds do
     @moduledoc false
 
-    alias Chart.Internal.{Utils, Validators}
+    alias Chart.Gauge.{Utils, Validators}
 
     @type t() :: %__MODULE__{
             positions_with_class_name: nil | list(tuple()),
