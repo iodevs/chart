@@ -28,6 +28,15 @@ defmodule Chart.Internal.AxisLine.MajorTicksText do
   @doc """
   format :: {:decimals, non_neg_integer()} | {:datetime, String.t()}
   """
+  def set_format(settings, axis, {:datetime, dt} = format)
+      when is_map(settings) and is_atom(axis) and is_binary(dt) do
+    now = DateTime.utc_now() |> DateTime.to_unix()
+
+    settings
+    |> put_in([axis, @self_key, :format], validate_format(format))
+    |> set_range(axis, {now - 60, now})
+  end
+
   def set_format(settings, axis, format) when is_map(settings) and is_atom(axis) do
     settings
     |> put_in([axis, @self_key, :format], validate_format(format))
