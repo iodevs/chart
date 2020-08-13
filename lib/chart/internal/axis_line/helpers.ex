@@ -8,7 +8,7 @@ defmodule Chart.Internal.AxisLine.Helpers do
   end
 
   def compute_ticks_positions(:x_axis, {pos_x, _pos_y}, {width, _height}, count, :log) do
-    Utils.logspace({pos_x, pos_x + width}, count)
+    {pos_x, pos_x + width} |> log10() |> Utils.logspace(count)
   end
 
   def compute_ticks_positions(:y_axis, {_pos_x, pos_y}, {_width, height}, count, :linear) do
@@ -16,6 +16,12 @@ defmodule Chart.Internal.AxisLine.Helpers do
   end
 
   def compute_ticks_positions(:y_axis, {_pos_x, pos_y}, {_width, height}, count, :log) do
-    Utils.logspace({pos_y, pos_y + height}, count)
+    {pos_y, pos_y + height} |> log10() |> Utils.logspace(count)
+  end
+
+  # Private
+
+  def log10({a, b}) do
+    {:math.log10(a), :math.log10(b)}
   end
 end

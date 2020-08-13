@@ -36,6 +36,7 @@ defmodule Chart.Internal.AxisLine do
     |> put_in([axis, :scale], scale)
     |> MajorTicks.set_positions(axis)
     |> MinorTicks.set_positions(axis)
+    |> MajorTicksText.set_positions(axis)
     |> MajorTicksText.set_labels(axis)
   end
 
