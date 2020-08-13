@@ -29,7 +29,9 @@ defmodule Chart.Internal.AxisLine.MajorTicksText do
   format :: {:decimals, non_neg_integer()} | {:datetime, String.t()}
   """
   def set_format(settings, axis, format) when is_map(settings) and is_atom(axis) do
-    put_in(settings, [axis, @self_key, :format], validate_format(format))
+    settings
+    |> put_in([axis, @self_key, :format], validate_format(format))
+    |> set_labels(axis)
   end
 
   @doc """
