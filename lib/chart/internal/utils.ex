@@ -4,6 +4,16 @@ defmodule Chart.Internal.Utils do
   def datetime_format(int, dt) when is_integer(int) and is_binary(dt) do
     int
     |> DateTime.from_unix!()
+    # |> DateTime.from_unix!(:millisecond)
+    # |> DateTime.to_naive()
+    |> NimbleStrftime.format(dt)
+  end
+
+  def datetime_format(num, dt) when is_float(num) and is_binary(dt) do
+    num
+    |> round_value(0)
+    |> List.to_integer()
+    |> DateTime.from_unix!()
     |> NimbleStrftime.format(dt)
   end
 
