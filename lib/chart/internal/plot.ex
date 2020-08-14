@@ -1,8 +1,7 @@
 defmodule Chart.Internal.Plot do
   @moduledoc false
 
-  alias Chart.Internal.AxisLine
-  alias Chart.Internal.AxisLine.{Label, MajorTicks, MinorTicks}
+  alias Chart.Internal.AxisLine.{Label, MajorTicks, MajorTicksText, MinorTicks}
 
   import Chart.Internal.Guards, only: [is_nonnegative_number: 1, is_positive_number: 1]
 
@@ -33,6 +32,8 @@ defmodule Chart.Internal.Plot do
     |> MajorTicks.set_positions({0, 1})
     |> MinorTicks.set_positions({1, 0})
     |> MinorTicks.set_positions({0, 1})
+    |> MajorTicksText.set_positions({1, 0})
+    |> MajorTicksText.set_positions({0, 1})
     |> Label.set_position({1, 0})
     |> Label.set_position({0, 1})
   end
@@ -56,8 +57,11 @@ defmodule Chart.Internal.Plot do
     |> MajorTicks.set_positions({0, 1})
     |> MinorTicks.set_positions({1, 0})
     |> MinorTicks.set_positions({0, 1})
+    |> MajorTicksText.set_positions({1, 0})
+    |> MajorTicksText.set_positions({0, 1})
     |> Label.set_position({1, 0})
     |> Label.set_position({0, 1})
+    |> IO.inspect(label: "DAAAAAA")
   end
 
   # Private
