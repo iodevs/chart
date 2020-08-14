@@ -61,7 +61,6 @@ defmodule Chart.Internal.Plot do
     |> MajorTicksText.set_positions({0, 1})
     |> Label.set_position({1, 0})
     |> Label.set_position({0, 1})
-    |> IO.inspect(label: "DAAAAAA")
   end
 
   # Private
