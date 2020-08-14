@@ -70,6 +70,12 @@ defmodule Chart.Internal.AxisLine.MajorTicksText do
     put_in(settings, [axis, @self_key, :labels], labels)
   end
 
+  def set_positions(settings, vector) when is_map(settings) and is_tuple(vector) do
+    axis = settings |> Utils.find_axis_for_vector(vector) |> hd()
+
+    set_positions(settings, axis)
+  end
+
   def set_positions(settings, axis) when is_map(settings) and is_atom(axis) do
     put_in(settings, [axis, @self_key, :positions], settings[axis].major_ticks.positions)
   end
