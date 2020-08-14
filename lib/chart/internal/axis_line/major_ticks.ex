@@ -2,6 +2,7 @@ defmodule Chart.Internal.AxisLine.MajorTicks do
   @moduledoc false
 
   alias Chart.Internal.AxisLine.{Helpers, MajorTicksText}
+  alias Chart.Internal.Utils
   import Chart.Internal.Guards, only: [is_positive_number: 1]
 
   @self_key :major_ticks
@@ -40,12 +41,18 @@ defmodule Chart.Internal.AxisLine.MajorTicks do
     put_in(settings, [axis, @self_key, :length], length)
   end
 
+  def set_positions(settings, vector) when is_map(settings) and is_tuple(vector) do
+    axis = settings |> Utils.find_axis_for_vector(vector) |> hd()
+
+    set_positions(settings, axis)
+  end
+
   def set_positions(settings, axis) when is_map(settings) and is_atom(axis) do
     settings_ax = settings[axis]
 
     positions =
       Helpers.compute_ticks_positions(
-        axis,
+        settings_ax.vector,
         settings.plot.position,
         settings.plot.size,
         settings_ax.major_ticks.count,

@@ -9,21 +9,22 @@ defmodule Chart.Internal.AxisLine do
     %{
       line: nil,
       scale: :linear,
-      thickness: 2
+      thickness: 2,
+      vector: {0, 0}
     }
   end
 
-  def add(settings, axis) when is_map(settings) and is_atom(axis) do
+  def add(settings, axis, vector) when is_map(settings) and is_atom(axis) do
     settings
     |> Map.put(axis, new())
+    |> put_in([axis, :vector], vector)
     |> set_line(axis)
   end
 
   # Setters
 
   def set_line(settings, axis) when is_map(settings) and is_atom(axis) do
-    line =
-      compute_line(axis, settings.plot.position, settings.plot.size, settings[axis].thickness)
+    line = compute_line(settings[axis].vector, settings.plot.position, settings.plot.size)
 
     put_in(settings, [axis, :line], line)
   end
@@ -45,18 +46,16 @@ defmodule Chart.Internal.AxisLine do
   """
   def set_thickness(settings, axis, thickness)
       when is_map(settings) and is_atom(axis) and is_number(thickness) and thickness > 0 do
-    settings
-    |> put_in([axis, :thickness], thickness)
-    |> set_line(axis)
+    put_in(settings, [axis, :thickness], thickness)
   end
 
   # Private
 
-  defp compute_line(:x_axis, {pos_x, pos_y}, {width, height}, thickness) do
-    {pos_x, pos_y + height, pos_x + width, pos_y + height, thickness}
+  defp compute_line({1, 0}, {pos_x, pos_y}, {width, height}) do
+    {pos_x, pos_y + height, pos_x + width, pos_y + height}
   end
 
-  defp compute_line(:y_axis, {pos_x, pos_y}, {_width, height}, thickness) do
-    {pos_x, pos_y, pos_x, pos_y + height + thickness / 2, thickness}
+  defp compute_line({0, 1}, {pos_x, pos_y}, {_width, height}) do
+    {pos_x, pos_y, pos_x, pos_y + height}
   end
 end

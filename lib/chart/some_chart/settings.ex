@@ -22,10 +22,20 @@ defmodule Chart.SomeChart.Settings do
 
   def axis(settings, key) when is_map(settings) and is_atom(key) do
     settings
-    |> AxisLine.add(key)
+    |> set_axis(key)
     |> Label.add(key)
     |> MajorTicks.add(key)
     |> MajorTicksText.add(key)
     |> MinorTicks.add(key)
+  end
+
+  # Private
+
+  defp set_axis(settings, :x_axis) do
+    AxisLine.add(settings, :x_axis, {1, 0})
+  end
+
+  defp set_axis(settings, :y_axis) do
+    AxisLine.add(settings, :y_axis, {0, 1})
   end
 end
