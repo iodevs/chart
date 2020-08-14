@@ -17,7 +17,17 @@ defmodule Chart.Internal.Utils do
     |> NimbleStrftime.format(dt)
   end
 
+  def find_axis_for_vector(map, vector) do
+    for {axis, %{vector: ^vector}} <- map, do: axis
+  end
+
   # Math
+  @doc """
+  transform(point, parametr, vector)
+  """
+  def transform({px, py}, parameter, {vx, vy}) do
+    {px + parameter * vx, py + parameter * vy}
+  end
 
   def linspace({min, max}, step), do: linspace(min, max, step)
 

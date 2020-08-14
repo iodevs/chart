@@ -1,6 +1,7 @@
 defmodule Chart.Internal.AxisLine.Label do
   @moduledoc false
 
+  alias Chart.Internal.Utils
   import Chart.Internal.Guards, only: [is_turn: 1]
 
   @self_key :label
@@ -36,6 +37,12 @@ defmodule Chart.Internal.AxisLine.Label do
     settings
     |> put_in([axis, @self_key, :adjust_placement], adjust_placement)
     |> set_position(axis)
+  end
+
+  def set_position(settings, vector) when is_map(settings) and is_tuple(vector) do
+    axis = settings |> Utils.find_axis_for_vector(vector) |> hd()
+
+    set_position(settings, axis)
   end
 
   def set_position(settings, axis) when is_map(settings) and is_atom(axis) do

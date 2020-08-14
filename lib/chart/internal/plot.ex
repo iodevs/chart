@@ -29,14 +29,12 @@ defmodule Chart.Internal.Plot do
       [@self_key, :position],
       validate_position(position, settings.figure.viewbox, settings.plot.size)
     )
-    |> MajorTicks.set_positions(:x_axis)
-    |> MajorTicks.set_positions(:y_axis)
-    |> MinorTicks.set_positions(:x_axis)
-    |> MinorTicks.set_positions(:y_axis)
-    |> AxisLine.set_line(:x_axis)
-    |> AxisLine.set_line(:y_axis)
-    |> Label.set_position(:x_axis)
-    |> Label.set_position(:y_axis)
+    |> MajorTicks.set_positions({1, 0})
+    |> MajorTicks.set_positions({0, 1})
+    |> MinorTicks.set_positions({1, 0})
+    |> MinorTicks.set_positions({0, 1})
+    |> Label.set_position({1, 0})
+    |> Label.set_position({0, 1})
   end
 
   def set_rect_bg_padding(settings, rect_bg_padding) do
@@ -54,14 +52,12 @@ defmodule Chart.Internal.Plot do
       [@self_key, :size],
       validate_size(size, settings.figure.viewbox)
     )
-    |> MajorTicks.set_positions(:x_axis)
-    |> MajorTicks.set_positions(:y_axis)
-    |> MinorTicks.set_positions(:x_axis)
-    |> MinorTicks.set_positions(:y_axis)
-    |> AxisLine.set_line(:x_axis)
-    |> AxisLine.set_line(:y_axis)
-    |> Label.set_position(:x_axis)
-    |> Label.set_position(:y_axis)
+    |> MajorTicks.set_positions({1, 0})
+    |> MajorTicks.set_positions({0, 1})
+    |> MinorTicks.set_positions({1, 0})
+    |> MinorTicks.set_positions({0, 1})
+    |> Label.set_position({1, 0})
+    |> Label.set_position({0, 1})
   end
 
   # Private
