@@ -22,6 +22,7 @@ defmodule Chart.Internal.Utils do
   end
 
   # Math
+
   @doc """
   transform(point, parametr, vector)
   """
@@ -51,6 +52,10 @@ defmodule Chart.Internal.Utils do
   def logspace(min, max, step)
       when is_number(min) and is_number(max) and is_integer(step) and min < max and 1 < step do
     linspace(min, max, step) |> Enum.map(&:math.pow(10, &1))
+  end
+
+  def log10({a, b}) do
+    {:math.log10(a), :math.log10(b)}
   end
 
   def round_value(value, decimals) do

@@ -1,7 +1,7 @@
 defmodule Chart.Internal.AxisLine.MajorTicks do
   @moduledoc false
 
-  alias Chart.Internal.AxisLine.{Helpers, MajorTicksText}
+  alias Chart.Internal.AxisLine.MajorTicksText
   alias Chart.Internal.Utils
   import Chart.Internal.Guards, only: [is_positive_number: 1]
 
@@ -9,9 +9,9 @@ defmodule Chart.Internal.AxisLine.MajorTicks do
 
   def new() do
     %{
-      count: 7,
+      count: 11,
       gap: 0,
-      length: 0.5,
+      length: 15,
       positions: []
     }
   end
@@ -51,7 +51,7 @@ defmodule Chart.Internal.AxisLine.MajorTicks do
     settings_ax = settings[axis]
 
     positions =
-      Helpers.compute_ticks_positions(
+      compute_ticks_positions(
         settings_ax.vector,
         settings.plot.position,
         settings.plot.size,
@@ -60,5 +60,23 @@ defmodule Chart.Internal.AxisLine.MajorTicks do
       )
 
     put_in(settings, [axis, @self_key, :positions], positions)
+  end
+
+  # Private
+
+  defp compute_ticks_positions({1, 0}, {pos_x, _pos_y}, {width, _height}, count, :linear) do
+    Utils.linspace({pos_x, pos_x + width}, count)
+  end
+
+  defp compute_ticks_positions({1, 0}, {pos_x, _pos_y}, {width, _height}, count, :log) do
+    {pos_x, pos_x + width} |> Utils.log10() |> Utils.logspace(count)
+  end
+
+  defp compute_ticks_positions({0, 1}, {_pos_x, pos_y}, {_width, height}, count, :linear) do
+    Utils.linspace({pos_y, pos_y + height}, count)
+  end
+
+  defp compute_ticks_positions({0, 1}, {_pos_x, pos_y}, {_width, height}, count, :log) do
+    {pos_y, pos_y + height} |> Utils.log10() |> Utils.logspace(count)
   end
 end

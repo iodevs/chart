@@ -1,7 +1,6 @@
 defmodule Chart.Internal.AxisLine.MinorTicks do
   @moduledoc false
 
-  alias Chart.Internal.AxisLine.Helpers
   alias Chart.Internal.Utils
   import Chart.Internal.Guards, only: [is_positive_number: 1]
 
@@ -9,9 +8,9 @@ defmodule Chart.Internal.AxisLine.MinorTicks do
 
   def new() do
     %{
-      count: 20,
+      count: 5,
       gap: 0,
-      length: 0.25,
+      length: 10,
       positions: []
     }
   end
@@ -50,14 +49,31 @@ defmodule Chart.Internal.AxisLine.MinorTicks do
     settings_ax = settings[axis]
 
     positions =
-      Helpers.compute_ticks_positions(
-        settings_ax.vector,
-        settings.plot.position,
-        settings.plot.size,
-        settings_ax.minor_ticks.count,
-        settings_ax.scale
+      settings_ax.major_ticks.positions
+      |> Enum.chunk_every(2, 1)
+      |> List.delete_at(-1)
+      |> Enum.map(
+        &(compute_ticks_positions(
+            &1,
+            settings_ax.minor_ticks.count + 2,
+            settings_ax.scale
+          )
+          |> List.delete_at(0)
+          |> List.delete_at(-1))
       )
+      |> List.flatten()
+      |> Enum.uniq()
 
     put_in(settings, [axis, @self_key, :positions], positions)
+  end
+
+  # Private
+
+  defp compute_ticks_positions([min, max], count, :linear) do
+    Utils.linspace(min, max, count)
+  end
+
+  defp compute_ticks_positions([min, max], count, :log) do
+    {min, max} |> Utils.log10() |> Utils.logspace(count)
   end
 end
