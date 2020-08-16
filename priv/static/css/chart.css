@@ -1,0 +1,104 @@
+chart {
+}
+
+#figure_bg {
+  fill: var(--figure_bg-color, white);
+}
+
+/* ====================== TITLE ======================  */
+#title {
+  font-size: 48px;
+}
+
+/* ====================== PLOT ======================  */
+#plot {
+  fill: lightgray;
+}
+
+/* ====================== AXIS ======================  */
+.axis {
+  --axis-color: #2d3436;
+}
+
+#x_axis {
+  stroke: var(--axis-color, #2d3436);
+}
+
+#y_axis {
+  stroke: var(--axis-color, #2d3436);
+}
+
+.major-ticks-text {
+  --mt-font-size: 6px;
+  --mt-font-color: rgb(85, 58, 58);
+  --mt-font-opacity: 0.8;
+  --mt-font-family: "Open Sans", Verdana, Arial;
+  --mt-font-variant: normal;
+  --mt-font-weight: 600;
+}
+
+.x-major-text {
+  font-family: var(--mt-font-family);
+  font-variant: var(--mt-font-variant);
+  font-weight: var(--mt-font-weight);
+  font-size: var(--mt-font-size);
+  fill: var(--mt-font-color);
+  opacity: var(--mt-font-opacity);
+}
+
+.x-major-ticks {
+  --mjl-stroke-color: var(--axis-color, #2d3436);
+  --mjl-stroke-width: 2;
+  --mjl-stroke-linecap: butt;
+}
+
+#x-major-line-ticks {
+  stroke: var(--mjl-stroke-color);
+  stroke-width: var(--mjl-stroke-width);
+  stroke-linecap: var(--mjl-stroke-linecap);
+}
+
+.x-minor-ticks {
+  --mjl-stroke-color: var(--axis-color, #2d3436);
+  --mjl-stroke-width: 1.5;
+  --mjl-stroke-linecap: butt;
+}
+
+#x-minor-line-ticks {
+  stroke: var(--mjl-stroke-color);
+  stroke-width: var(--mjl-stroke-width);
+  stroke-linecap: var(--mjl-stroke-linecap);
+}
+
+.y-major-text {
+  font-family: var(--mt-font-family);
+  font-variant: var(--mt-font-variant);
+  font-weight: var(--mt-font-weight);
+  font-size: var(--mt-font-size);
+  fill: var(--mt-font-color);
+  opacity: var(--mt-font-opacity);
+}
+
+.y-major-ticks {
+  --mjl-stroke-color: #2d3436;
+  --mjl-stroke-width: 2;
+  --mjl-stroke-linecap: butt;
+}
+
+#y-major-line-ticks {
+  stroke: var(--mjl-stroke-color);
+  stroke-width: var(--mjl-stroke-width);
+  stroke-linecap: var(--mjl-stroke-linecap);
+}
+
+.y-minor-ticks {
+  --mjl-stroke-color: var(--axis-color, #2d3436);
+  --mjl-stroke-width: 1.5;
+  --mjl-stroke-linecap: butt;
+}
+
+#y-minor-line-ticks {
+  stroke: var(--mjl-stroke-color);
+  stroke-width: var(--mjl-stroke-width);
+  stroke-linecap: var(--mjl-stroke-linecap);
+}

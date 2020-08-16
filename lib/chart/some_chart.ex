@@ -3,11 +3,11 @@ defmodule Chart.SomeChart do
   An example chart.
   """
 
-  alias Chart.SomeChart.Settings
-  alias Chart.Chart
+  alias Chart.Line.Settings
+  alias Chart.Line
 
   def new() do
-    Chart.new()
-    |> Chart.put_settings(Settings.new())
+    Line.new()
+    |> Line.put_settings(Settings.new())
   end
 end

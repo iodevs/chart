@@ -1,6 +1,6 @@
-defmodule Chart.SomeChart.Settings do
+defmodule Chart.Line.Settings do
   @moduledoc """
-  A chart settings.
+  A line chart settings.
   """
 
   alias Chart.Internal.AxisLine.{Label, MajorTicks, MajorTicksText, MinorTicks}
@@ -11,12 +11,16 @@ defmodule Chart.SomeChart.Settings do
     |> Figure.add()
     |> Title.add()
     |> Title.set_text("Graph")
+    |> Title.set_position({400, 50})
     |> Plot.add()
     |> GridLine.add()
     |> axis(:x_axis)
     |> axis(:y_axis)
     |> Label.set_text(:x_axis, "Axis X")
+    |> MajorTicksText.set_range(:x_axis, {0, 10})
+    # |> AxisLine.set_scale(:x_axis, :log)
     |> Label.set_text(:y_axis, "Axis Y")
+    |> MinorTicks.set_count(:y_axis, 3)
     |> Label.set_placement(:y_axis, :top)
   end
 
