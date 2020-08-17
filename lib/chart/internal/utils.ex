@@ -18,7 +18,14 @@ defmodule Chart.Internal.Utils do
   end
 
   def find_axis_for_vector(map, vector) do
-    map |> Enum.filter(fn {_k, ax} -> ax.vector == vector end) |> Keyword.keys()
+    {axis, _map} =
+      map
+      |> Enum.find(fn
+        {_axis, %{vector: v}} -> v == vector
+        {_k, _v} -> nil
+      end)
+
+    axis
   end
 
   # Math
