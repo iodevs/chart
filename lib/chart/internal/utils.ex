@@ -18,7 +18,7 @@ defmodule Chart.Internal.Utils do
   end
 
   def find_axis_for_vector(map, vector) do
-    for {axis, %{vector: ^vector}} <- map, do: axis
+    map |> Enum.filter(fn {_k, ax} -> ax.vector == vector end) |> Keyword.keys()
   end
 
   # Math
