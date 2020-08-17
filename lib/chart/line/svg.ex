@@ -1,12 +1,11 @@
-defmodule Chart.Line.Svg do
+defmodule Chart.Chart.Line.Svg do
   @moduledoc false
 
-  alias Chart.Line
   alias Chart.Line.View
 
   use Phoenix.HTML
 
-  def generate(%Line{} = line) do
+  def generate(line) do
     assigns =
       line
       |> Map.from_struct()
