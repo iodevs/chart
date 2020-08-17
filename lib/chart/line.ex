@@ -3,32 +3,19 @@ defmodule Chart.Line do
   A line chart definition structure
   """
 
+  alias Chart.Chart
   alias Chart.Line.{Settings, Svg}
 
-  defstruct settings: nil,
-            data: nil
-
-  def new() do
-    %__MODULE__{
-      settings: nil,
-      data: nil
-    }
+  def put(%Chart{} = chart, data) do
+    Chart.put_data(chart, data)
   end
 
-  def put(%__MODULE__{} = line, data) do
-    %{line | data: data}
-  end
-
-  def render(%__MODULE__{} = line) do
-    line |> Svg.generate()
+  def render(%Chart{} = chart) do
+    chart |> Svg.generate()
   end
 
   def setup() do
-    new()
-    |> put_settings(Settings.new())
-  end
-
-  def put_settings(%__MODULE__{} = chart, settings) when is_map(settings) do
-    Map.put(chart, :settings, settings)
+    Chart.new()
+    |> Chart.put_settings(Settings.new())
   end
 end

@@ -1,4 +1,4 @@
-defmodule Chart.Line.Settings do
+defmodule Chart.Chart.Line.Settings do
   @moduledoc """
   A line chart settings.
   """
