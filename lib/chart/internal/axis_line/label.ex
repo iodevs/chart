@@ -40,7 +40,7 @@ defmodule Chart.Internal.AxisLine.Label do
   end
 
   def set_position(settings, vector) when is_map(settings) and is_tuple(vector) do
-    axis = settings |> Utils.find_axis_for_vector(vector) |> hd()
+    axis = settings |> Utils.find_axis_for_vector(vector)
 
     set_position(settings, axis)
   end

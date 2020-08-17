@@ -7,7 +7,7 @@ defmodule Chart.Line.View do
   @gap_from_y_axis_line 35
 
   def get_axis(settings, vector) do
-    Utils.find_axis_for_vector(settings, vector) |> hd()
+    Utils.find_axis_for_vector(settings, vector)
   end
 
   def plot_rect_bg(plot) do

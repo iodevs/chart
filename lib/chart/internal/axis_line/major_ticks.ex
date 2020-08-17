@@ -42,7 +42,7 @@ defmodule Chart.Internal.AxisLine.MajorTicks do
   end
 
   def set_positions(settings, vector) when is_map(settings) and is_tuple(vector) do
-    axis = settings |> Utils.find_axis_for_vector(vector) |> hd()
+    axis = settings |> Utils.find_axis_for_vector(vector)
 
     set_positions(settings, axis)
   end
