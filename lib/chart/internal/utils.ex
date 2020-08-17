@@ -24,34 +24,45 @@ defmodule Chart.Internal.Utils do
   # Math
 
   @doc """
+  Linear transform function.
+
   transform(point, parametr, vector)
   """
+  @spec transform({number(), number()}, number(), {number(), number()}) :: {number(), number()}
   def transform({px, py}, parameter, {vx, vy}) do
     {px + parameter * vx, py + parameter * vy}
   end
 
-  def linspace({min, max}, step), do: linspace(min, max, step)
+  @doc """
+  Generate linearly spaced list.
+
+  y = linspace(x1, x2) returns a list of 10 evenly spaced points between x1 and x2.
+  y = linspace(x1, x2, N) generates N points between x1 and x2.
+  """
+  @spec linspace({number(), number()}, pos_integer()) :: list(number())
+  def linspace({min, max}, num_points), do: linspace(min, max, num_points)
 
   @spec linspace(number(), number(), pos_integer()) :: list(number())
-  def linspace(min, max, step)
-      when is_number(min) and is_number(max) and is_integer(step) and min < max and 1 < step do
-    delta = :erlang.abs(max - min) / (step - 1)
+  def linspace(min, max, num_points \\ 10)
+      when is_number(min) and is_number(max) and is_integer(num_points) and min < max and
+             1 < num_points do
+    delta = :erlang.abs(max - min) / (num_points - 1)
 
-    Enum.reduce(1..(step - 1), [min], fn x, acc ->
-      acc ++ [min + x * delta]
-    end)
+    Enum.map(0..(num_points - 1), fn i -> min + i * delta end)
   end
 
   @doc """
-  Return numbers spaced evenly on a log scale. It means that generates `n` points between
+  Return numbers spaced evenly on a log scale. It means that generates `N` points between
   decades `10^min` and `10^max`.
   """
-  def logspace({min, max}, step), do: logspace(min, max, step)
+  @spec logspace({number(), number()}, pos_integer()) :: list(number())
+  def logspace({min, max}, num_points), do: logspace(min, max, num_points)
 
   @spec logspace(number(), number(), pos_integer()) :: list(number())
-  def logspace(min, max, step)
-      when is_number(min) and is_number(max) and is_integer(step) and min < max and 1 < step do
-    linspace(min, max, step) |> Enum.map(&:math.pow(10, &1))
+  def logspace(min, max, num_points)
+      when is_number(min) and is_number(max) and is_integer(num_points) and min < max and
+             1 < num_points do
+    linspace(min, max, num_points) |> Enum.map(&:math.pow(10, &1))
   end
 
   def log10({a, b}) do
