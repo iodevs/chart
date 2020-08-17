@@ -55,7 +55,7 @@ defmodule Chart.Internal.AxisLine.MajorTicks do
         settings_ax.vector,
         settings.plot.position,
         settings.plot.size,
-        settings_ax.major_ticks.count,
+        settings_ax.major_ticks.count + 1,
         settings_ax.scale
       )
 
