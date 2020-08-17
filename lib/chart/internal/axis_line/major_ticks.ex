@@ -9,7 +9,7 @@ defmodule Chart.Internal.AxisLine.MajorTicks do
 
   def new() do
     %{
-      count: 11,
+      count: 10,
       gap: 0,
       length: 15,
       positions: []

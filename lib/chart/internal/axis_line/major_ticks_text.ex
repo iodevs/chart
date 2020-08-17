@@ -61,7 +61,7 @@ defmodule Chart.Internal.AxisLine.MajorTicksText do
     labels =
       compute_labels(
         settings_ax.major_ticks_text.range,
-        settings_ax.major_ticks.count,
+        settings_ax.major_ticks.count + 1,
         settings_ax.scale,
         format
       )
