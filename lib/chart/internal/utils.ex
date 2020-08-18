@@ -17,15 +17,14 @@ defmodule Chart.Internal.Utils do
     |> NimbleStrftime.format(dt)
   end
 
-  def find_axis_for_vector(map, vector) do
-    {axis, _map} =
-      map
-      |> Enum.find(fn
-        {_axis, %{vector: v}} -> v == vector
-        {_k, _v} -> nil
-      end)
+  def get_all_axis(map) do
+    Map.keys(map)
+  end
 
-    axis
+  def get_axis_for_vector(map, vector) when is_map(map) and is_tuple(vector) do
+    map
+    |> Enum.find(fn {_key, v} -> v == vector end)
+    |> elem(0)
   end
 
   # Math

@@ -6,7 +6,7 @@ defmodule Chart.Internal.AxisLine.Label do
 
   @self_key :label
   @gap_from_bottom 60
-  @gap_from_left 20
+  @gap_from_left 70
 
   defguard label_placement(pl) when pl in [:left, :center, :right, :top, :middle, :bottom]
 
@@ -40,7 +40,7 @@ defmodule Chart.Internal.AxisLine.Label do
   end
 
   def set_position(settings, vector) when is_map(settings) and is_tuple(vector) do
-    axis = settings |> Utils.find_axis_for_vector(vector)
+    axis = settings.axis_table |> Utils.get_axis_for_vector(vector)
 
     set_position(settings, axis)
   end
