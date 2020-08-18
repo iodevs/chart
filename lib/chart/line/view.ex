@@ -26,6 +26,34 @@ defmodule Chart.Line.View do
     List.zip([pos_x, major_ticks_text.positions |> Enum.reverse(), major_ticks_text.labels])
   end
 
+  def css_id_axis_major_line_ticks(axis) do
+    "#{Atom.to_string(axis)}-major-line-ticks"
+  end
+
+  def css_id_axis_minor_line_ticks(axis) do
+    "#{Atom.to_string(axis)}-minor-line-ticks"
+  end
+
+  def css_class_axis_major_ticks(axis) do
+    "#{Atom.to_string(axis)}-major-ticks"
+  end
+
+  def css_class_axis_minor_ticks(axis) do
+    "#{Atom.to_string(axis)}-minor-ticks"
+  end
+
+  def css_class_axis_major_ticks_label(axis) do
+    "#{Atom.to_string(axis)}-major-ticks-label"
+  end
+
+  def css_class_axis_tick_label(axis) do
+    "#{Atom.to_string(axis)}-tick-label"
+  end
+
+  def css_id_axis_label(axis) do
+    "#{Atom.to_string(axis)}-label"
+  end
+
   def get_axis(settings, vector) do
     Utils.get_axis_for_vector(settings.axis_table, vector)
   end
