@@ -10,6 +10,10 @@ defmodule Chart.Line.View do
     Utils.find_axis_for_vector(settings, vector)
   end
 
+  def parse_chart(settings) do
+    {settings.figure, settings.grid, settings.plot, settings.title}
+  end
+
   def plot_rect_bg(plot) do
     {px, py} = plot.position
     {width, height} = plot.size
