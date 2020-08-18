@@ -15,10 +15,8 @@ defmodule Chart.Line.AxisSvg do
       <% settings_ax = settings[axis] %>
       <% minor_ticks = settings_ax.minor_ticks %>
       <defs>
-        <%= case vector do %>
-          <% {1, 0} -> %><line id="<%= Atom.to_string(axis) %>-minor-line-ticks" y1="<%= minor_ticks.length %>"/>
-          <% {0, 1} -> %><line id="<%= Atom.to_string(axis) %>-minor-line-ticks" x1="<%= minor_ticks.length %>"/>
-        <% end%>
+        <% {x1, y1} = @view.set_axis_tick(minor_ticks.length, vector) %>
+        <line id="<%= Atom.to_string(axis) %>-minor-line-ticks" x1="<%= x1 %>" y1="<%= y1 %>" />
       </defs>
       <g class="<%= Atom.to_string(axis) %>-minor-ticks">
         <%= for position <- minor_ticks.positions do %>
@@ -29,10 +27,8 @@ defmodule Chart.Line.AxisSvg do
 
       <% major_ticks = settings_ax.major_ticks %>
       <defs>
-        <%= case vector do %>
-          <% {1, 0} -> %><line id="<%= Atom.to_string(axis) %>-major-line-ticks" y1="<%= major_ticks.length %>"/>
-          <% {0, 1} -> %><line id="<%= Atom.to_string(axis) %>-major-line-ticks" x1="<%= major_ticks.length %>"/>
-        <% end%>
+        <% {x1, y1} = @view.set_axis_tick(major_ticks.length, vector) %>
+        <line id="<%= Atom.to_string(axis) %>-major-line-ticks" x1="<%= x1 %>" y1="<%= y1 %>" />
       </defs>
       <g class="<%= Atom.to_string(axis) %>-major-ticks">
         <%= for position <- major_ticks.positions do %>

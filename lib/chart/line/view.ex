@@ -48,6 +48,14 @@ defmodule Chart.Line.View do
     {x1, y1, x2, y2 + settings_ax.thickness / 2, settings_ax.thickness}
   end
 
+  def set_axis_tick(length, {1, 0}) do
+    {0, length}
+  end
+
+  def set_axis_tick(length, {0, 1}) do
+    {length, 0}
+  end
+
   def translate_axis_ticks({_x1, y1, _x2, _y2}, _length, gap, px, {1, 0}) do
     "translate(#{px}, #{y1 + gap})"
   end
