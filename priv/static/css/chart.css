@@ -20,6 +20,10 @@ chart {
   --axis-color: #2d3436;
 }
 
+.axis-label {
+  --axis-label-color: #2d3436;
+}
+
 #x_axis {
   stroke: var(--axis-color, #2d3436);
 }
@@ -37,7 +41,7 @@ chart {
   --mt-font-weight: 600;
 }
 
-.x-major-text {
+.x_axis-major-text {
   font-family: var(--mt-font-family);
   font-variant: var(--mt-font-variant);
   font-weight: var(--mt-font-weight);
@@ -46,31 +50,35 @@ chart {
   opacity: var(--mt-font-opacity);
 }
 
-.x-major-ticks {
+.x_axis-major-ticks {
   --mjl-stroke-color: var(--axis-color, #2d3436);
   --mjl-stroke-width: 2;
   --mjl-stroke-linecap: butt;
 }
 
-#x-major-line-ticks {
+#x_axis-major-line-ticks {
   stroke: var(--mjl-stroke-color);
   stroke-width: var(--mjl-stroke-width);
   stroke-linecap: var(--mjl-stroke-linecap);
 }
 
-.x-minor-ticks {
+.x_axis-minor-ticks {
   --mjl-stroke-color: var(--axis-color, #2d3436);
   --mjl-stroke-width: 1.5;
   --mjl-stroke-linecap: butt;
 }
 
-#x-minor-line-ticks {
+#x_axis-minor-line-ticks {
   stroke: var(--mjl-stroke-color);
   stroke-width: var(--mjl-stroke-width);
   stroke-linecap: var(--mjl-stroke-linecap);
 }
 
-.y-major-text {
+#x_axis-label {
+  color: var(--axis-label-color, #2d3436);
+}
+
+.y_axis-major-text {
   font-family: var(--mt-font-family);
   font-variant: var(--mt-font-variant);
   font-weight: var(--mt-font-weight);
@@ -79,26 +87,31 @@ chart {
   opacity: var(--mt-font-opacity);
 }
 
-.y-major-ticks {
+.y_axis-major-ticks {
   --mjl-stroke-color: #2d3436;
   --mjl-stroke-width: 2;
   --mjl-stroke-linecap: butt;
 }
 
-#y-major-line-ticks {
+#y_axis-major-line-ticks {
   stroke: var(--mjl-stroke-color);
   stroke-width: var(--mjl-stroke-width);
   stroke-linecap: var(--mjl-stroke-linecap);
 }
 
-.y-minor-ticks {
+.y_axis-minor-ticks {
   --mjl-stroke-color: var(--axis-color, #2d3436);
   --mjl-stroke-width: 1.5;
   --mjl-stroke-linecap: butt;
 }
 
-#y-minor-line-ticks {
+#y_axis-minor-line-ticks {
   stroke: var(--mjl-stroke-color);
   stroke-width: var(--mjl-stroke-width);
   stroke-linecap: var(--mjl-stroke-linecap);
+}
+
+#y_axis-label {
+  color: var(--axis-label-color, #2d3436);
+  writing-mode: vertical-lr;
 }
