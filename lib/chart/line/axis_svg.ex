@@ -53,12 +53,14 @@ defmodule Chart.Line.AxisSvg do
       <line id="<%= Atom.to_string(axis) %>" x1="<%= x1 %>" y1="<%= y1 %>" x2="<%= x2 %>" y2="<%= y2 %>"
       stroke-width="<%= thickness %>" />
 
-      <g class="axis-label">
-        <% {pos_x, pos_y} = settings_ax.label.position %>
-          <text id="<%= @axis_view.css_id_axis_label(axis) %>" x="<%= pos_x %>" y="<%= pos_y %>"
-            alignment-baseline="middle" text-anchor="middle"
-          ><%= settings_ax.label.text %></text>
-      </g>
+      <%= if settings_ax.label.turn == :on do %>
+        <g class="axis-label">
+          <% {pos_x, pos_y} = settings_ax.label.position %>
+            <text id="<%= @axis_view.css_id_axis_label(axis) %>" x="<%= pos_x %>" y="<%= pos_y %>"
+              dominant-baseline="central" text-anchor="middle"
+            ><%= settings_ax.label.text %></text>
+        </g>
+      <% end %>
     <% end %>
     </g>
     """
