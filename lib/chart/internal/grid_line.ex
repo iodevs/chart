@@ -9,10 +9,10 @@ defmodule Chart.Internal.GridLine do
 
   def new() do
     %{
-      major_gap: 0.5,
+      major_gap: 0.25,
       major_placement: :under,
       major_turn: :on,
-      minor_gap: 0.5,
+      minor_gap: 5,
       minor_placement: :under,
       minor_turn: :off
     }
