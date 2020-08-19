@@ -15,9 +15,39 @@ chart {
   fill: lightgray;
 }
 
+/* ====================== GRID ======================  */
+.grid {
+  --grid-minor-color: darkgrey;
+  --grid-minor-stroke-width: 1;
+  --grid-minor-stroke-linecap: butt;
+  --grid-minor-stroke-dasharray: 3;
+  --grid-major-color: darkgrey;
+  --grid-major-stroke-width: 1.2;
+  --grid-major-stroke-linecap: butt;
+  --grid-major-stroke-dasharray: 0;
+}
+
+.grid-minor-lines {
+  stroke: var(--grid-minor-color, darkgrey);
+  stroke-width: var(--grid-minor-stroke-width, 2);
+  stroke-linecap: var(--grid-minor-stroke-linecap, butt);
+  stroke-dasharray: var(--grid-minor-stroke-dasharray, 3);
+}
+
+.grid-major-lines {
+  stroke: var(--grid-major-color, darkgrey);
+  stroke-width: var(--grid-major-stroke-width, 2);
+  stroke-linecap: var(--grid-major-stroke-linecap, butt);
+  stroke-dasharray: var(--grid-major-stroke-dasharray, 0);
+}
+
+
+
 /* ====================== AXIS ======================  */
 .axis {
   --axis-color: #2d3436;
+  --axis-stroke-width: 2;
+  --axis-stroke-linecap: butt;
 }
 
 .axis-label {

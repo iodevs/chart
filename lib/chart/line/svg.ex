@@ -1,7 +1,7 @@
 defmodule Chart.Chart.Line.Svg do
   @moduledoc false
 
-  alias Chart.Line.{AxisSvg, View}
+  alias Chart.Line.{AxisSvg, GridSvg, View}
 
   use Phoenix.HTML
 
@@ -10,6 +10,7 @@ defmodule Chart.Chart.Line.Svg do
       line.settings
       |> Map.put(:view, View)
       |> Map.put(:axis, AxisSvg.render(line.settings))
+      |> Map.put(:grid, GridSvg.render(line.settings))
 
     ~E"""
     <% {width, height} = @figure.viewbox %>
@@ -26,7 +27,9 @@ defmodule Chart.Chart.Line.Svg do
       <% {pos_x, pos_y, width, height} = @view.plot_rect_bg(@plot) %>
       <rect id="plot" x="<%= pos_x %>" y="<%= pos_y %>" width="<%= width %>" height="<%= height %>" />
 
+      <%= @grid %>
       <%= @axis %>
+
     </svg>
     """
   end
