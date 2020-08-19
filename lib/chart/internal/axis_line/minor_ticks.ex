@@ -47,22 +47,21 @@ defmodule Chart.Internal.AxisLine.MinorTicks do
 
   def set_positions(settings, axis) when is_map(settings) and is_atom(axis) do
     settings_ax = settings[axis]
+    major_ticks = settings_ax.major_ticks.positions
 
     positions =
-      settings_ax.major_ticks.positions
+      major_ticks
       |> Enum.chunk_every(2, 1)
       |> List.delete_at(-1)
       |> Enum.map(
-        &(compute_ticks_positions(
-            &1,
-            settings_ax.minor_ticks.count + 2,
-            settings_ax.scale
-          )
-          |> List.delete_at(0)
-          |> List.delete_at(-1))
+        &compute_ticks_positions(
+          &1,
+          settings_ax.minor_ticks.count + 2,
+          settings_ax.scale
+        )
       )
       |> List.flatten()
-      |> Enum.uniq()
+      |> Enum.filter(fn x -> x not in major_ticks end)
 
     put_in(settings, [axis, @self_key, :positions], positions)
   end
