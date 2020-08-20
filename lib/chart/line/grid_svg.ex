@@ -15,7 +15,7 @@ defmodule Chart.Line.GridSvg do
     <%= for {axis, vector} <- @axis_table do %>
       <% plot = settings.plot %>
 
-      <%= if settings.grid.minor_turn == :on do %>
+      <%= if settings.grid.minor_visibility == :visible do %>
         <% minor_ticks = settings[axis].minor_ticks %>
         <g class="grid-minor-lines">
           <%= for position <- minor_ticks.positions do %>
@@ -25,7 +25,7 @@ defmodule Chart.Line.GridSvg do
         </g>
       <% end %>
 
-      <%= if settings.grid.major_turn == :on do %>
+      <%= if settings.grid.major_visibility == :visible do %>
         <% major_ticks = settings[axis].major_ticks %>
         <g class="grid-major-lines">
           <%= for position <- major_ticks.positions |> Enum.slice(1..-2) do %>

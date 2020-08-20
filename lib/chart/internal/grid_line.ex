@@ -1,7 +1,7 @@
 defmodule Chart.Internal.GridLine do
   @moduledoc false
 
-  import Chart.Internal.Guards, only: [is_positive_number: 1, is_turn: 1]
+  import Chart.Internal.Guards, only: [is_positive_number: 1, is_visibility: 1]
 
   @self_key :grid
 
@@ -11,10 +11,10 @@ defmodule Chart.Internal.GridLine do
     %{
       major_gap: 0.25,
       major_placement: :under,
-      major_turn: :on,
+      major_visibility: :visible,
       minor_gap: 5,
       minor_placement: :under,
-      minor_turn: :off
+      minor_visibility: :none
     }
   end
 
@@ -41,11 +41,11 @@ defmodule Chart.Internal.GridLine do
   end
 
   @doc """
-  turn :: :on | :off
+  visibility :: :visible | :none
   """
-  def set_major_turn(settings, turn)
-      when is_map(settings) and is_turn(turn) do
-    put_in(settings, [@self_key, :major_turn], turn)
+  def set_major_visibility(settings, visibility)
+      when is_map(settings) and is_visibility(visibility) do
+    put_in(settings, [@self_key, :major_visibility], visibility)
   end
 
   def set_minor_gap(settings, number)
@@ -58,8 +58,8 @@ defmodule Chart.Internal.GridLine do
     put_in(settings, [@self_key, :minor_placement], placement)
   end
 
-  def set_minor_turn(settings, turn)
-      when is_map(settings) and is_turn(turn) do
-    put_in(settings, [@self_key, :minor_turn], turn)
+  def set_minor_visibility(settings, visibility)
+      when is_map(settings) and is_visibility(visibility) do
+    put_in(settings, [@self_key, :minor_visibility], visibility)
   end
 end

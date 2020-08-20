@@ -1,15 +1,15 @@
 defmodule Chart.Internal.Text do
   @moduledoc false
 
-  import Chart.Internal.Guards, only: [is_turn: 1]
+  import Chart.Internal.Guards, only: [is_visibility: 1]
 
   @self_key :text
 
   def new() do
     %{
       position: {0, 0},
-      rect_bg: :off,
-      turn: :on,
+      rect_bg: :none,
+      visibility: :visible,
       text: ""
     }
   end
@@ -26,13 +26,13 @@ defmodule Chart.Internal.Text do
   end
 
   def set_rect_bg(settings, rect_bg)
-      when is_map(settings) and is_turn(rect_bg) do
+      when is_map(settings) and is_visibility(rect_bg) do
     put_in(settings, [@self_key, :rect_bg], rect_bg)
   end
 
-  def set_turn(settings, turn)
-      when is_map(settings) and is_turn(turn) do
-    put_in(settings, [@self_key, :turn], turn)
+  def set_visibility(settings, visibility)
+      when is_map(settings) and is_visibility(visibility) do
+    put_in(settings, [@self_key, :visibility], visibility)
   end
 
   def set_text(settings, text)
