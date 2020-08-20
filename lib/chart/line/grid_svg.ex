@@ -1,13 +1,12 @@
 defmodule Chart.Line.GridSvg do
   @moduledoc false
 
-  alias Chart.Line.{GridView, View}
+  alias Chart.Line.GridView
   use Phoenix.HTML
 
   def render(settings) do
     assigns =
       settings
-      |> Map.put(:view, View)
       |> Map.put(:grid_view, GridView)
 
     ~E"""

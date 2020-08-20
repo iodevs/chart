@@ -6,11 +6,14 @@ defmodule Chart.Chart.Line.Svg do
   use Phoenix.HTML
 
   def generate(line) do
+    line_settings = line.settings
+
     assigns =
-      line.settings
+      line_settings
+      |> Map.put(:data, line.data)
       |> Map.put(:view, View)
-      |> Map.put(:axis, AxisSvg.render(line.settings))
-      |> Map.put(:grid, GridSvg.render(line.settings))
+      |> Map.put(:axis, AxisSvg.render(line_settings))
+      |> Map.put(:grid, GridSvg.render(line_settings))
 
     ~E"""
     <% {width, height} = @figure.viewbox %>
