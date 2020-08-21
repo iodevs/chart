@@ -1,4 +1,4 @@
-defmodule Chart.Chart.Line.Svg do
+defmodule Chart.Line.Svg do
   @moduledoc false
 
   alias Chart.Line.{AxisSvg, GridSvg, View}
@@ -31,8 +31,15 @@ defmodule Chart.Chart.Line.Svg do
       <rect id="plot" x="<%= pos_x %>" y="<%= pos_y %>" width="<%= width %>" height="<%= height %>" />
 
       <%= @grid %>
-      <%= @axis %>
 
+      <g class="lines">
+        <%= for {data, id_line} <- Enum.with_index(@data) do %>
+        <polyline id="line-<%= id_line %>" points="<%= @view.set_line_points(line_settings, data) %>"
+          style="" />
+        <% end %>
+      </g>
+
+      <%= @axis %>
     </svg>
     """
   end

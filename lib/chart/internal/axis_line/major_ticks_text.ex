@@ -2,7 +2,7 @@ defmodule Chart.Internal.AxisLine.MajorTicksText do
   @moduledoc false
 
   alias Chart.Internal.Utils
-  import Chart.Internal.Guards, only: [is_decimals: 1]
+  import Chart.Internal.Guards, only: [is_decimals: 1, is_range: 2]
 
   @self_key :major_ticks_text
 
@@ -80,8 +80,15 @@ defmodule Chart.Internal.AxisLine.MajorTicksText do
     put_in(settings, [axis, @self_key, :positions], settings[axis].major_ticks.positions)
   end
 
+  def set_range(settings, vector, {from, to} = range)
+      when is_map(settings) and is_tuple(vector) and is_range(from, to) do
+    axis = settings.axis_table |> Utils.get_axis_for_vector(vector)
+
+    set_range(settings, axis, range)
+  end
+
   def set_range(settings, axis, {from, to} = range)
-      when is_map(settings) and is_atom(axis) and is_number(from) and is_number(to) and from < to do
+      when is_map(settings) and is_atom(axis) and is_range(from, to) do
     settings
     |> put_in([axis, @self_key, :range], range)
     |> set_labels(axis)
