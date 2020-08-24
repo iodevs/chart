@@ -14,7 +14,7 @@ defmodule Chart.Internal.AxisLine.Label do
     %{
       adjust_placement: {0, 0},
       placement: :center,
-      rect_bg: :none,
+      rect_bg: nil,
       visibility: :visible,
       text: "",
       position: {0, 0}

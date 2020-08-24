@@ -8,7 +8,7 @@ defmodule Chart.Internal.Text do
   def new() do
     %{
       position: {0, 0},
-      rect_bg: :none,
+      rect_bg: nil,
       visibility: :visible,
       text: ""
     }
