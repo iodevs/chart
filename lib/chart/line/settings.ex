@@ -4,18 +4,19 @@ defmodule Chart.Line.Settings do
   """
 
   alias Chart.Internal.AxisLine.{Label, MajorTicks, MajorTicksText, MinorTicks}
-  alias Chart.Internal.{AxisLine, Figure, GridLine, Plot, Title}
+  alias Chart.Internal.{AxisLine, Figure, GridLine, Plot, Text}
 
   def new() do
     %{axis_table: %{}}
     |> Figure.add()
-    |> Title.add()
-    |> Title.set_text("Graph")
-    |> Title.set_position({400, 50})
+    |> Text.add(:title)
+    |> Text.set_text(:title, "Graph")
+    |> Text.set_position(:title, {400, 50})
     |> Plot.add()
     |> GridLine.add()
-    |> axis(x_axis: {1, 0})
-    |> axis(y_axis: {0, 1})
+    |> GridLine.set_grid(:major)
+    |> axis(:x_axis, {1, 0})
+    |> axis(:y_axis, {0, 1})
     |> Label.set_text(:x_axis, "Axis X")
     |> MajorTicksText.set_range(:x_axis, {0, 10})
     # |> AxisLine.set_scale(:x_axis, :log)
@@ -25,7 +26,7 @@ defmodule Chart.Line.Settings do
     |> Label.set_placement(:y_axis, :middle)
   end
 
-  def axis(settings, [{key, vector}])
+  def axis(settings, key, vector)
       when is_map(settings) and is_atom(key) and is_tuple(vector) do
     settings
     |> AxisLine.add(key, vector)

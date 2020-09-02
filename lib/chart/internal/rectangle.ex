@@ -7,7 +7,6 @@ defmodule Chart.Internal.Rectangle do
 
   def new() do
     %{
-      border_radius: 0,
       padding: {0, 0, 0, 0},
       position: {0, 0},
       size: {0, 0}
@@ -19,11 +18,6 @@ defmodule Chart.Internal.Rectangle do
   end
 
   # Setters
-
-  def set_border_radius(settings, key \\ @self_key, radius)
-      when is_map(settings) and is_atom(key) and is_nonnegative_number(radius) do
-    put_in(settings, [key, :border_radius], radius)
-  end
 
   def set_padding(settings, key \\ @self_key, {top, right, bottom, left} = padding)
       when is_map(settings) and is_atom(key) and is_nonnegative_number(top) and
