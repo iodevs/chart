@@ -1,8 +1,10 @@
 defmodule Chart.Internal.AxisLine.Label do
   @moduledoc false
 
+  alias Chart.Internal.Rectangle
   alias Chart.Internal.Utils
-  import Chart.Internal.Guards, only: [is_visibility: 1]
+
+  import Chart.Internal.Guards, only: [is_positive_number: 1]
 
   @self_key :label
   @gap_from_bottom 60
@@ -14,10 +16,9 @@ defmodule Chart.Internal.AxisLine.Label do
     %{
       adjust_placement: {0, 0},
       placement: :center,
+      position: {0, 0},
       rect_bg: nil,
-      visibility: :visible,
-      text: "",
-      position: {0, 0}
+      text: ""
     }
   end
 
@@ -25,6 +26,15 @@ defmodule Chart.Internal.AxisLine.Label do
     settings
     |> put_in([axis, @self_key], new())
     |> set_position(axis)
+  end
+
+  def add_rect_bg(settings, axis) when is_map(settings) and is_atom(axis) do
+    rect_bg =
+      Rectangle.new()
+      |> Map.take([:size])
+      |> Map.put(:position, settings[axis][@self_key].position)
+
+    put_in(settings, [axis, @self_key, :rect_bg], rect_bg)
   end
 
   # Setters
@@ -46,7 +56,7 @@ defmodule Chart.Internal.AxisLine.Label do
   end
 
   def set_position(settings, axis) when is_map(settings) and is_atom(axis) do
-    label = settings[axis].label
+    label = settings[axis][@self_key]
 
     position =
       compute_label_position(
@@ -56,7 +66,9 @@ defmodule Chart.Internal.AxisLine.Label do
         settings.plot.size
       )
 
-    put_in(settings, [axis, @self_key, :position], position)
+    settings
+    |> put_in([axis, @self_key, :position], position)
+    |> set_rect_bg_position(axis, position, label.rect_bg)
   end
 
   @doc """
@@ -69,28 +81,24 @@ defmodule Chart.Internal.AxisLine.Label do
     |> set_position(axis)
   end
 
-  @doc """
-  rect_bg :: :visible | :none
-  """
-  def set_rect_bg(settings, axis, rect_bg)
-      when is_map(settings) and is_visibility(rect_bg) do
-    put_in(settings, [axis, @self_key, :rect_bg], rect_bg)
-  end
-
-  @doc """
-  visibility :: :visible | :none
-  """
-  def set_visibility(settings, axis, visibility)
-      when is_map(settings) and is_visibility(visibility) do
-    put_in(settings, [axis, @self_key, :visibility], visibility)
-  end
-
   def set_text(settings, axis, text)
       when is_map(settings) and is_atom(axis) and is_binary(text) do
     put_in(settings, [axis, @self_key, :text], text)
   end
 
+  def set_rect_bg_size(settings, axis, {w, h} = size)
+      when is_map(settings) and is_atom(axis) and is_positive_number(w) and is_positive_number(h) do
+    put_in(settings, [axis, @self_key, :rect_bg, :size], size)
+  end
+
   # Private
+
+  defp set_rect_bg_position(settings, _axis, _position, nil), do: settings
+
+  defp set_rect_bg_position(settings, axis, position, _rect)
+       when is_map(settings) and is_atom(axis) and is_tuple(position) do
+    put_in(settings, [axis, @self_key, :rect_bg, :position], position)
+  end
 
   # compute_label_position(placement, adjust_placement, plot_position, plot_size)
   defp compute_label_position(:left, {ad_pl_x, ad_pl_y}, {pos_x, pos_y}, {_width, height}) do
