@@ -1,7 +1,8 @@
 defmodule Chart.Line.Svg do
   @moduledoc false
 
-  alias Chart.Line.{AxisSvg, GridSvg, View}
+  alias Chart.Line.Templates.{AxisSvg, GridSvg}
+  alias Chart.Line.View
 
   use Phoenix.HTML
 

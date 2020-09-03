@@ -16,7 +16,8 @@ defmodule Chart.Internal.AxisLine.MajorTicksText do
     }
   end
 
-  def add(settings, axis) when is_map(settings) and is_atom(axis) do
+  def add(%{axis_table: axis_table} = settings, axis)
+      when is_map(settings) and is_map_key(axis_table, axis) do
     settings
     |> put_in([axis, @self_key], new())
     |> set_positions(axis)
@@ -28,8 +29,8 @@ defmodule Chart.Internal.AxisLine.MajorTicksText do
   @doc """
   format :: {:decimals, non_neg_integer()} | {:datetime, String.t()}
   """
-  def set_format(settings, axis, {:datetime, dt} = format)
-      when is_map(settings) and is_atom(axis) and is_binary(dt) do
+  def set_format(%{axis_table: axis_table} = settings, axis, {:datetime, dt} = format)
+      when is_map(settings) and is_map_key(axis_table, axis) and is_binary(dt) do
     now = DateTime.utc_now() |> DateTime.to_unix()
 
     settings
@@ -37,7 +38,8 @@ defmodule Chart.Internal.AxisLine.MajorTicksText do
     |> set_range(axis, {now - 60, now})
   end
 
-  def set_format(settings, axis, format) when is_map(settings) and is_atom(axis) do
+  def set_format(%{axis_table: axis_table} = settings, axis, format)
+      when is_map(settings) and is_map_key(axis_table, axis) do
     settings
     |> put_in([axis, @self_key, :format], validate_format(format))
     |> set_labels(axis)
@@ -46,15 +48,16 @@ defmodule Chart.Internal.AxisLine.MajorTicksText do
   @doc """
   gap ::  number
   """
-  def set_gap(settings, axis, gap) when is_map(settings) and is_atom(axis) and is_number(gap) do
+  def set_gap(%{axis_table: axis_table} = settings, axis, gap)
+      when is_map(settings) and is_map_key(axis_table, axis) and is_number(gap) do
     put_in(settings, [axis, @self_key, :gap], gap)
   end
 
   @doc """
   range :: tuple(number(), number())
   """
-  def set_labels(settings, axis)
-      when is_map(settings) and is_atom(axis) do
+  def set_labels(%{axis_table: axis_table} = settings, axis)
+      when is_map(settings) and is_map_key(axis_table, axis) do
     settings_ax = settings[axis]
     format = settings_ax.major_ticks_text.format
 
@@ -76,7 +79,8 @@ defmodule Chart.Internal.AxisLine.MajorTicksText do
     set_positions(settings, axis)
   end
 
-  def set_positions(settings, axis) when is_map(settings) and is_atom(axis) do
+  def set_positions(%{axis_table: axis_table} = settings, axis)
+      when is_map(settings) and is_map_key(axis_table, axis) do
     put_in(settings, [axis, @self_key, :positions], settings[axis].major_ticks.positions)
   end
 
@@ -87,8 +91,8 @@ defmodule Chart.Internal.AxisLine.MajorTicksText do
     set_range(settings, axis, range)
   end
 
-  def set_range(settings, axis, {from, to} = range)
-      when is_map(settings) and is_atom(axis) and is_range(from, to) do
+  def set_range(%{axis_table: axis_table} = settings, axis, {from, to} = range)
+      when is_map(settings) and is_map_key(axis_table, axis) and is_range(from, to) do
     settings
     |> put_in([axis, @self_key, :range], range)
     |> set_labels(axis)

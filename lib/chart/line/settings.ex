@@ -29,11 +29,11 @@ defmodule Chart.Line.Settings do
   def axis(settings, key, vector)
       when is_map(settings) and is_atom(key) and is_tuple(vector) do
     settings
+    |> put_in([:axis_table], Map.put_new(settings.axis_table, key, vector))
     |> AxisLine.add(key, vector)
     |> Label.add(key)
     |> MajorTicks.add(key)
     |> MajorTicksText.add(key)
     |> MinorTicks.add(key)
-    |> put_in([:axis_table], Map.put_new(settings.axis_table, key, vector))
   end
 end

@@ -1,4 +1,4 @@
-defmodule Chart.Line.GridView do
+defmodule Chart.Line.Views.GridView do
   @moduledoc false
 
   def set_grid_line({_pos_x, pos_y}, {_w, h}, position, gap, {1, 0}) do

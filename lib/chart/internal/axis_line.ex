@@ -23,7 +23,8 @@ defmodule Chart.Internal.AxisLine do
 
   # Setters
 
-  def set_line(settings, axis) when is_map(settings) and is_atom(axis) do
+  def set_line(%{axis_table: axis_table} = settings, axis)
+      when is_map(settings) and is_map_key(axis_table, axis) do
     line = compute_line(settings[axis].vector, settings.plot.position, settings.plot.size)
 
     put_in(settings, [axis, :line], line)
@@ -32,7 +33,8 @@ defmodule Chart.Internal.AxisLine do
   @doc """
   scale :: :linear | :log
   """
-  def set_scale(settings, axis, scale) when is_map(settings) and is_atom(axis) and scale(scale) do
+  def set_scale(%{axis_table: axis_table} = settings, axis, scale)
+      when is_map(settings) and is_map_key(axis_table, axis) and scale(scale) do
     settings
     |> put_in([axis, :scale], scale)
     |> MajorTicks.set_positions(axis)
@@ -44,8 +46,9 @@ defmodule Chart.Internal.AxisLine do
   @doc """
   thickness :: 0 < number
   """
-  def set_thickness(settings, axis, thickness)
-      when is_map(settings) and is_atom(axis) and is_number(thickness) and thickness > 0 do
+  def set_thickness(%{axis_table: axis_table} = settings, axis, thickness)
+      when is_map(settings) and is_map_key(axis_table, axis) and
+             is_number(thickness) and 0 < thickness do
     put_in(settings, [axis, :thickness], thickness)
   end
 
