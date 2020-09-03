@@ -1,7 +1,7 @@
-defmodule Chart.Line.GridSvg do
+defmodule Chart.Line.Templates.GridSvg do
   @moduledoc false
 
-  alias Chart.Line.GridView
+  alias Chart.Line.Views.GridView
   use Phoenix.HTML
 
   def render(settings) do

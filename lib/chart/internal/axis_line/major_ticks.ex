@@ -16,7 +16,8 @@ defmodule Chart.Internal.AxisLine.MajorTicks do
     }
   end
 
-  def add(settings, axis) when is_map(settings) and is_atom(axis) do
+  def add(%{axis_table: axis_table} = settings, axis)
+      when is_map(settings) and is_map_key(axis_table, axis) do
     settings
     |> put_in([axis, @self_key], new())
     |> set_positions(axis)
@@ -24,20 +25,21 @@ defmodule Chart.Internal.AxisLine.MajorTicks do
 
   # Setters
 
-  def set_count(settings, axis, count)
-      when is_map(settings) and is_atom(axis) and is_integer(count) and 1 < count do
+  def set_count(%{axis_table: axis_table} = settings, axis, count)
+      when is_map(settings) and is_map_key(axis_table, axis) and is_integer(count) and 1 < count do
     settings
     |> put_in([axis, @self_key, :count], count)
     |> set_positions(axis)
     |> MajorTicksText.set_labels(axis)
   end
 
-  def set_gap(settings, axis, gap) when is_map(settings) and is_atom(axis) and is_number(gap) do
+  def set_gap(%{axis_table: axis_table} = settings, axis, gap)
+      when is_map(settings) and is_map_key(axis_table, axis) and is_number(gap) do
     put_in(settings, [axis, @self_key, :gap], gap)
   end
 
-  def set_length(settings, axis, length)
-      when is_map(settings) and is_atom(axis) and is_positive_number(length) do
+  def set_length(%{axis_table: axis_table} = settings, axis, length)
+      when is_map(settings) and is_map_key(axis_table, axis) and is_positive_number(length) do
     put_in(settings, [axis, @self_key, :length], length)
   end
 
@@ -47,7 +49,8 @@ defmodule Chart.Internal.AxisLine.MajorTicks do
     set_positions(settings, axis)
   end
 
-  def set_positions(settings, axis) when is_map(settings) and is_atom(axis) do
+  def set_positions(%{axis_table: axis_table} = settings, axis)
+      when is_map(settings) and is_map_key(axis_table, axis) do
     settings_ax = settings[axis]
 
     positions =

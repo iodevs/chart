@@ -1,4 +1,4 @@
-defmodule Chart.Line.AxisView do
+defmodule Chart.Line.Views.AxisView do
   @moduledoc false
 
   @gap_from_x_axis_line 30
@@ -24,20 +24,12 @@ defmodule Chart.Line.AxisView do
     List.zip([pos_x, major_ticks_text.positions |> Enum.reverse(), major_ticks_text.labels])
   end
 
-  def css_id_axis_major_line_ticks(axis) do
-    "#{Atom.to_string(axis)}-major-line-ticks"
+  def css_id_axis_ticks_line(axis, tick_type) do
+    "#{Atom.to_string(axis)}-#{convert_tick_type(tick_type)}-line"
   end
 
-  def css_id_axis_minor_line_ticks(axis) do
-    "#{Atom.to_string(axis)}-minor-line-ticks"
-  end
-
-  def css_class_axis_major_ticks(axis) do
-    "#{Atom.to_string(axis)}-major-ticks"
-  end
-
-  def css_class_axis_minor_ticks(axis) do
-    "#{Atom.to_string(axis)}-minor-ticks"
+  def css_class_axis_ticks(axis, tick_type) do
+    "#{Atom.to_string(axis)}-#{convert_tick_type(tick_type)}"
   end
 
   def css_class_axis_major_ticks_label(axis) do
@@ -52,14 +44,12 @@ defmodule Chart.Line.AxisView do
     "#{Atom.to_string(axis)}-label"
   end
 
-  def set_axis_line(settings_ax, {1, 0}) do
-    Tuple.append(settings_ax.line, settings_ax.thickness)
+  def set_axis_line(line, thickness, {1, 0}) do
+    Tuple.append(line, thickness)
   end
 
-  def set_axis_line(settings_ax, {0, 1}) do
-    {x1, y1, x2, y2} = settings_ax.line
-
-    {x1, y1, x2, y2 + settings_ax.thickness / 2, settings_ax.thickness}
+  def set_axis_line({x1, y1, x2, y2}, thickness, {0, 1}) do
+    {x1, y1, x2, y2 + thickness / 2, thickness}
   end
 
   def set_axis_tick(length, {1, 0}) do
@@ -76,5 +66,11 @@ defmodule Chart.Line.AxisView do
 
   def translate_axis_ticks({x1, _y1, _x2, _y2}, length, gap, py, {0, 1}) do
     "translate(#{x1 - length + gap}, #{py})"
+  end
+
+  # Private
+
+  defp convert_tick_type(tp) when is_atom(tp) do
+    tp |> Atom.to_string() |> String.replace("_", "-")
   end
 end

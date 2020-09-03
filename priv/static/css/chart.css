@@ -86,7 +86,7 @@ chart {
   --mjl-stroke-linecap: butt;
 }
 
-#x_axis-major-line-ticks {
+#x_axis-major-ticks-line {
   stroke: var(--mjl-stroke-color);
   stroke-width: var(--mjl-stroke-width);
   stroke-linecap: var(--mjl-stroke-linecap);
@@ -98,7 +98,7 @@ chart {
   --mjl-stroke-linecap: butt;
 }
 
-#x_axis-minor-line-ticks {
+#x_axis-minor-ticks-line {
   stroke: var(--mjl-stroke-color);
   stroke-width: var(--mjl-stroke-width);
   stroke-linecap: var(--mjl-stroke-linecap);
@@ -123,7 +123,7 @@ chart {
   --mjl-stroke-linecap: butt;
 }
 
-#y_axis-major-line-ticks {
+#y_axis-major-ticks-line {
   stroke: var(--mjl-stroke-color);
   stroke-width: var(--mjl-stroke-width);
   stroke-linecap: var(--mjl-stroke-linecap);
@@ -135,7 +135,7 @@ chart {
   --mjl-stroke-linecap: butt;
 }
 
-#y_axis-minor-line-ticks {
+#y_axis-minor-ticks-line {
   stroke: var(--mjl-stroke-color);
   stroke-width: var(--mjl-stroke-width);
   stroke-linecap: var(--mjl-stroke-linecap);
