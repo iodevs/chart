@@ -6,7 +6,7 @@ defmodule Chart.Internal.GridLine do
   @self_key :grid
 
   defguard grid_placement(grid) when grid in [:under, :over]
-  defguard grid_type(type) when type in [:major, :minor]
+  defguard is_grid(type) when type in [:x_major, :x_minor, :y_major, :y_minor]
 
   def new() do
     %{
@@ -21,7 +21,7 @@ defmodule Chart.Internal.GridLine do
 
   # Setters
 
-  def set_grid(settings, key) when is_map(settings) and grid_type(key) do
+  def set_grid(settings, key) when is_map(settings) and is_grid(key) do
     put_in(settings, [@self_key, key], new())
   end
 
@@ -29,7 +29,7 @@ defmodule Chart.Internal.GridLine do
   gap :: 0 < number
   """
   def set_gap(settings, key, number)
-      when is_map(settings) and is_atom(key) and is_positive_number(number) do
+      when is_map(settings) and is_grid(key) and is_positive_number(number) do
     put_in(settings, [@self_key, key, :gap], number)
   end
 
@@ -37,7 +37,7 @@ defmodule Chart.Internal.GridLine do
   placement :: :under | :over
   """
   def set_placement(settings, key, placement)
-      when is_map(settings) and is_atom(key) and grid_placement(placement) do
+      when is_map(settings) and is_grid(key) and grid_placement(placement) do
     put_in(settings, [@self_key, key, :placement], placement)
   end
 end

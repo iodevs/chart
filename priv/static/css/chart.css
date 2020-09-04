@@ -27,14 +27,28 @@ chart {
   --grid-major-stroke-dasharray: 0;
 }
 
-.grid-minor-lines {
-  stroke: var(--grid-minor-color, darkgrey);
-  stroke-width: var(--grid-minor-stroke-width, 2);
-  stroke-linecap: var(--grid-minor-stroke-linecap, butt);
-  stroke-dasharray: var(--grid-minor-stroke-dasharray, 3);
+.grid-x-major-line {
+  stroke: var(--grid-major-color, darkgrey);
+  stroke-width: var(--grid-major-stroke-width, 2);
+  stroke-linecap: var(--grid-major-stroke-linecap, butt);
+  stroke-dasharray: var(--grid-major-stroke-dasharray, 0);
 }
 
-.grid-major-lines {
+.grid-x-minor-line {
+  stroke: var(--grid-major-color, darkgrey);
+  stroke-width: var(--grid-major-stroke-width, 2);
+  stroke-linecap: var(--grid-major-stroke-linecap, butt);
+  stroke-dasharray: var(--grid-major-stroke-dasharray, 0);
+}
+
+.grid-y-major-line {
+  stroke: var(--grid-major-color, darkgrey);
+  stroke-width: var(--grid-major-stroke-width, 2);
+  stroke-linecap: var(--grid-major-stroke-linecap, butt);
+  stroke-dasharray: var(--grid-major-stroke-dasharray, 0);
+}
+
+.grid-y-minor-line {
   stroke: var(--grid-major-color, darkgrey);
   stroke-width: var(--grid-major-stroke-width, 2);
   stroke-linecap: var(--grid-major-stroke-linecap, butt);
