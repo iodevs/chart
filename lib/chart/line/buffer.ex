@@ -4,20 +4,44 @@ defmodule Chart.Line.Buffer do
   alias Chart.Internal.AxisLine.MajorTicksText
   alias Chart.Chart
 
-  def process(%Chart{} = chart, data) do
-    data = List.flatten(data)
-    range_for_x = data |> get_axis_range({1, 0}) |> add_offset_to_range()
-    range_for_y = data |> get_axis_range({0, 1}) |> add_offset_to_range()
+  def put(%Chart{data: buffer, settings: %{storage_count: count}} = chart, data) do
+    merged_data = merge(buffer, data, count)
+    fl_data = List.flatten(merged_data)
+
+    range_for_x = fl_data |> get_axis_range({1, 0}) |> add_offset_to_range()
+    range_for_y = fl_data |> get_axis_range({0, 1}) |> add_offset_to_range()
 
     updated_settings =
       chart.settings
       |> MajorTicksText.set_range({1, 0}, range_for_x)
       |> MajorTicksText.set_range({0, 1}, range_for_y)
 
-    Chart.put_settings(chart, updated_settings)
+    chart
+    |> Chart.put_settings(updated_settings)
+    |> Chart.put_data(merged_data)
+  end
+
+  def set_count(settings, count) when is_integer(count) and 0 < count do
+    Map.put(settings, :storage_count, count)
   end
 
   # Private
+
+  defp merge(nil, data, _count) do
+    data
+  end
+
+  defp merge([first | _rest] = buffer, data, count) when length(first) <= count do
+    buffer
+    |> Enum.zip(data)
+    |> Enum.map(fn {bf, d} -> Enum.concat(bf, d) end)
+  end
+
+  defp merge(buffer, data, count) do
+    buffer
+    |> Enum.map(fn [_first | rest] -> rest end)
+    |> merge(data, count)
+  end
 
   defp get_axis_range(data, {1, 0}) do
     {{min_x, _y1}, {max_x, _y2}} = Enum.min_max_by(data, fn {x, _y} -> x end)

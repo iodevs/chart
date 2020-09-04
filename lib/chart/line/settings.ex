@@ -5,9 +5,11 @@ defmodule Chart.Line.Settings do
 
   alias Chart.Internal.AxisLine.{Label, MajorTicks, MajorTicksText, MinorTicks}
   alias Chart.Internal.{AxisLine, Figure, GridLine, Plot, Text}
+  alias Chart.Line.Buffer
 
   def new() do
     %{axis_table: %{}}
+    |> set_storage({Buffer, 10})
     |> Figure.add()
     |> Text.add(:title)
     |> Text.set_text(:title, "Graph")
@@ -37,5 +39,15 @@ defmodule Chart.Line.Settings do
     |> Label.add(key)
     |> MajorTicks.add(key)
     |> MajorTicksText.add(key)
+  end
+
+  def set_storage(settings, {storage, count} = st) when is_tuple(st) do
+    settings
+    |> Map.put(:storage, storage)
+    |> Map.put(:storage_count, count)
+  end
+
+  def set_storage(settings, storage) when is_atom(storage) do
+    Map.put(settings, :storage, storage)
   end
 end

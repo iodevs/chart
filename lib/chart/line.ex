@@ -3,12 +3,12 @@ defmodule Chart.Line do
   A line chart definition structure
   """
 
-  alias Chart.Line.{Buffer, Settings, Svg}
+  alias Chart.Line.{Settings, Svg}
   alias Chart.Chart
 
-  def put(%Chart{} = chart, data) do
+  def put(%Chart{settings: %{storage: storage}} = chart, data) do
     chart
-    |> Buffer.process(data)
+    |> storage.put(data)
     |> Chart.put_data(data)
   end
 
