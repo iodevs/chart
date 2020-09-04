@@ -23,6 +23,8 @@ defmodule Chart.Line.Settings do
     # |> AxisLine.set_scale(:x_axis, :log)
     |> Label.set_text(:y_axis, "Axis Y")
     # |> Label.set_adjust_placement(:y_axis, {0, -30})
+    |> MinorTicks.add(:x_axis)
+    |> MinorTicks.add(:y_axis)
     |> MinorTicks.set_count(:y_axis, 3)
     |> Label.set_placement(:y_axis, :middle)
   end
@@ -35,6 +37,5 @@ defmodule Chart.Line.Settings do
     |> Label.add(key)
     |> MajorTicks.add(key)
     |> MajorTicksText.add(key)
-    |> MinorTicks.add(key)
   end
 end

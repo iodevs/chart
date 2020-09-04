@@ -6,27 +6,42 @@ defmodule Chart.Line.Templates.AxisSvg do
   use Phoenix.HTML
 
   def render(settings) do
-    x_axis = Utils.get_axis_for_vector(settings.axis_table, {1, 0})
-    y_axis = Utils.get_axis_for_vector(settings.axis_table, {0, 1})
+    axis_table = settings.axis_table
+    x_axis = Utils.get_axis_for_vector(axis_table, {1, 0})
+    y_axis = Utils.get_axis_for_vector(axis_table, {0, 1})
+    x_axis_map = settings[x_axis]
+    y_axis_map = settings[y_axis]
 
     assigns =
       %{}
-      |> Map.put(:x_axis_major_ticks, ticks_render(settings, [x_axis, :line, :major_ticks]))
-      |> Map.put(:y_axis_major_ticks, ticks_render(settings, [y_axis, :line, :major_ticks]))
-      |> Map.put(:x_axis_minor_ticks, ticks_render(settings, [x_axis, :line, :minor_ticks]))
-      |> Map.put(:y_axis_minor_ticks, ticks_render(settings, [y_axis, :line, :minor_ticks]))
+      |> Map.put(
+        :x_axis_major_ticks,
+        ticks_render(x_axis_map, axis_table, [x_axis, :line, :major_ticks])
+      )
+      |> Map.put(
+        :y_axis_major_ticks,
+        ticks_render(y_axis_map, axis_table, [y_axis, :line, :major_ticks])
+      )
+      |> Map.put(
+        :x_axis_minor_ticks,
+        ticks_render(x_axis_map, axis_table, [x_axis, :line, :minor_ticks])
+      )
+      |> Map.put(
+        :y_axis_minor_ticks,
+        ticks_render(y_axis_map, axis_table, [y_axis, :line, :minor_ticks])
+      )
       |> Map.put(
         :x_axis_major_ticks_text,
-        ticks_text_render(settings, [x_axis, :line, :major_ticks_text])
+        ticks_text_render(x_axis_map, axis_table, [x_axis, :line, :major_ticks_text])
       )
       |> Map.put(
         :y_axis_major_ticks_text,
-        ticks_text_render(settings, [y_axis, :line, :major_ticks_text])
+        ticks_text_render(y_axis_map, axis_table, [y_axis, :line, :major_ticks_text])
       )
-      |> Map.put(:x_axis, axis_render(settings, [x_axis, :line, :thickness]))
-      |> Map.put(:y_axis, axis_render(settings, [y_axis, :line, :thickness]))
-      |> Map.put(:x_axis_label, label_render(settings[x_axis], [x_axis, :label]))
-      |> Map.put(:y_axis_label, label_render(settings[y_axis], [y_axis, :label]))
+      |> Map.put(:x_axis, axis_render(x_axis_map, axis_table, [x_axis, :line, :thickness]))
+      |> Map.put(:y_axis, axis_render(y_axis_map, axis_table, [y_axis, :line, :thickness]))
+      |> Map.put(:x_axis_label, label_render(x_axis_map, [x_axis, :label]))
+      |> Map.put(:y_axis_label, label_render(y_axis_map, [y_axis, :label]))
 
     ~E"""
     <g class="axis">
@@ -35,7 +50,6 @@ defmodule Chart.Line.Templates.AxisSvg do
       <%= @y_axis_major_ticks_text %>
       <%= @y_axis %>
       <%= @y_axis_label %>
-
       <%= @x_axis_minor_ticks %>
       <%= @x_axis_major_ticks %>
       <%= @x_axis_major_ticks_text %>
@@ -47,19 +61,19 @@ defmodule Chart.Line.Templates.AxisSvg do
 
   # Private
 
-  defp ticks_render(settings, [_axis, _line, ticks_type])
-       when not is_map_key(settings, ticks_type) do
+  defp ticks_render(axis_map, _axis_table, [_axis, _line, ticks_type])
+       when not is_map_key(axis_map, ticks_type) do
     ~E"""
     """
   end
 
-  defp ticks_render(settings, [axis, line, ticks_type]) do
-    ticks = settings[axis][ticks_type]
-    vector = settings[:axis_table][axis]
+  defp ticks_render(axis_map, axis_table, [axis, line, ticks_type]) do
+    ticks = axis_map[ticks_type]
+    vector = axis_table[axis]
     {x1, y1} = AxisView.set_axis_tick(ticks.length, vector)
 
     assigns =
-      ticks
+      %{}
       |> Map.put(:css_id, AxisView.css_id_axis_ticks_line(axis, ticks_type))
       |> Map.put(:css_class, AxisView.css_class_axis_ticks(axis, ticks_type))
       |> Map.put(:x1, x1)
@@ -72,27 +86,27 @@ defmodule Chart.Line.Templates.AxisSvg do
     <g class="<%= @css_class %>">
       <%= for position <- ticks.positions do %>
         <use xlink:href="#<%= @css_id %>"
-          transform="<%= AxisView.translate_axis_ticks(settings[axis][line], ticks.length, ticks.gap, position, vector) %>" />
+          transform="<%= AxisView.translate_axis_ticks(axis_map[line], ticks.length, ticks.gap, position, vector) %>" />
       <% end %>
     </g>
     """
   end
 
-  defp ticks_text_render(settings, [_axis, _line, ticks_text_type])
-       when not is_map_key(settings, ticks_text_type) do
+  defp ticks_text_render(axis_map, _axis_table, [_axis, _line, ticks_text_type])
+       when not is_map_key(axis_map, ticks_text_type) do
     ~E"""
     """
   end
 
-  defp ticks_text_render(settings, [axis, line, ticks_text_type]) do
-    ticks_text = settings[axis][ticks_text_type]
-    vector = settings[:axis_table][axis]
+  defp ticks_text_render(axis_map, axis_table, [axis, line, ticks_text_type]) do
+    ticks_text = axis_map[ticks_text_type]
+    vector = axis_table[axis]
 
     assigns =
-      ticks_text
+      %{}
       |> Map.put(:css_tick_label, AxisView.css_class_axis_tick_label(axis))
       |> Map.put(:css_ticks_label, AxisView.css_class_axis_major_ticks_label(axis))
-      |> Map.put(:ticks_label, AxisView.axis_ticks_label(line, ticks_text, vector))
+      |> Map.put(:ticks_label, AxisView.axis_ticks_label(axis_map[line], ticks_text, vector))
 
     ~E"""
     <g class="<%= @css_ticks_label %>">
@@ -105,11 +119,9 @@ defmodule Chart.Line.Templates.AxisSvg do
     """
   end
 
-  defp axis_render(settings, [axis, line, thickness]) do
-    vector = settings[:axis_table][axis]
-
+  defp axis_render(axis_map, axis_table, [axis, line, thickness]) do
     {x1, y1, x2, y2, thickness} =
-      AxisView.set_axis_line(settings[axis][line], settings[axis][thickness], vector)
+      AxisView.set_axis_line(axis_map[line], axis_map[thickness], axis_table[axis])
 
     assigns =
       %{}

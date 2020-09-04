@@ -15,7 +15,6 @@ defmodule Chart.Line.Templates.GridSvg do
       |> Map.put(:x_minor, grid_render(settings, [x_axis, :x_minor, :plot, :minor_ticks]))
       |> Map.put(:y_major, grid_render(settings, [y_axis, :y_major, :plot, :major_ticks]))
       |> Map.put(:y_minor, grid_render(settings, [y_axis, :y_minor, :plot, :minor_ticks]))
-      |> IO.inspect()
 
     ~E"""
     <g class="grid"><%= @y_minor %><%= @y_major %><%= @x_minor %><%= @x_major %></g>
