@@ -2,7 +2,7 @@ defmodule Chart.Internal.AxisLine.MajorTicksText do
   @moduledoc false
 
   alias Chart.Internal.Utils
-  import Chart.Internal.Guards, only: [is_decimals: 1, is_range: 2]
+  import Chart.Internal.Guards, only: [is_decimals: 1, is_nonnegative_number: 1, is_range: 2]
 
   @self_key :major_ticks_text
 
@@ -12,6 +12,7 @@ defmodule Chart.Internal.AxisLine.MajorTicksText do
       gap: 0,
       labels: [],
       positions: [],
+      offset_range: {0, 0},
       range: {0, 1}
     }
   end
@@ -93,9 +94,25 @@ defmodule Chart.Internal.AxisLine.MajorTicksText do
 
   def set_range(%{axis_table: axis_table} = settings, axis, {from, to} = range)
       when is_map(settings) and is_map_key(axis_table, axis) and is_range(from, to) do
+    range = compute_range(range, settings[axis][@self_key][:offset_range])
+
     settings
     |> put_in([axis, @self_key, :range], range)
     |> set_labels(axis)
+  end
+
+  def set_range_offset(settings, axis, :auto) when is_map(settings) do
+    put_in(settings, [axis, @self_key, :offset_range], :auto)
+  end
+
+  def set_range_offset(settings, axis, offset_range)
+      when is_map(settings) and is_tuple(offset_range) do
+    put_in(settings, [axis, @self_key, :offset_range], offset_range)
+  end
+
+  def set_range_offset(settings, axis, offset)
+      when is_map(settings) and is_nonnegative_number(offset) do
+    put_in(settings, [axis, @self_key, :offset_range], {offset, offset})
   end
 
   # Private
@@ -120,11 +137,40 @@ defmodule Chart.Internal.AxisLine.MajorTicksText do
     Utils.linspace(range, count)
   end
 
+  defp compute_range(range, :auto) do
+    add_offset_to_range(range)
+  end
+
+  defp compute_range({from, to}, {offset_from, offset_to}) do
+    {from - offset_from, to + offset_to}
+  end
+
   defp validate_format({:decimals, dec} = format) when is_decimals(dec) do
     format
   end
 
   defp validate_format({:datetime, dt} = format) when is_binary(dt) do
     format
+  end
+
+  defp add_offset_to_range({min, max}) when 0 < min do
+    {0, max + offset(max)}
+  end
+
+  defp add_offset_to_range({min, max}) do
+    {min - offset(min), max + offset(max)}
+  end
+
+  defp offset(num) do
+    log10 = num |> :erlang.abs() |> :math.log10()
+
+    exp =
+      if log10 < 1 do
+        Float.floor(log10)
+      else
+        Float.floor(log10) - 1
+      end
+
+    :math.pow(10, exp)
   end
 end

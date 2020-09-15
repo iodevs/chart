@@ -8,8 +8,7 @@ defmodule Chart.Line do
 
   def put(%Chart{settings: %{storage: storage}} = chart, data) do
     chart
-    |> storage.put(data)
-    |> Chart.put_data(data)
+    |> storage.type.put(data)
   end
 
   def render(%Chart{} = chart) do
