@@ -101,6 +101,17 @@ defmodule Chart.Internal.AxisLine.MajorTicksText do
     |> set_labels(axis)
   end
 
+  def recalc_range(chart) do
+    {x_data, y_data} = chart.storage.data |> List.flatten() |> Enum.unzip()
+
+    updated_settings =
+      chart.settings
+      |> set_range({1, 0}, Enum.min_max(x_data))
+      |> set_range({0, 1}, Enum.min_max(y_data))
+
+    Map.put(chart, :settings, updated_settings)
+  end
+
   def set_range_offset(settings, axis, :auto) when is_map(settings) do
     put_in(settings, [axis, @self_key, :offset_range], :auto)
   end
@@ -153,7 +164,7 @@ defmodule Chart.Internal.AxisLine.MajorTicksText do
     format
   end
 
-  defp add_offset_to_range({min, max}) when 0 < min do
+  defp add_offset_to_range({min, max}) when 0 <= min do
     {0, max + offset(max)}
   end
 

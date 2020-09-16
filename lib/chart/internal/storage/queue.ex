@@ -3,41 +3,31 @@ defmodule Chart.Internal.Storage.Queue do
 
   alias Chart.Chart
 
-  @self_key :storage
+  defstruct count: nil,
+            data: nil
 
   def new() do
-    %{
-      callbacks: [],
-      count: 10,
-      type: __MODULE__
+    %__MODULE__{
+      count: 50,
+      data: nil
     }
   end
 
-  def add(settings) when is_map(settings) do
-    put_in(settings, [@self_key], new())
-  end
-
-  def put(%Chart{data: buffer, settings: %{storage: storage}} = chart, data) do
-    merged_data = merge(buffer, data, storage.count)
-    {x_data, y_data} = merged_data |> List.flatten() |> Enum.unzip()
-
-    updated_settings =
-      storage.callbacks
-      |> Enum.zip([x_data, y_data])
-      |> Enum.reduce(chart.settings, fn {callback, data}, settings ->
-        callback.(settings, Enum.min_max(data))
-      end)
-
+  def put(%Chart{storage: storage} = chart, data) do
     chart
-    |> Chart.put_settings(updated_settings)
-    |> Chart.put_data(merged_data)
+    |> Map.put(:storage, %__MODULE__{storage | data: merge(storage.data, data, storage.count)})
+    |> apply_callbacks()
   end
 
-  def set_count(settings, count) when is_map(settings) and is_integer(count) and 1 < count do
-    put_in(settings, [@self_key, :count], count)
+  def set_count(%Chart{} = chart, count) when is_map(chart) and is_integer(count) and 1 < count do
+    put_in(chart, [:storage, :count], count)
   end
 
   # Private
+
+  defp apply_callbacks(%Chart{callbacks: callbacks} = chart) do
+    Enum.reduce(callbacks, chart, fn cb, acc -> cb.(acc) end)
+  end
 
   defp merge(nil, data, _count) when is_tuple(data) do
     [data]
@@ -47,7 +37,7 @@ defmodule Chart.Internal.Storage.Queue do
     data
   end
 
-  defp merge([first | _rest] = buffer, data, count) when length(first) <= count do
+  defp merge([first | _rest] = buffer, data, count) when length(first) < count do
     buffer
     |> Enum.zip(data)
     |> Enum.map(fn {bf, d} -> Enum.concat(bf, d) end)

@@ -3,13 +3,15 @@ defmodule Chart.Chart do
   A chart definition structure
   """
 
-  defstruct settings: nil,
-            data: nil
+  defstruct callbacks: nil,
+            settings: nil,
+            storage: nil
 
-  def new() do
+  def new(manager) do
     %__MODULE__{
+      callbacks: [],
       settings: nil,
-      data: nil
+      storage: manager.new()
     }
   end
 
@@ -17,7 +19,15 @@ defmodule Chart.Chart do
     Map.put(chart, :settings, settings)
   end
 
-  def put_data(%__MODULE__{} = chart, data) do
-    Map.put(chart, :data, data)
+  def put_data(%__MODULE__{storage: %module{}} = chart, data) do
+    module.put(chart, data)
+  end
+
+  def put_data_manager(%__MODULE__{} = chart, manager) do
+    Map.put(chart, :storage, manager.new())
+  end
+
+  def register(%__MODULE__{} = chart, callbacks) when is_list(callbacks) do
+    Map.put(chart, :callbacks, callbacks)
   end
 end

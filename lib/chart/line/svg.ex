@@ -16,7 +16,7 @@ defmodule Chart.Line.Svg do
 
     assigns =
       line_settings
-      |> Map.put(:data, line.data)
+      |> Map.put(:data, line.storage.data)
       |> Map.put(:fig_width, fig_width)
       |> Map.put(:fig_height, fig_height)
       |> Map.put(:title_pos_x, title_pos_x)
