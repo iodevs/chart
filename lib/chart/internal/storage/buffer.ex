@@ -3,42 +3,26 @@ defmodule Chart.Internal.Storage.Buffer do
 
   alias Chart.Chart
 
-  @self_key :storage
+  defstruct data: nil
 
   def new() do
-    %{
-      callbacks: [],
-      type: __MODULE__
+    %__MODULE__{
+      data: nil
     }
   end
 
-  def add(settings) when is_map(settings) do
-    put_in(settings, [@self_key], new())
-  end
-
-  def put(%Chart{data: buffer, settings: %{storage: storage}} = chart, data) do
-    merged_data = merge(buffer, data)
-    {x_data, y_data} = merged_data |> List.flatten() |> Enum.unzip()
-
-    updated_settings =
-      storage.callbacks
-      |> Enum.zip([x_data, y_data])
-      |> Enum.reduce(chart.settings, fn {callback, data}, settings ->
-        callback.(settings, Enum.min_max(data))
-      end)
-
+  def put(%Chart{storage: storage} = chart, data) do
     chart
-    |> Chart.put_settings(updated_settings)
-    |> Chart.put_data(merged_data)
-  end
-
-  # Setters
-
-  def set_callbacks(settings, callbacks) when is_map(settings) and is_list(callbacks) do
-    put_in(settings, [@self_key, :callbacks], callbacks)
+    # |> put_in([:storage, :data], merge(chart.storage.data, data))
+    |> Map.put(:storage, %__MODULE__{storage | data: merge(storage.data, data)})
+    |> apply_callbacks()
   end
 
   # Private
+
+  defp apply_callbacks(%Chart{callbacks: callbacks} = chart) do
+    Enum.reduce(callbacks, chart, fn cb, acc -> cb.(acc) end)
+  end
 
   defp merge(nil, data) when is_tuple(data) do
     [data]

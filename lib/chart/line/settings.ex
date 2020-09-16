@@ -5,10 +5,9 @@ defmodule Chart.Line.Settings do
 
   alias Chart.Internal.AxisLine.{Label, MajorTicks, MajorTicksText, MinorTicks}
   alias Chart.Internal.{AxisLine, Figure, GridLine, Plot, Text}
-  alias Chart.Internal.Storage.Buffer
 
   def new() do
-    %{axis_table: %{}}
+    %{axis_table: %{}, marker: nil, shape: :linear}
     |> Figure.add()
     |> Text.add(:title)
     |> Text.set_text(:title, "Graph")
@@ -20,7 +19,6 @@ defmodule Chart.Line.Settings do
     |> axis(:x_axis, {1, 0})
     |> axis(:y_axis, {0, 1})
     |> MajorTicksText.set_range(:x_axis, {0, 10})
-    |> MajorTicksText.set_range_offset(:x_axis, 1)
     |> MajorTicksText.set_range_offset(:y_axis, :auto)
     |> Label.set_text(:x_axis, "Axis X")
     # |> AxisLine.set_scale(:x_axis, :log)
@@ -30,11 +28,6 @@ defmodule Chart.Line.Settings do
     |> MinorTicks.add(:y_axis)
     |> MinorTicks.set_count(:y_axis, 3)
     |> Label.set_placement(:y_axis, :middle)
-    |> Buffer.add()
-    |> Buffer.set_callbacks([
-      &MajorTicksText.set_range(&1, :x_axis, &2),
-      &MajorTicksText.set_range(&1, :y_axis, &2)
-    ])
   end
 
   def axis(settings, key, vector)
