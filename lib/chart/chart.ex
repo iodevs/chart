@@ -30,4 +30,8 @@ defmodule Chart.Chart do
   def register(%__MODULE__{} = chart, callbacks) when is_list(callbacks) do
     Map.put(chart, :callbacks, callbacks)
   end
+
+  def apply_callbacks(%__MODULE__{callbacks: callbacks} = chart) do
+    Enum.reduce(callbacks, chart, fn cb, acc -> cb.(acc) end)
+  end
 end
