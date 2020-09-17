@@ -39,6 +39,24 @@ defmodule Chart.Line do
     apply_setter(chart, &AxisLine.Label.set_placement(&1, axis, placement))
   end
 
+  #  Axis tick setters
+
+  def add_axis_minor_ticks(%Chart{} = chart, axis) do
+    apply_setter(chart, &AxisLine.MinorTicks.add(&1, axis))
+  end
+
+  def set_axis_minor_ticks_count(%Chart{} = chart, axis, count) do
+    apply_setter(chart, &AxisLine.MinorTicks.set_count(&1, axis, count))
+  end
+
+  def set_axis_minor_ticks_gap(%Chart{} = chart, axis, gap) do
+    apply_setter(chart, &AxisLine.MinorTicks.set_gap(&1, axis, gap))
+  end
+
+  def set_axis_minor_ticks_length(%Chart{} = chart, axis, length) do
+    apply_setter(chart, &AxisLine.MinorTicks.set_length(&1, axis, length))
+  end
+
   #  Grid setters
 
   def set_grid(%Chart{} = chart, axis_grid_type) do

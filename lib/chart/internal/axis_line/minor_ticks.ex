@@ -2,7 +2,7 @@ defmodule Chart.Internal.AxisLine.MinorTicks do
   @moduledoc false
 
   alias Chart.Internal.Utils
-  import Chart.Internal.Guards, only: [is_positive_number: 1]
+  import Chart.Internal.Guards, only: [is_positive_integer: 1, is_positive_number: 1]
 
   @self_key :minor_ticks
 
@@ -25,7 +25,8 @@ defmodule Chart.Internal.AxisLine.MinorTicks do
   # Setters
 
   def set_count(%{axis_table: axis_table} = settings, axis, count)
-      when is_map(settings) and is_map_key(axis_table, axis) and is_integer(count) and 1 < count do
+      when is_map(settings) and is_map_key(axis_table, axis) and is_positive_integer(count) and
+             0 < count do
     settings
     |> put_in([axis, @self_key, :count], count)
     |> set_positions(axis)
