@@ -3,7 +3,7 @@ defmodule Chart.Line.Settings do
   A line chart settings.
   """
 
-  alias Chart.Internal.AxisLine.{Label, MajorTicks, MajorTicksText, MinorTicks}
+  alias Chart.Internal.AxisLine.{Label, MajorTicks, MajorTicksText}
   alias Chart.Internal.{AxisLine, Figure, GridLine, Plot, Text}
 
   def new() do
@@ -15,9 +15,6 @@ defmodule Chart.Line.Settings do
     |> axis(:y_axis, {0, 1})
     |> MajorTicksText.set_range(:x_axis, {0, 10})
     |> MajorTicksText.set_range_offset(:y_axis, :auto)
-    |> MinorTicks.add(:x_axis)
-    |> MinorTicks.add(:y_axis)
-    |> MinorTicks.set_count(:y_axis, 3)
     |> Label.set_placement(:y_axis, :middle)
     |> Text.add(:title)
   end
