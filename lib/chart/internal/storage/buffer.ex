@@ -15,14 +15,10 @@ defmodule Chart.Internal.Storage.Buffer do
     chart
     # |> put_in([:storage, :data], merge(chart.storage.data, data))
     |> Map.put(:storage, %__MODULE__{storage | data: merge(storage.data, data)})
-    |> apply_callbacks()
+    |> Chart.apply_callbacks()
   end
 
   # Private
-
-  defp apply_callbacks(%Chart{callbacks: callbacks} = chart) do
-    Enum.reduce(callbacks, chart, fn cb, acc -> cb.(acc) end)
-  end
 
   defp merge(nil, data) when is_tuple(data) do
     [data]

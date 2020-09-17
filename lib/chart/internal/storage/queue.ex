@@ -16,7 +16,7 @@ defmodule Chart.Internal.Storage.Queue do
   def put(%Chart{storage: storage} = chart, data) do
     chart
     |> Map.put(:storage, %__MODULE__{storage | data: merge(storage.data, data, storage.count)})
-    |> apply_callbacks()
+    |> Chart.apply_callbacks()
   end
 
   def set_count(%Chart{} = chart, count) when is_map(chart) and is_integer(count) and 1 < count do
@@ -24,10 +24,6 @@ defmodule Chart.Internal.Storage.Queue do
   end
 
   # Private
-
-  defp apply_callbacks(%Chart{callbacks: callbacks} = chart) do
-    Enum.reduce(callbacks, chart, fn cb, acc -> cb.(acc) end)
-  end
 
   defp merge(nil, data, _count) when is_tuple(data) do
     [data]
