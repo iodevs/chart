@@ -60,12 +60,9 @@ chart {
 /* ====================== AXIS ======================  */
 .axis {
   --axis-color: #2d3436;
+  --axis-label-color: #2d3436;
   --axis-stroke-width: 2;
   --axis-stroke-linecap: butt;
-}
-
-.axis-label {
-  --axis-label-color: #2d3436;
 }
 
 #x_axis {
@@ -119,7 +116,7 @@ chart {
 }
 
 #x_axis-label {
-  color: var(--axis-label-color, #2d3436);
+  fill: var(--axis-label-color, #2d3436);
 }
 
 .y_axis-major-text {
@@ -156,6 +153,6 @@ chart {
 }
 
 #y_axis-label {
-  color: var(--axis-label-color, #2d3436);
+  fill: var(--axis-label-color, #2d3436);
   writing-mode: vertical-lr;
 }
