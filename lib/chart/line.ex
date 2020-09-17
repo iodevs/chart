@@ -2,9 +2,9 @@ defmodule Chart.Line do
   @moduledoc """
   A line chart definition structure
   """
+
   alias Chart.Internal.{AxisLine, GridLine, Text}
   alias Chart.Internal.Storage.Buffer
-  alias Chart.Internal.AxisLine.MajorTicksText
   alias Chart.Line.{Settings, Svg}
   alias Chart.Chart
 
@@ -21,8 +21,18 @@ defmodule Chart.Line do
     |> Chart.new()
     |> Chart.put_settings(Settings.new())
     |> Chart.register([
-      &MajorTicksText.recalc_range/1
+      &AxisLine.MajorTicksText.recalc_range/1
     ])
+  end
+
+  # Line setter
+
+  def set_scale(%Chart{} = chart, axis, scale) do
+    apply_setter(chart, &AxisLine.set_scale(&1, axis, scale))
+  end
+
+  def set_thickness(%Chart{} = chart, axis, thickness) do
+    apply_setter(chart, &AxisLine.set_thickness(&1, axis, thickness))
   end
 
   #  Axis label setters
@@ -67,6 +77,20 @@ defmodule Chart.Line do
 
   def set_axis_major_ticks_length(%Chart{} = chart, axis, length) do
     apply_setter(chart, &AxisLine.MajorTicks.set_length(&1, axis, length))
+  end
+
+  #  Axis tick text setters
+
+  def set_axis_ticks_text_format(%Chart{} = chart, axis, format) do
+    apply_setter(chart, &AxisLine.MajorTicksText.set_format(&1, axis, format))
+  end
+
+  def set_axis_ticks_text_gap(%Chart{} = chart, axis, gap) do
+    apply_setter(chart, &AxisLine.MajorTicksText.set_gap(&1, axis, gap))
+  end
+
+  def set_axis_ticks_text_range_offset(%Chart{} = chart, axis, range_offset) do
+    apply_setter(chart, &AxisLine.MajorTicksText.set_range_offset(&1, axis, range_offset))
   end
 
   #  Grid setters
