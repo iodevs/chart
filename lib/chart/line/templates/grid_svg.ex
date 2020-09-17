@@ -5,7 +5,7 @@ defmodule Chart.Line.Templates.GridSvg do
   alias Chart.Internal.Utils
   use Phoenix.HTML
 
-  def render(settings) do
+  def render(%{grid: grid} = settings) when 0 < map_size(grid) do
     x_axis = Utils.get_axis_for_vector(settings.axis_table, {1, 0})
     y_axis = Utils.get_axis_for_vector(settings.axis_table, {0, 1})
 
@@ -18,6 +18,11 @@ defmodule Chart.Line.Templates.GridSvg do
 
     ~E"""
     <g class="grid"><%= @y_minor %><%= @y_major %><%= @x_minor %><%= @x_major %></g>
+    """
+  end
+
+  def render(_settings) do
+    ~E"""
     """
   end
 

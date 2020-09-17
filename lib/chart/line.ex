@@ -3,6 +3,7 @@ defmodule Chart.Line do
   A line chart definition structure
   """
 
+  alias Chart.Internal.GridLine
   alias Chart.Internal.Storage.Buffer
   alias Chart.Internal.AxisLine.MajorTicksText
   alias Chart.Line.{Settings, Svg}
@@ -23,5 +24,13 @@ defmodule Chart.Line do
     |> Chart.register([
       &MajorTicksText.recalc_range/1
     ])
+  end
+
+  #  Setters
+
+  def set_grid(%Chart{} = chart, axis_grid_type) do
+    settings = chart.settings |> GridLine.set_grid(axis_grid_type)
+
+    Chart.put_settings(chart, settings)
   end
 end
