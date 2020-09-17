@@ -3,7 +3,7 @@ defmodule Chart.Line do
   A line chart definition structure
   """
 
-  alias Chart.Internal.{AxisLine, GridLine, Text}
+  alias Chart.Internal.{AxisLine, GridLine, Plot, Text}
   alias Chart.Internal.Storage.Buffer
   alias Chart.Line.{Settings, Svg}
   alias Chart.Chart
@@ -101,6 +101,20 @@ defmodule Chart.Line do
 
   def set_grid_gap(%Chart{} = chart, axis_grid_type, number) do
     apply_setter(chart, &GridLine.set_gap(&1, axis_grid_type, number))
+  end
+
+  # Plot setters
+
+  def set_plot_background_padding(%Chart{} = chart, padding) do
+    apply_setter(chart, &Plot.set_background_padding(&1, padding))
+  end
+
+  def set_plot_position(%Chart{} = chart, position) do
+    apply_setter(chart, &Plot.set_position(&1, position))
+  end
+
+  def set_plot_size(%Chart{} = chart, size) do
+    apply_setter(chart, &Plot.set_size(&1, size))
   end
 
   #  Title setters
