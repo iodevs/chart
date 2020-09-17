@@ -40,8 +40,8 @@ defmodule Chart.Line.Templates.AxisSvg do
       )
       |> Map.put(:x_axis, axis_render(x_axis_map, axis_table, [x_axis, :line, :thickness]))
       |> Map.put(:y_axis, axis_render(y_axis_map, axis_table, [y_axis, :line, :thickness]))
-      |> Map.put(:x_axis_label, label_render(x_axis_map, [x_axis, :label]))
-      |> Map.put(:y_axis_label, label_render(y_axis_map, [y_axis, :label]))
+      |> Map.put(:x_axis_label, label_render(x_axis_map, x_axis))
+      |> Map.put(:y_axis_label, label_render(y_axis_map, y_axis))
 
     ~E"""
     <g class="axis">
@@ -137,28 +137,24 @@ defmodule Chart.Line.Templates.AxisSvg do
     """
   end
 
-  defp label_render(axis_map, [_axis, label])
-       when not is_map_key(axis_map, label) do
-    ~E"""
-    """
-  end
-
-  defp label_render(axis_map, [axis, label]) do
-    label = axis_map[label]
-    {pos_x, pos_y} = label.position
-
+  defp label_render(%{label: %{position: {pos_x, pos_y}, text: text}}, axis)
+       when 0 < byte_size(text) do
     assigns =
       %{}
       |> Map.put(:css_id, AxisView.css_id_axis_label(axis))
-      |> Map.put(:text, label.text)
+      |> Map.put(:text, text)
       |> Map.put(:pos_x, pos_x)
       |> Map.put(:pos_y, pos_y)
 
     ~E"""
-    <g class="axis-label">
-      <text id="<%= @css_id %>" x="<%= @pos_x %>" y="<%= @pos_y %>" dominant-baseline="central"
-        text-anchor="middle"><%= @text %></text>
-    </g>
+    <text id="<%= @css_id %>" x="<%= @pos_x %>" y="<%= @pos_y %>"
+      dominant-baseline="central" text-anchor="middle"
+    ><%= @text %></text>
+    """
+  end
+
+  defp label_render(_axis_map, _axis) do
+    ~E"""
     """
   end
 end
