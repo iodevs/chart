@@ -57,6 +57,18 @@ defmodule Chart.Line do
     apply_setter(chart, &AxisLine.MinorTicks.set_length(&1, axis, length))
   end
 
+  def set_axis_major_ticks_count(%Chart{} = chart, axis, count) do
+    apply_setter(chart, &AxisLine.MajorTicks.set_count(&1, axis, count))
+  end
+
+  def set_axis_major_ticks_gap(%Chart{} = chart, axis, gap) do
+    apply_setter(chart, &AxisLine.MajorTicks.set_gap(&1, axis, gap))
+  end
+
+  def set_axis_major_ticks_length(%Chart{} = chart, axis, length) do
+    apply_setter(chart, &AxisLine.MajorTicks.set_length(&1, axis, length))
+  end
+
   #  Grid setters
 
   def set_grid(%Chart{} = chart, axis_grid_type) do
