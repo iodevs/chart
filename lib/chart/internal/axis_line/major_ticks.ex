@@ -31,6 +31,7 @@ defmodule Chart.Internal.AxisLine.MajorTicks do
     |> put_in([axis, @self_key, :count], count)
     |> set_positions(axis)
     |> MajorTicksText.set_labels(axis)
+    |> MajorTicksText.set_positions(axis)
   end
 
   def set_gap(%{axis_table: axis_table} = settings, axis, gap)
