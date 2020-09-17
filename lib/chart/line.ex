@@ -28,42 +28,40 @@ defmodule Chart.Line do
   #  Axis label setters
 
   def set_axis_label_adjust_placement(%Chart{} = chart, axis, adjust_placement) do
-    settings = chart.settings |> AxisLine.Label.set_adjust_placement(axis, adjust_placement)
-
-    Chart.put_settings(chart, settings)
+    apply_setter(chart, &AxisLine.Label.set_adjust_placement(&1, axis, adjust_placement))
   end
 
   def set_axis_label(%Chart{} = chart, axis, text) do
-    settings = chart.settings |> AxisLine.Label.set_text(axis, text)
-
-    Chart.put_settings(chart, settings)
+    apply_setter(chart, &AxisLine.Label.set_text(&1, axis, text))
   end
 
   def set_axis_label_placement(%Chart{} = chart, axis, placement) do
-    settings = chart.settings |> AxisLine.Label.set_placement(axis, placement)
-
-    Chart.put_settings(chart, settings)
+    apply_setter(chart, &AxisLine.Label.set_placement(&1, axis, placement))
   end
 
   #  Grid setters
 
   def set_grid(%Chart{} = chart, axis_grid_type) do
-    settings = chart.settings |> GridLine.set_grid(axis_grid_type)
+    apply_setter(chart, &GridLine.set_grid(&1, axis_grid_type))
+  end
 
-    Chart.put_settings(chart, settings)
+  def set_grid_gap(%Chart{} = chart, axis_grid_type, number) do
+    apply_setter(chart, &GridLine.set_gap(&1, axis_grid_type, number))
   end
 
   #  Title setters
 
-  def set_title_position(%Chart{} = chart, text) do
-    settings = chart.settings |> Text.set_position(:title, text)
-
-    Chart.put_settings(chart, settings)
+  def set_title_position(%Chart{} = chart, position) do
+    apply_setter(chart, &Text.set_position(&1, :title, position))
   end
 
   def set_title_text(%Chart{} = chart, text) do
-    settings = chart.settings |> Text.set_text(:title, text)
+    apply_setter(chart, &Text.set_text(&1, :title, text))
+  end
 
-    Chart.put_settings(chart, settings)
+  # Private
+
+  defp apply_setter(chart, setter) do
+    Chart.put_settings(chart, setter.(chart.settings))
   end
 end
