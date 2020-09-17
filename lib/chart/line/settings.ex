@@ -10,8 +10,6 @@ defmodule Chart.Line.Settings do
     %{axis_table: %{}, marker: nil, shape: :linear}
     |> Figure.add()
     |> Text.add(:title)
-    |> Text.set_text(:title, "Graph")
-    |> Text.set_position(:title, {400, 50})
     |> Plot.add()
     |> GridLine.add()
     |> axis(:x_axis, {1, 0})
