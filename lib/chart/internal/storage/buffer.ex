@@ -28,7 +28,11 @@ defmodule Chart.Internal.Storage.Buffer do
     data
   end
 
-  defp merge(buffer, data) when is_list(buffer) and (is_tuple(data) or is_list(data)) do
+  defp merge(buffer, data) when is_list(buffer) and is_tuple(data) do
+    merge(buffer, [data])
+  end
+
+  defp merge(buffer, data) when is_list(buffer) and is_list(data) do
     buffer
     |> Enum.zip(data)
     |> Enum.map(fn {bf, d} -> Enum.concat(bf, d) end)
