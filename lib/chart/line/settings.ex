@@ -7,7 +7,7 @@ defmodule Chart.Line.Settings do
   alias Chart.Internal.{AxisLine, Figure, GridLine, Plot, Text}
 
   def new() do
-    %{axis_table: %{}, marker: nil, shape: :linear}
+    %{axis_table: %{}, marker: nil, type: :linear}
     |> Figure.add()
     |> Plot.add()
     |> GridLine.add()
