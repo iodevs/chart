@@ -102,12 +102,12 @@ defmodule Chart.Internal.AxisLine.MajorTicksText do
   end
 
   def recalc_range(chart) do
-    {x_data, y_data} = chart.storage.data |> List.flatten() |> Enum.unzip()
+    [x_data, y_data] = get_range_from_data(chart.storage.data)
 
     updated_settings =
       chart.settings
-      |> set_range({1, 0}, Enum.min_max(x_data))
-      |> set_range({0, 1}, Enum.min_max(y_data))
+      |> set_range({1, 0}, x_data)
+      |> set_range({0, 1}, y_data)
 
     Map.put(chart, :settings, updated_settings)
   end
@@ -127,6 +127,32 @@ defmodule Chart.Internal.AxisLine.MajorTicksText do
   end
 
   # Private
+
+  defp check_x_range([{x_min, x_max}, y_range]) when x_min == x_max do
+    [{x_min - 1, x_min + 1}, y_range]
+  end
+
+  defp check_x_range(range), do: range
+
+  defp check_y_range([x_range, {y_min, y_max}]) when y_min == y_max do
+    [x_range, {y_min - 1, y_min + 1}]
+  end
+
+  defp check_y_range(range), do: range
+
+  defp get_range_from_data([hd | _tail] = data) when length(hd) == 1 do
+    data
+    |> List.flatten()
+    |> Enum.unzip()
+    |> Tuple.to_list()
+    |> Enum.map(&Enum.min_max/1)
+    |> check_x_range()
+    |> check_y_range()
+  end
+
+  defp get_range_from_data(data) do
+    data |> List.flatten() |> Enum.unzip() |> Tuple.to_list() |> Enum.map(&Enum.min_max/1)
+  end
 
   defp apply_format(labels, {:decimals, dec}) do
     Enum.map(labels, &Utils.round_value(&1, dec))
