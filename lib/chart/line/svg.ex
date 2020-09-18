@@ -1,7 +1,7 @@
 defmodule Chart.Line.Svg do
   @moduledoc false
 
-  alias Chart.Line.Templates.{AxisSvg, GridSvg, TitleSvg}
+  alias Chart.Line.Templates.{AxisSvg, GridSvg, LinesSvg, TitleSvg}
   alias Chart.Line.View
 
   use Phoenix.HTML
@@ -24,6 +24,7 @@ defmodule Chart.Line.Svg do
       |> Map.put(:rect_bg_height, rect_bg_height)
       |> Map.put(:axis, AxisSvg.render(line_settings))
       |> Map.put(:grid, GridSvg.render(line_settings))
+      |> Map.put(:lines, LinesSvg.render(line_settings, line.storage.data))
       |> Map.put(:title, TitleSvg.render(line_settings))
 
     ~E"""
@@ -38,13 +39,7 @@ defmodule Chart.Line.Svg do
         width="<%= @rect_bg_width %>" height="<%= @rect_bg_height %>" />
 
       <%= @grid %>
-
-      <g class="lines">
-        <%= for {data, id_line} <- Enum.with_index(@data) do %>
-          <polyline id="line-<%= id_line %>" points="<%= View.set_line_points(line_settings, data) %>" />
-        <% end %>
-      </g>
-
+      <%= @lines %>
       <%= @axis %>
     </svg>
     """
