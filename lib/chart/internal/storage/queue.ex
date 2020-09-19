@@ -19,8 +19,9 @@ defmodule Chart.Internal.Storage.Queue do
     |> Chart.apply_callbacks()
   end
 
-  def set_count(%Chart{} = chart, count) when is_map(chart) and is_integer(count) and 1 < count do
-    put_in(chart, [:storage, :count], count)
+  def set_count(%Chart{storage: storage} = chart, count)
+      when is_map(chart) and is_integer(count) and 1 < count do
+    Map.put(chart, :storage, %__MODULE__{storage | count: count})
   end
 
   # Private
