@@ -13,7 +13,6 @@ defmodule Chart.Internal.Storage.Buffer do
 
   def put(%Chart{storage: storage} = chart, data) do
     chart
-    # |> put_in([:storage, :data], merge(chart.storage.data, data))
     |> Map.put(:storage, %__MODULE__{storage | data: merge(storage.data, data)})
     |> Chart.apply_callbacks()
   end
