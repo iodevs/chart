@@ -20,10 +20,26 @@ defmodule Chart.Internal.Storage.Tuple do
   # Private
 
   defp merge(nil, data) when is_map(data) do
-    data
+    sort(data)
   end
 
-  defp merge(data, new_data) when is_map(data) and is_map(new_data) do
-    Map.merge(data, new_data)
+  defp merge(data, new_data) when is_list(data) and is_map(new_data) do
+    data
+    |> to_map()
+    |> Map.merge(new_data)
+    |> sort()
+  end
+
+  defp sort(data) do
+    data
+    |> Map.to_list()
+    |> Enum.map(fn {k, v} -> {Atom.to_string(k), v} end)
+    |> Enum.sort_by(&elem(&1, 0), &(String.length(&1) <= String.length(&2)))
+  end
+
+  defp to_map(data) do
+    data
+    |> Enum.map(fn {k, v} -> {String.to_atom(k), v} end)
+    |> Enum.into(%{})
   end
 end

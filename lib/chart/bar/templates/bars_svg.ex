@@ -4,22 +4,29 @@ defmodule Chart.Bar.Templates.BarsSvg do
   alias Chart.Bar.Views.BarsView
   use Phoenix.HTML
 
-  def render(_settings, data) when is_map(data) or data == %{} do
+  def render(_settings, nil) do
     ~E"""
     """
   end
 
-  def render(settings, data) do
-    assigns = settings
+  def render(%{bar: bar, x_axis: x_axis, y_axis: y_axis}, data) when is_list(data) do
+    assigns =
+      %{}
+      |> Map.put(
+        :rect_data,
+        BarsView.calc_rect_attributes(
+          Enum.map(data, fn {_k, v} -> v end),
+          x_axis.major_ticks.positions,
+          y_axis.major_ticks_text.range,
+          y_axis.line,
+          bar.width
+        )
+      )
 
     ~E"""
     <g class="bars">
-      <%= for {key, value} <- data do %>
-      <rect class="ha" x="20" y="30" height="420" rx="0" style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" />
-
-      <rect class="ha" x="140" y="230" height="220" rx="0" style="fill:rgb(0,255,255);stroke-width:3;stroke:rgb(0,0,0)" />
-
-      <rect class="ha c3" x="260" y="350" height="100" rx="0" style="stroke-width:3;stroke:rgb(0,0,0)" />
+      <%= for {{x, y, w, h}, id_bar} <- Enum.with_index(@rect_data) do %>
+        <rect id="bar-<%= id_bar %>" x="<%= x %>" y="<%= y %>" width="<%= w %>" height="<%= h %>" />
       <% end %>
     </g>
     """
