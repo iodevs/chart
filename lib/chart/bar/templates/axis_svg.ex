@@ -23,10 +23,6 @@ defmodule Chart.Bar.Templates.AxisSvg do
         ticks_render(y_axis_map, axis_table, [y_axis, :line, :major_ticks])
       )
       |> Map.put(
-        :x_axis_minor_ticks,
-        ticks_render(x_axis_map, axis_table, [x_axis, :line, :minor_ticks])
-      )
-      |> Map.put(
         :y_axis_minor_ticks,
         ticks_render(y_axis_map, axis_table, [y_axis, :line, :minor_ticks])
       )
@@ -40,7 +36,6 @@ defmodule Chart.Bar.Templates.AxisSvg do
       )
       |> Map.put(:x_axis, axis_render(x_axis_map, axis_table, [x_axis, :line, :thickness]))
       |> Map.put(:y_axis, axis_render(y_axis_map, axis_table, [y_axis, :line, :thickness]))
-      |> Map.put(:x_axis_label, label_render(x_axis_map, x_axis))
       |> Map.put(:y_axis_label, label_render(y_axis_map, y_axis))
 
     ~E"""
@@ -50,11 +45,9 @@ defmodule Chart.Bar.Templates.AxisSvg do
       <%= @y_axis_major_ticks_text %>
       <%= @y_axis %>
       <%= @y_axis_label %>
-      <%= @x_axis_minor_ticks %>
       <%= @x_axis_major_ticks %>
       <%= @x_axis_major_ticks_text %>
       <%= @x_axis %>
-      <%= @x_axis_label %>
     </g>
     """
   end
@@ -94,6 +87,15 @@ defmodule Chart.Bar.Templates.AxisSvg do
 
   defp ticks_text_render(axis_map, _axis_table, [_axis, _line, ticks_text_type])
        when not is_map_key(axis_map, ticks_text_type) do
+    ~E"""
+    """
+  end
+
+  defp ticks_text_render(%{major_ticks_text: %{labels: :from_map}}, _axis_table, [
+         _axis,
+         _line,
+         _ticks_text_type
+       ]) do
     ~E"""
     """
   end
