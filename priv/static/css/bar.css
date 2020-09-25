@@ -1,5 +1,5 @@
 .bars {
-  --bar-default-color: #657c83;
+  --bar-default-color: #7b97a0;
   fill: var(--bar-color, var(--bar-default-color));
 }
 

@@ -40,6 +40,6 @@ defmodule Chart.Internal.Storage.Tuple do
   defp to_map(data) do
     data
     |> Enum.map(fn {k, v} -> {String.to_atom(k), v} end)
-    |> Enum.into(%{})
+    |> Map.new()
   end
 end

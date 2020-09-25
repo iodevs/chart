@@ -54,33 +54,6 @@ defmodule Chart.Internal.AxisLine.MajorTicksText do
     put_in(settings, [axis, @self_key, :gap], gap)
   end
 
-  def set_x_axis_labels(chart) do
-    labels = chart.storage.data |> Enum.map(fn {k, _v} -> k end)
-    updated_settings = put_in(chart.settings, [:x_axis, @self_key, :labels], labels)
-
-    Map.put(chart, :settings, updated_settings)
-  end
-
-  def set_x_axis_positions(chart) do
-    settings = chart.settings
-    {px1, _py1, px2, _py2} = settings[:x_axis][:line]
-    count_bar = length(settings[:x_axis][@self_key][:labels])
-    bar_width = get_bar_width(px2 - px1, count_bar, settings.bar.gap, settings.bar.width)
-
-    positions =
-      {px1, px2}
-      |> Utils.linspace(2 * count_bar + 1)
-      |> Enum.drop_every(2)
-
-    updated_settings =
-      chart.settings
-      |> put_in([:bar, :width], bar_width)
-      |> put_in([:x_axis, @self_key, :positions], positions)
-      |> put_in([:x_axis, :major_ticks, :positions], positions)
-
-    Map.put(chart, :settings, updated_settings)
-  end
-
   @doc """
   range :: tuple(number(), number())
   """
@@ -142,9 +115,7 @@ defmodule Chart.Internal.AxisLine.MajorTicksText do
   def recalc_y_axis_range(chart) do
     y_max_range = chart.storage.data |> Enum.map(fn {_k, v} -> v end) |> Enum.max()
 
-    updated_settings =
-      chart.settings
-      |> set_range({0, 1}, {0, y_max_range + 1})
+    updated_settings = chart.settings |> set_range({0, 1}, {0, y_max_range + 1})
 
     Map.put(chart, :settings, updated_settings)
   end
@@ -246,13 +217,5 @@ defmodule Chart.Internal.AxisLine.MajorTicksText do
       end
 
     :math.pow(10, exp)
-  end
-
-  defp get_bar_width(plot_width, count_bar, gap, :auto) when is_number(gap) and 0 < gap do
-    plot_width / (count_bar + (count_bar + 1) * gap)
-  end
-
-  defp get_bar_width(_plot_width, _count_bar, _gap, width) when is_number(width) and 0 < width do
-    width
   end
 end
