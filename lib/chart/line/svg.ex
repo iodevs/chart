@@ -28,7 +28,8 @@ defmodule Chart.Line.Svg do
 
     ~E"""
     <svg version="1.2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-      viewbox="0 0 <%= @fig_width %> <%= @fig_height %>" >
+      class="svg-content" viewbox="0 0 <%= @fig_width %> <%= @fig_height %>"
+      preserveAspectRatio="<%= @figure.preserve_aspect_ratio %>" >
 
       <rect id="figure_bg" width="100%" height="100%" />
 
