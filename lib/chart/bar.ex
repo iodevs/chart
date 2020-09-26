@@ -97,6 +97,14 @@ defmodule Chart.Bar do
 
   #  Axis tick text setters
 
+  def set_axis_range_limit(%Chart{} = chart, limit) do
+    apply_setter(chart, &AxisLine.MajorTicksText.set_range_limit(&1, :y_axis, limit))
+  end
+
+  def set_axis_range(%Chart{} = chart, range) do
+    apply_setter(chart, &AxisLine.MajorTicksText.set_range(&1, :y_axis, range))
+  end
+
   def set_axis_ticks_text_format(%Chart{} = chart, :y_axis, format) do
     apply_setter(chart, &AxisLine.MajorTicksText.set_format(&1, :y_axis, format))
   end

@@ -17,7 +17,7 @@ defmodule Chart.Bar.Templates.BarsSvg do
         BarsView.calc_rect_attributes(
           Enum.map(data, fn {_k, v} -> v end),
           x_axis.major_ticks.positions,
-          y_axis.major_ticks_text.range,
+          y_axis.major_ticks_text,
           y_axis.line,
           bar.width
         )

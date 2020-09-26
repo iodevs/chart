@@ -4,6 +4,7 @@ defmodule Chart.Internal.AxisLine.MajorTicksText do
   alias Chart.Internal.Utils
   import Chart.Internal.Guards, only: [is_decimals: 1, is_nonnegative_number: 1, is_range: 2]
 
+  @type limit_range() :: :auto | :fixed
   @self_key :major_ticks_text
 
   def new() do
@@ -12,6 +13,7 @@ defmodule Chart.Internal.AxisLine.MajorTicksText do
       gap: 0,
       labels: [],
       positions: [],
+      limit_range: :auto,
       offset_range: {0, 0},
       range: {0, 1}
     }
@@ -115,9 +117,13 @@ defmodule Chart.Internal.AxisLine.MajorTicksText do
   def recalc_y_axis_range(chart) do
     y_max_range = chart.storage.data |> Enum.map(fn {_k, v} -> v end) |> Enum.max()
 
-    updated_settings = chart.settings |> set_range({0, 1}, {0, y_max_range + 1})
+    updated_settings = chart.settings |> apply_limit_range(y_max_range)
 
     Map.put(chart, :settings, updated_settings)
+  end
+
+  def set_range_limit(settings, axis, limit) when is_map(settings) and is_atom(limit) do
+    put_in(settings, [axis, @self_key, :limit_range], limit)
   end
 
   def set_range_offset(settings, axis, :auto) when is_map(settings) do
@@ -135,6 +141,20 @@ defmodule Chart.Internal.AxisLine.MajorTicksText do
   end
 
   # Private
+
+  defp apply_limit_range(
+         %{y_axis: %{major_ticks_text: %{limit_range: :auto}}} = settings,
+         y_max_range
+       ) do
+    set_range(settings, {0, 1}, {0, y_max_range + 1})
+  end
+
+  defp apply_limit_range(
+         %{y_axis: %{major_ticks_text: %{limit_range: :fixed, range: range}}} = settings,
+         _y_max_range
+       ) do
+    set_range(settings, {0, 1}, range)
+  end
 
   defp check_x_range([{x_min, x_max}, y_range]) when x_min == x_max do
     [{x_min - 1, x_min + 1}, y_range]
