@@ -4,7 +4,7 @@ defmodule Chart.Bar.Settings do
   """
 
   alias Chart.Internal.{AxisLine, BarLine, Figure, GridLine, Plot, Text}
-  import Chart.Internal.Guards, only: [is_nonnegative_number: 1, is_positive_number: 1]
+  import Chart.Internal.Guards, only: [is_positive_number: 1]
 
   @type type_bar :: :normal | :stacked | :grouped
   @type orientation :: :horizontal | :vertical
