@@ -1,8 +1,29 @@
-chart {
+body {
+  --svg-viewbox-width: 800px;
+  --svg-viewbox-height: 600px;
+  --chart-div-width: 50%;
+  --chart-div-width-default: 50%;
 }
 
 #figure_bg {
   fill: var(--figure_bg-color, white);
+}
+
+/* ================ SVG Responsivity =================  */
+.svg-container {
+  position: relative;
+  width: var(--chart-div-width, var(--chart-div-width-default));
+  height: 0;
+  padding-top: calc(
+    (var(--svg-viewbox-height, 600) / var(--svg-viewbox-width, 800)) *
+      var(--chart-div-width, var(--chart-div-width-default))
+  );
+}
+
+.svg-content {
+  position: absolute;
+  left: 0;
+  top: 0;
 }
 
 /* ====================== TITLE ======================  */
@@ -54,8 +75,6 @@ chart {
   stroke-linecap: var(--grid-major-stroke-linecap, butt);
   stroke-dasharray: var(--grid-major-stroke-dasharray, 0);
 }
-
-
 
 /* ====================== AXIS ======================  */
 .axis {
