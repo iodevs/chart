@@ -1,29 +1,27 @@
-body {
-  --svg-viewbox-width: 800px;
-  --svg-viewbox-height: 600px;
-  --chart-div-width: 50%;
-  --chart-div-width-default: 50%;
-}
-
 #figure_bg {
   fill: var(--figure_bg-color, white);
 }
 
 /* ================ SVG Responsivity =================  */
 .svg-container {
-  position: relative;
+  --svg-viewbox-width: 800px;
+  --svg-viewbox-height: 600px;
+  --chart-div-width: 60%;
+  --chart-div-width-default: 50%;
+
+  /* position: relative; */
   width: var(--chart-div-width, var(--chart-div-width-default));
-  height: 0;
+  /* height: 0;
   padding-top: calc(
     (var(--svg-viewbox-height, 600) / var(--svg-viewbox-width, 800)) *
       var(--chart-div-width, var(--chart-div-width-default))
-  );
+  ); */
 }
 
 .svg-content {
-  position: absolute;
+  /* position: absolute;
   left: 0;
-  top: 0;
+  top: 0; */
 }
 
 /* ====================== TITLE ======================  */
