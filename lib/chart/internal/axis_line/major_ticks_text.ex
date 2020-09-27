@@ -226,6 +226,8 @@ defmodule Chart.Internal.AxisLine.MajorTicksText do
     {min - offset(min), max + offset(max)}
   end
 
+  defp offset(0), do: 1
+
   defp offset(num) do
     log10 = num |> :erlang.abs() |> :math.log10()
 
