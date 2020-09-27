@@ -3,7 +3,7 @@ defmodule Chart.Line do
   A line chart definition structure
   """
 
-  alias Chart.Internal.{AxisLine, GridLine, Plot, Text}
+  alias Chart.Internal.{AxisLine, Figure, GridLine, Plot, Text}
   alias Chart.Internal.Storage.Buffer
   alias Chart.Line.{Settings, Svg}
   alias Chart.Chart
@@ -23,6 +23,16 @@ defmodule Chart.Line do
     |> Chart.register([
       &AxisLine.MajorTicksText.recalc_range/1
     ])
+  end
+
+  # Figure setter
+
+  def set_viewbox(%Chart{} = chart, viewbox) do
+    apply_setter(chart, &Figure.set_viewbox(&1, viewbox))
+  end
+
+  def set_aspect_ratio(%Chart{} = chart, ar) do
+    apply_setter(chart, &Figure.set_aspect_ratio(&1, ar))
   end
 
   # Line setter

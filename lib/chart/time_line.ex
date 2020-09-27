@@ -10,6 +10,8 @@ defmodule Chart.TimeLine do
 
   defdelegate put(chart, data), to: Line
   defdelegate render(chart), to: Line
+  defdelegate set_viewbox(chart, viewbox), to: Line
+  defdelegate set_aspect_ratio(chart, aspect_ratio), to: Line
   defdelegate set_thickness(chart, axis, thickness), to: Line
   defdelegate set_axis_label_adjust_placement(chart, axis, adjust_placement), to: Line
   defdelegate set_axis_label(chart, axis, text), to: Line

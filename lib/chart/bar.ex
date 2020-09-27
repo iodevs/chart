@@ -3,7 +3,7 @@ defmodule Chart.Bar do
   A bar chart definition structure
   """
 
-  alias Chart.Internal.{AxisLine, BarLine, GridLine, Plot, Text}
+  alias Chart.Internal.{AxisLine, BarLine, Figure, GridLine, Plot, Text}
   alias Chart.Internal
   alias Chart.Bar.{Settings, Svg}
   alias Chart.Chart
@@ -25,6 +25,16 @@ defmodule Chart.Bar do
       &BarLine.MajorTicksText.set_labels/1,
       &BarLine.MajorTicks.set_positions/1
     ])
+  end
+
+  # Figure setter
+
+  def set_viewbox(%Chart{} = chart, viewbox) do
+    apply_setter(chart, &Figure.set_viewbox(&1, viewbox))
+  end
+
+  def set_aspect_ratio(%Chart{} = chart, ar) do
+    apply_setter(chart, &Figure.set_aspect_ratio(&1, ar))
   end
 
   # Bar setter
