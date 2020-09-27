@@ -3,6 +3,7 @@ defmodule Chart.Internal.Plot do
 
   alias Chart.Internal.Rectangle
   alias Chart.Internal.AxisLine.{Label, MajorTicks, MajorTicksText, MinorTicks}
+  alias Chart.Internal.AxisLine
 
   import Chart.Internal.Guards, only: [is_positive_number: 1]
 
@@ -24,6 +25,8 @@ defmodule Chart.Internal.Plot do
       @self_key,
       validate_position(position, settings.figure.viewbox, settings.plot.size)
     )
+    |> AxisLine.set_line(:x_axis)
+    |> AxisLine.set_line(:y_axis)
     |> MajorTicks.set_positions({1, 0})
     |> MajorTicks.set_positions({0, 1})
     |> MinorTicks.set_positions({1, 0})
@@ -42,6 +45,8 @@ defmodule Chart.Internal.Plot do
       when is_map(settings) and is_positive_number(x) and is_positive_number(y) do
     settings
     |> Rectangle.set_size(@self_key, validate_size(size, settings.figure.viewbox))
+    |> AxisLine.set_line(:x_axis)
+    |> AxisLine.set_line(:y_axis)
     |> MajorTicks.set_positions({1, 0})
     |> MajorTicks.set_positions({0, 1})
     |> MinorTicks.set_positions({1, 0})

@@ -42,6 +42,16 @@ defmodule Chart.Internal.AxisLine.MinorTicks do
     put_in(settings, [axis, @self_key, :length], length)
   end
 
+  def set_positions(%{x_axis: x_axis} = settings, vector)
+      when is_map(settings) and is_tuple(vector) and not is_map_key(x_axis, :minor_ticks) do
+    settings
+  end
+
+  def set_positions(%{y_axis: y_axis} = settings, vector)
+      when is_map(settings) and is_tuple(vector) and not is_map_key(y_axis, :minor_ticks) do
+    settings
+  end
+
   def set_positions(settings, vector) when is_map(settings) and is_tuple(vector) do
     axis = settings.axis_table |> Utils.get_axis_for_vector(vector)
 
