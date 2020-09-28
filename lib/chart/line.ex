@@ -3,6 +3,8 @@ defmodule Chart.Line do
   A line chart definition structure
   """
 
+  import Chart.Internal.Utils, only: [apply_setter: 2]
+
   alias Chart.Internal.{AxisLine, Figure, GridLine, Plot, Text}
   alias Chart.Internal.Storage.Buffer
   alias Chart.Line.{Settings, Svg}
@@ -135,11 +137,5 @@ defmodule Chart.Line do
 
   def set_title_text(%Chart{} = chart, text) do
     apply_setter(chart, &Text.set_text(&1, :title, text))
-  end
-
-  # Private
-
-  defp apply_setter(chart, setter) do
-    Chart.put_settings(chart, setter.(chart.settings))
   end
 end
