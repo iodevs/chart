@@ -1,6 +1,12 @@
 defmodule Chart.Internal.Utils do
   @moduledoc false
 
+  alias Chart.Chart
+
+  def apply_setter(chart, setter) do
+    Chart.put_settings(chart, setter.(chart.settings))
+  end
+
   def datetime_format(int, dt) when is_integer(int) and is_binary(dt) do
     int
     |> DateTime.from_unix!()

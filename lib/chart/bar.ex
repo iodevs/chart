@@ -3,6 +3,8 @@ defmodule Chart.Bar do
   A bar chart definition structure
   """
 
+  import Chart.Internal.Utils, only: [apply_setter: 2]
+
   alias Chart.Internal.{AxisLine, BarLine, Figure, GridLine, Plot, Text}
   alias Chart.Internal
   alias Chart.Bar.{Settings, Svg}
@@ -167,11 +169,5 @@ defmodule Chart.Bar do
 
   def set_title_text(%Chart{} = chart, text) do
     apply_setter(chart, &Text.set_text(&1, :title, text))
-  end
-
-  # Private
-
-  defp apply_setter(chart, setter) do
-    Chart.put_settings(chart, setter.(chart.settings))
   end
 end
