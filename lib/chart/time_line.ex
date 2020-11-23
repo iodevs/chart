@@ -8,7 +8,9 @@ defmodule Chart.TimeLine do
   alias Chart.Line
   alias Chart.Chart
 
+  defdelegate append(chart, data), to: Line
   defdelegate put(chart, data), to: Line
+  defdelegate reset(chart), to: Line
   defdelegate render(chart), to: Line
   defdelegate set_viewbox(chart, viewbox), to: Line
   defdelegate set_aspect_ratio(chart, aspect_ratio), to: Line

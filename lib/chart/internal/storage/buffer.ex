@@ -19,7 +19,6 @@ defmodule Chart.Internal.Storage.Buffer do
 
   def put(%Chart{storage: storage} = chart, data) do
     chart
-    |> reset()
     |> Map.put(:storage, %__MODULE__{storage | data: data})
     |> Chart.apply_callbacks()
   end

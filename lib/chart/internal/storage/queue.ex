@@ -13,10 +13,21 @@ defmodule Chart.Internal.Storage.Queue do
     }
   end
 
-  def put(%Chart{storage: storage} = chart, data) do
+  def append(%Chart{storage: storage} = chart, data) do
     chart
     |> Map.put(:storage, %__MODULE__{storage | data: merge(storage.data, data, storage.count)})
     |> Chart.apply_callbacks()
+  end
+
+  def put(%Chart{storage: storage} = chart, data) do
+    chart
+    |> Map.put(:storage, %__MODULE__{storage | data: data})
+    |> Chart.apply_callbacks()
+  end
+
+  def reset(%Chart{storage: storage} = chart) do
+    chart
+    |> Map.put(:storage, %__MODULE__{storage | data: nil})
   end
 
   def set_count(%Chart{storage: storage} = chart, count)
