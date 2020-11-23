@@ -10,8 +10,16 @@ defmodule Chart.Bar do
   alias Chart.Bar.{Settings, Svg}
   alias Chart.Chart
 
+  def append(%Chart{} = chart, data) do
+    chart |> Chart.append_data(data)
+  end
+
   def put(%Chart{} = chart, data) do
     chart |> Chart.put_data(data)
+  end
+
+  def reset(%Chart{} = chart) do
+    chart |> Chart.reset_data()
   end
 
   def render(%Chart{} = chart) do
