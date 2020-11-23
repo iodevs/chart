@@ -15,12 +15,20 @@ defmodule Chart.Chart do
     }
   end
 
-  def put_settings(%__MODULE__{} = chart, settings) when is_map(settings) do
-    Map.put(chart, :settings, settings)
+  def append_data(%__MODULE__{storage: %module{}} = chart, data) do
+    module.append(chart, data)
   end
 
   def put_data(%__MODULE__{storage: %module{}} = chart, data) do
     module.put(chart, data)
+  end
+
+  def reset_data(%__MODULE__{storage: %module{}} = chart) do
+    module.reset(chart)
+  end
+
+  def put_settings(%__MODULE__{} = chart, settings) when is_map(settings) do
+    Map.put(chart, :settings, settings)
   end
 
   def put_data_manager(%__MODULE__{} = chart, manager) do
