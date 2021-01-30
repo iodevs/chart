@@ -9,7 +9,7 @@ defmodule Chart.Bar.Templates.BarsSvg do
     """
   end
 
-  def render(%{bar: bar, x_axis: x_axis, y_axis: y_axis}, data) when is_list(data) do
+  def render(%{bar: bar, x_axis: x_axis, y_axis: y_axis}, data) when is_map(data) do
     assigns =
       %{}
       |> Map.put(

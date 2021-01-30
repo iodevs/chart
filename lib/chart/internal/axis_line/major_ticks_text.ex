@@ -103,6 +103,10 @@ defmodule Chart.Internal.AxisLine.MajorTicksText do
     |> set_labels(axis)
   end
 
+  def set_range(settings, _vector, _range) when is_map(settings) do
+    settings
+  end
+
   def recalc_range(chart) do
     [x_data, y_data] = get_range_from_data(chart.storage.data)
 
